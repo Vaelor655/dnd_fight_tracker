@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grimoire d’Initiative + Battlemap</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="stylesheet" href="assets/theme.css" />
+</head>
+<body class="mj">
+<div class="container">
+    <div class="header-row">
+      <div>
+        <h1>Grimoire d’Initiative</h1>
+      </div>
+      <div class="header-right">
+        <label class="theme-control">
+          <span class="badge-label">Thème</span>
+          <select id="themeSelect" aria-label="Sélection du thème">
+            <option value="system">Système</option>
+            <option value="light">Clair</option>
+            <option value="dark">Sombre</option>
+          </select>
+        </label>
+        <span class="chip">
+          <span class="badge-label">Round</span>
+          <span id="roundDisplay">1</span>
+        </span>
+        <span class="chip">
+          <span class="badge-label">Créatures</span>
+          <span id="countDisplay">0</span>
+        </span>
+        <span class="chip">
+          <span class="badge-label">Durée</span>
+          <span id="timerDisplay">00:00</span>
+        </span>
+      </div>
+    </div>
+
+    <div class="top-layout">
+      <!-- Formulaire d'ajout -->
+      <div class="panel">
+        <div class="form-title">Ajout de combattants</div>
+        <div class="form-row" style="margin-bottom: 10px;">
+          <label style="flex: 1 1 220px;">
+            <span>Monstre préfait</span>
+            <select id="presetMonsterSelect">
+              <option value="">– Choisir un monstre –</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Nom</span>
+            <input type="text" id="nameInput" placeholder="Gobelin, Guerrier, Magicien..." />
+          </label>
+          <label>
+            <span>Initiative</span>
+            <input type="number" id="initiativeInput" placeholder="Ex: 15" />
+          </label>
+          <label>
+            <span>CA de base</span>
+            <input type="number" id="acBaseInput" placeholder="Ex: 16" />
+          </label>
+          <label>
+            <span>Bonus CA (temp.)</span>
+            <input type="number" id="acTempInput" placeholder="Ex: 2" />
+          </label>
+          <label>
+            <span>PV max</span>
+            <input type="number" id="hpInput" placeholder="Ex: 12" />
+          </label>
+        </div>
+
+        <div class="form-row" style="margin-bottom: 6px;">
+          <label>
+            <span>PV bonus</span>
+            <input type="number" id="hpTempInput" placeholder="Ex: 5" />
+          </label>
+          <label>
+            <span>Quantité</span>
+            <input type="number" id="quantityInput" value="1" min="1" />
+          </label>
+
+          <label class="inline-check" style="flex: 1 1 220px;">
+            <span style="margin-bottom: 2px;">Token</span>
+            <span class="inline-check-row">
+              <input type="checkbox" id="createTokenOnAdd" checked />
+              <span>Créer token sur la map</span>
+            </span>
+          </label>
+          <label style="flex: 1 1 220px;">
+            <span>Taille du token (non préfait)</span>
+            <select id="tokenSizeSelect">
+              <option value="0.5">TP (1/2 case)</option>
+              <option value="1" selected>P/M (1 case)</option>
+              <option value="2">G (2 cases)</option>
+              <option value="3">TG (3 cases)</option>
+              <option value="4">Gig (4 cases)</option>
+            </select>
+          </label>
+
+          <label style="flex: 1 1 220px;">
+            <span>Conditions</span>
+            <input
+              type="text"
+              id="conditionsInput"
+              class="conditions-input"
+              placeholder="Texte libre : Empoisonné, Concentration..."
+            />
+            <select id="conditionSelect" class="condition-select">
+              <option value="">+ Ajouter une condition D&D</option>
+              <option value="Aveuglé (Blinded)">Aveuglé (Blinded)</option>
+              <option value="Charmé (Charmed)">Charmé (Charmed)</option>
+              <option value="Assourdi (Deafened)">Assourdi (Deafened)</option>
+              <option value="Effrayé (Frightened)">Effrayé (Frightened)</option>
+              <option value="Agrippé (Grappled)">Agrippé (Grappled)</option>
+              <option value="Neutralisé (Incapacitated)">Neutralisé (Incapacitated)</option>
+              <option value="Invisible (Invisible)">Invisible (Invisible)</option>
+              <option value="Paralysé (Paralyzed)">Paralysé (Paralyzed)</option>
+              <option value="Pétrifié (Petrified)">Pétrifié (Petrified)</option>
+              <option value="Empoisonné (Poisoned)">Empoisonné (Poisoned)</option>
+              <option value="À terre (Prone)">À terre (Prone)</option>
+              <option value="Entravé (Restrained)">Entravé (Restrained)</option>
+              <option value="Étourdi (Stunned)">Étourdi (Stunned)</option>
+              <option value="Inconscient (Unconscious)">Inconscient (Unconscious)</option>
+              <option value="Exténué (Exhaustion)">Exténué (Exhaustion)</option>
+            </select>
+          </label>
+          <div style="display:flex; align-items:flex-end;">
+            <button id="addBtn" class="primary">Ajouter</button>
+          </div>
+        </div>
+
+        <!-- Contrôles globaux -->
+        <div class="controls">
+          <div>
+            <button id="nextBtn" class="secondary" disabled>Tour suivant</button>
+            <button id="resetBtn" class="danger">Reset combat</button>
+            <button id="exportCombatBtn" class="secondary">Exporter JSON</button>
+            <button id="importCombatBtn" class="secondary">Importer JSON</button>
+            <input id="importCombatFile" type="file" accept="application/json" hidden />
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel de dés -->
+      <div class="panel dice-panel">
+        <div class="dice-header">
+          <span>Jets de dés</span>
+        </div>
+        <div class="dice-buttons">
+          <button class="secondary small dice-btn" data-sides="100">d100</button>
+          <button class="secondary small dice-btn" data-sides="20">d20</button>
+          <button class="secondary small dice-btn" data-sides="12">d12</button>
+          <button class="secondary small dice-btn" data-sides="10">d10</button>
+          <button class="secondary small dice-btn" data-sides="8">d8</button>
+          <button class="secondary small dice-btn" data-sides="6">d6</button>
+          <button class="secondary small dice-btn" data-sides="4">d4</button>
+        </div>
+        <div class="dice-result">
+          <span class="badge-label">Résultat</span>
+          <span id="diceResultValue" class="dice-result-value">–</span>
+        </div>
+        <div class="dice-history" id="diceHistory"></div>
+      </div>
+    </div>
+
+    <!-- Tableau d'initiative -->
+    <table>
+      <thead>
+        <tr>
+          <th class="col-n">#</th>
+          <th class="col-hide" title="Cacher pour les players">Cacher</th>
+          <th>Nom</th>
+          <th>Init</th>
+          <th>CA</th>
+          <th>PV</th>
+          <th>Conditions / notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="trackerBody">
+        <tr>
+          <td colspan="8" class="empty">Aucune créature pour l'instant.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Battlemap -->
+    <div class="map-section">
+      <div class="map-header">
+        <div>
+          <h2>Battlemap</h2>
+        </div>
+        <div class="online-players">
+            <span class="badge-label">Joueurs en ligne</span>
+            <div id="onlinePlayers" class="online-players-list">
+              <span class="muted">—</span>
+            </div>
+          </div>
+      </div>
+
+      <div class="map-layout map-layout--stack">
+        <div class="panel map-controls">
+          <div class="map-controls-title">Outils</div>
+
+<!-- Hidden legacy selects (kept for compatibility) -->
+<select id="toolSelect" class="sr-only" aria-hidden="true" tabindex="-1">
+  <option value="tokens" selected>Déplacer tokens</option>
+  <option value="background">Déplacer la map</option>
+  <option value="rect">Rectangle</option>
+  <option value="circle">Cercle</option>
+  <option value="pen">Main levée</option>
+</select>
+<select id="distanceRule" class="sr-only" aria-hidden="true" tabindex="-1">
+  <option value="chebyshev" selected>Diag = 1 case</option>
+</select>
+
+<div class="toolbar-row">
+  <div id="toolButtons" class="tool-buttons" role="toolbar" aria-label="Outils de la battlemap">
+    <button type="button" class="icon-btn is-active" data-tool="tokens" title="Déplacer tokens">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 3h-2v4h4V7l3 3-3 3v-2h-4v4h2l-3 3-3-3h2v-4H7v2l-3-3 3-3v2h4V5H9l3-3z"/></svg>
+    </button>
+    <button type="button" class="icon-btn" data-tool="background" title="Déplacer la map">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="2" fill="currentColor"/><path d="M5 17l5-5 3 3 4-4 3 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button type="button" class="icon-btn" data-tool="rect" title="Rectangle">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M6 8h12v8H6z" fill="none"/></svg>
+    </button>
+    <button type="button" class="icon-btn" data-tool="circle" title="Cercle">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>
+    </button>
+    <button type="button" class="icon-btn" data-tool="pen" title="Main levée">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17c3-1 4-3 6-4s4 1 6 0 3-3 4-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 21c4-2 8 0 14-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <label class="field-inline" title="Couleur de dessin">
+    <span>Couleur</span>
+    <input id="drawColor" type="color" value="#22c55e" />
+  </label>
+
+  <label class="field-inline field-inline--range" title="Épaisseur du trait">
+    <span>Épaisseur <b id="drawWidthValue">3</b></span>
+    <input id="drawWidth" type="range" min="1" max="16" value="3" />
+  </label>
+
+  <label class="check-inline" title="Remplir les formes (rectangle/cercle)">
+    <input id="fillMode" type="checkbox" />
+    <span>Remplir</span>
+  </label>
+
+  <label class="check-inline" title="Snap sur la grille">
+    <input id="snapMode" type="checkbox" checked />
+    <span>Snap</span>
+  </label>
+
+  <button id="undoDrawBtn" class="icon-btn" type="button" title="Annuler le dernier dessin">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button id="clearDrawBtn" class="icon-btn danger" type="button" title="Effacer tous les dessins">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6V4h8v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6l1 16h10l1-16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</div>
+
+<div class="map-controls-title">Grille / Mesure / Ping</div>
+
+<div class="toolbar-row">
+  <label class="field-inline field-inline--range" title="Taille d'une case (en pixels)">
+    <span>Case <b id="cellPxValue">40</b> px</span>
+    <input id="cellPx" type="range" min="10" max="200" value="40" />
+  </label>
+
+  <label class="field-inline field-inline--range" title="Zoom de la carte">
+    <span>Zoom <b id="mapZoomValue">100%</b></span>
+    <input id="mapZoomRange" type="range" min="0.25" max="3.5" step="0.01" value="1" />
+  </label>
+
+  <label class="field-inline" title="Distance : diagonale = 1 case ; 1 case = 1 mètre (modifiable)">
+    <span>Mètres / case</span>
+    <input id="metersPerCell" type="number" min="0.1" max="50" value="1" />
+  </label>
+
+  <div class="hint-inline">
+    <span class="muted">Distance :</span> <b>diag = 1 case</b> (<span class="muted">règle auto</span>)
+  </div>
+
+  <button id="measureBtn" class="icon-btn" type="button" title="Mesure (clique-drag)">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 7v10m4-10v6m4-6v10m4-10v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+
+  <label class="check-inline" title="Afficher la grille">
+    <input id="toggleGridBtn" type="checkbox" checked />
+    <span>Grille</span>
+  </label>
+
+  <button id="mjPingBtn" class="icon-btn" type="button" title="Ping (maintenir G + clic gauche)">
+    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M2 12h4M18 12h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+  </button>
+</div>
+
+<div class="toolbar-row">
+  <label class="check-inline" title="Cacher les noms des tokens côté joueur (contrôlé par le MJ)">
+    <input id="hideTokenNamesPlayer" type="checkbox" />
+    <span>Cacher noms (players)</span>
+  </label>
+</div>
+
+<div class="map-realtime">
+            <div class="map-controls-title">Temps réel (Supabase)</div>
+
+            <div class="form-row">
+              <label>Room (partie)</label>
+              <div class="inline-row">
+                <input id="rtRoom" type="text" placeholder="ex: table-1" />
+                <button id="rtConnectBtn" class="secondary small" type="button">Realtime : OFF</button>
+              </div>
+              <div class="map-hint" style="margin-top:6px">
+                Statut : <span id="rtStatus">non configuré</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label>Lien joueurs</label>
+              <div class="inline-row">
+                <input id="rtPlayerLink" type="text" readonly />
+                <button id="rtCopyBtn" class="secondary small" type="button">Copier</button>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label>Fond via URL (recommandé pour partager la map)</label>
+              <div class="inline-row">
+                <input id="bgUrl" type="text" placeholder="https://.../map.png (ou /assets/map.png)" />
+                <button id="bgUrlBtn" class="secondary small" type="button">Charger</button>
+              </div>
+              <div class="map-hint" style="margin-top:6px">
+                Astuce : évite les fonds en base64 (upload fichier) si tu veux que les joueurs voient la même image.
+              </div>
+            </div>
+          </div>
+
+<div class="map-hint">
+            Outil “Déplacer la map” : drag pour déplacer l’image • Clic droit + drag (ou espace/shift) : déplacer la caméra • Molette : zoom • “Map” dans le tableau : focus token.
+          </div>
+        </div>
+
+        <div class="panel map-canvas">
+          <canvas id="map"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

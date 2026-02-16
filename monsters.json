@@ -1,0 +1,4082 @@
+[
+  {
+    "name": "Aarakocre, aéromancien",
+    "cr": "4",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 16,
+    "hp": 66
+  },
+  {
+    "name": "Aarakocre, tirailleur",
+    "cr": "1/4",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 12,
+    "hp": 11
+  },
+  {
+    "name": "Abattis de troll",
+    "cr": "1/2",
+    "type": "Géant",
+    "size": "P",
+    "ac": 13,
+    "hp": 14
+  },
+  {
+    "name": "Aboleth",
+    "cr": "10",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 17,
+    "hp": 150
+  },
+  {
+    "name": "Aigle",
+    "cr": "0",
+    "type": "Bête",
+    "size": "P",
+    "ac": 12,
+    "hp": 4
+  },
+  {
+    "name": "Aigle géant",
+    "cr": "1",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 13,
+    "hp": 26
+  },
+  {
+    "name": "Allosaure",
+    "cr": "2",
+    "type": "Bête (Dinosaure)",
+    "size": "G",
+    "ac": 13,
+    "hp": 51
+  },
+  {
+    "name": "Âme en peine",
+    "cr": "5",
+    "type": "Mort-vivant",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 67
+  },
+  {
+    "name": "Ankheg",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 14,
+    "hp": 45
+  },
+  {
+    "name": "Ankylosaure",
+    "cr": "3",
+    "type": "Bête (Dinosaure)",
+    "size": "TG",
+    "ac": 15,
+    "hp": 68
+  },
+  {
+    "name": "Araignée",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 12,
+    "hp": 1
+  },
+  {
+    "name": "Araignée de phase",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 14,
+    "hp": 45
+  },
+  {
+    "name": "Araignée géante",
+    "cr": "1",
+    "type": "Bête",
+    "size": "G",
+    "ac": 14,
+    "hp": 26
+  },
+  {
+    "name": "Araignée-loup géante",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "M",
+    "ac": 13,
+    "hp": 11
+  },
+  {
+    "name": "Arbre éveillé",
+    "cr": "2",
+    "type": "Plante",
+    "size": "TG",
+    "ac": 13,
+    "hp": 59
+  },
+  {
+    "name": "Arbroyeux",
+    "cr": "7",
+    "type": "Plante",
+    "size": "TG",
+    "ac": 15,
+    "hp": 115
+  },
+  {
+    "name": "Arbuste éveillé",
+    "cr": "0",
+    "type": "Plante",
+    "size": "P",
+    "ac": 9,
+    "hp": 10
+  },
+  {
+    "name": "Arcanaloth",
+    "cr": "12",
+    "type": "Fiélon (yugoloth)",
+    "size": "M",
+    "ac": 18,
+    "hp": 175
+  },
+  {
+    "name": "Archélon",
+    "cr": "4",
+    "type": "Bête (Dinosaure)",
+    "size": "TG",
+    "ac": 17,
+    "hp": 90
+  },
+  {
+    "name": "Archi-guenaude",
+    "cr": "21",
+    "type": "Fée",
+    "size": "G",
+    "ac": 20,
+    "hp": 333
+  },
+  {
+    "name": "Archimage",
+    "cr": "12",
+    "type": "Humanoïde (magicien)",
+    "size": "M ou P",
+    "ac": 17,
+    "hp": 170
+  },
+  {
+    "name": "Archiprêtre",
+    "cr": "12",
+    "type": "Humanoïde (clerc)",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 240
+  },
+  {
+    "name": "Armure animée",
+    "cr": "1",
+    "type": "Artificiel",
+    "size": "M",
+    "ac": 18,
+    "hp": 33
+  },
+  {
+    "name": "Assassin",
+    "cr": "8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 97
+  },
+  {
+    "name": "Azer, pyromancien",
+    "cr": "6",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 18,
+    "hp": 97
+  },
+  {
+    "name": "Azer, sentinelle",
+    "cr": "2",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 17,
+    "hp": 39
+  },
+  {
+    "name": "Babélien",
+    "cr": "2",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 9,
+    "hp": 52
+  },
+  {
+    "name": "Babouin",
+    "cr": "0",
+    "type": "Bête",
+    "size": "P",
+    "ac": 12,
+    "hp": 3
+  },
+  {
+    "name": "Balai animé",
+    "cr": "1/4",
+    "type": "Artificiel",
+    "size": "P",
+    "ac": 15,
+    "hp": 14
+  },
+  {
+    "name": "Balor",
+    "cr": "19",
+    "type": "Fiélon (démon)",
+    "size": "TG",
+    "ac": 19,
+    "hp": 287
+  },
+  {
+    "name": "Bandit",
+    "cr": "1/8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 12,
+    "hp": 11
+  },
+  {
+    "name": "Bandit, baron du crime",
+    "cr": "11",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 17,
+    "hp": 169
+  },
+  {
+    "name": "Bandit, capitaine",
+    "cr": "2",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 52
+  },
+  {
+    "name": "Bandit, embrouilleur",
+    "cr": "7",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 130
+  },
+  {
+    "name": "Banshie",
+    "cr": "4",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 12,
+    "hp": 54
+  },
+  {
+    "name": "Barlgura",
+    "cr": "5",
+    "type": "Fiélon (démon)",
+    "size": "G",
+    "ac": 15,
+    "hp": 85
+  },
+  {
+    "name": "Basilic",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 15,
+    "hp": 52
+  },
+  {
+    "name": "Bec de hache géant|Autrache géante",
+    "cr": "5",
+    "type": "Monstruosité",
+    "size": "TG",
+    "ac": 15,
+    "hp": 84
+  },
+  {
+    "name": "Bec de hache|Autrache",
+    "cr": "1/4",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 11,
+    "hp": 19
+  },
+  {
+    "name": "Béhir",
+    "cr": "11",
+    "type": "Monstruosité",
+    "size": "TG",
+    "ac": 17,
+    "hp": 168
+  },
+  {
+    "name": "Belette",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 13,
+    "hp": 1
+  },
+  {
+    "name": "Belette géante",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "M",
+    "ac": 13,
+    "hp": 9
+  },
+  {
+    "name": "Berserker",
+    "cr": "2",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 67
+  },
+  {
+    "name": "Berserker, chef",
+    "cr": "8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 136
+  },
+  {
+    "name": "Bête éclipsante",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 13,
+    "hp": 76
+  },
+  {
+    "name": "Blaireau",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 11,
+    "hp": 5
+  },
+  {
+    "name": "Blaireau géant",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "M",
+    "ac": 13,
+    "hp": 15
+  },
+  {
+    "name": "Blême",
+    "cr": "2",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 13,
+    "hp": 36
+  },
+  {
+    "name": "Blême fossoyeuse",
+    "cr": "6",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 16,
+    "hp": 97
+  },
+  {
+    "name": "Blob d'annihilation",
+    "cr": "23",
+    "type": "Vase (titan)",
+    "size": "Gig",
+    "ac": 18,
+    "hp": 448
+  },
+  {
+    "name": "Brutacien, guerrier",
+    "cr": "1/4",
+    "type": "Fée",
+    "size": "M",
+    "ac": 15,
+    "hp": 11
+  },
+  {
+    "name": "Brutacien, sage du marais",
+    "cr": "4",
+    "type": "Fée",
+    "size": "M",
+    "ac": 16,
+    "hp": 52
+  },
+  {
+    "name": "Bulette",
+    "cr": "5",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 17,
+    "hp": 94
+  },
+  {
+    "name": "Bulettiot",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 16,
+    "hp": 45
+  },
+  {
+    "name": "Calamar géant",
+    "cr": "6",
+    "type": "Bête",
+    "size": "TG",
+    "ac": 12,
+    "hp": 120
+  },
+  {
+    "name": "Cambion",
+    "cr": "5",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 19,
+    "hp": 105
+  },
+  {
+    "name": "Cataclysme élémentaire",
+    "cr": "22",
+    "type": "Élémentaire (titan)",
+    "size": "Gig",
+    "ac": 20,
+    "hp": 370
+  },
+  {
+    "name": "Centaure, gardien",
+    "cr": "7",
+    "type": "Fée",
+    "size": "G",
+    "ac": 16,
+    "hp": 105
+  },
+  {
+    "name": "Centaure, soldat",
+    "cr": "2",
+    "type": "Fée",
+    "size": "G",
+    "ac": 16,
+    "hp": 45
+  },
+  {
+    "name": "Cerf",
+    "cr": "0",
+    "type": "Bête",
+    "size": "M",
+    "ac": 13,
+    "hp": 4
+  },
+  {
+    "name": "Chacal",
+    "cr": "0",
+    "type": "Bête",
+    "size": "P",
+    "ac": 12,
+    "hp": 3
+  },
+  {
+    "name": "Chameau",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "G",
+    "ac": 10,
+    "hp": 17
+  },
+  {
+    "name": "Charognard rampant",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 13,
+    "hp": 51
+  },
+  {
+    "name": "Chasme",
+    "cr": "6",
+    "type": "Fiélon (démon)",
+    "size": "G",
+    "ac": 15,
+    "hp": 78
+  },
+  {
+    "name": "Chat",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 12,
+    "hp": 2
+  },
+  {
+    "name": "Chauve-souris",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 12,
+    "hp": 1
+  },
+  {
+    "name": "Chauve-souris géante",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "G",
+    "ac": 13,
+    "hp": 22
+  },
+  {
+    "name": "Cheval de guerre",
+    "cr": "1/2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 11,
+    "hp": 19
+  },
+  {
+    "name": "Cheval de guerre squelette",
+    "cr": "1/2",
+    "type": "Mort-vivant",
+    "size": "G",
+    "ac": 13,
+    "hp": 22
+  },
+  {
+    "name": "Cheval de selle",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "G",
+    "ac": 11,
+    "hp": 13
+  },
+  {
+    "name": "Cheval de trait",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "G",
+    "ac": 10,
+    "hp": 15
+  },
+  {
+    "name": "Chevalier",
+    "cr": "3",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 18,
+    "hp": 52
+  },
+  {
+    "name": "Chevalier de la mort",
+    "cr": "17",
+    "type": "Mort-vivant",
+    "size": "M ou P",
+    "ac": 20,
+    "hp": 199
+  },
+  {
+    "name": "Chevalier de la mort, aspirant",
+    "cr": "11",
+    "type": "Mort-vivant",
+    "size": "M ou P",
+    "ac": 20,
+    "hp": 178
+  },
+  {
+    "name": "Chevalier errant",
+    "cr": "12",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 18,
+    "hp": 202
+  },
+  {
+    "name": "Chèvre",
+    "cr": "0",
+    "type": "Bête",
+    "size": "M",
+    "ac": 10,
+    "hp": 4
+  },
+  {
+    "name": "Chèvre géante",
+    "cr": "1/2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 11,
+    "hp": 19
+  },
+  {
+    "name": "Chien de chasse infernal",
+    "cr": "3",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 15,
+    "hp": 58
+  },
+  {
+    "name": "Chien du trépas",
+    "cr": "1",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 12,
+    "hp": 39
+  },
+  {
+    "name": "Chien esquiveur",
+    "cr": "1/4",
+    "type": "Fée",
+    "size": "M",
+    "ac": 13,
+    "hp": 16
+  },
+  {
+    "name": "Chimère",
+    "cr": "6",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 14,
+    "hp": 114
+  },
+  {
+    "name": "Chouette",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 11,
+    "hp": 1
+  },
+  {
+    "name": "Chouette géante",
+    "cr": "1/4",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 12,
+    "hp": 19
+  },
+  {
+    "name": "Chuul",
+    "cr": "4",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 16,
+    "hp": 76
+  },
+  {
+    "name": "Cockatrice",
+    "cr": "1/2",
+    "type": "Monstruosité",
+    "size": "P",
+    "ac": 11,
+    "hp": 22
+  },
+  {
+    "name": "Cockatrice souveraine",
+    "cr": "8",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 15,
+    "hp": 136
+  },
+  {
+    "name": "Colosse",
+    "cr": "25",
+    "type": "Artificiel (titan)",
+    "size": "Gig",
+    "ac": 23,
+    "hp": 553
+  },
+  {
+    "name": "Combattant, commandant",
+    "cr": "10",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 18,
+    "hp": 161
+  },
+  {
+    "name": "Combattant, fantassin",
+    "cr": "1/8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 9
+  },
+  {
+    "name": "Combattant, vétéran",
+    "cr": "3",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 17,
+    "hp": 65
+  },
+  {
+    "name": "Corbeau",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 12,
+    "hp": 2
+  },
+  {
+    "name": "Couatl",
+    "cr": "4",
+    "type": "Céleste",
+    "size": "M",
+    "ac": 19,
+    "hp": 60
+  },
+  {
+    "name": "Crabe",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 11,
+    "hp": 3
+  },
+  {
+    "name": "Crabe géant",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "M",
+    "ac": 15,
+    "hp": 13
+  },
+  {
+    "name": "Crânefeu",
+    "cr": "4",
+    "type": "Mort-vivant",
+    "size": "TP",
+    "ac": 13,
+    "hp": 40
+  },
+  {
+    "name": "Crapaud géant",
+    "cr": "1",
+    "type": "Bête",
+    "size": "G",
+    "ac": 11,
+    "hp": 39
+  },
+  {
+    "name": "Crocodile",
+    "cr": "1/2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 12,
+    "hp": 13
+  },
+  {
+    "name": "Crocodile géant",
+    "cr": "5",
+    "type": "Bête",
+    "size": "TG",
+    "ac": 14,
+    "hp": 85
+  },
+  {
+    "name": "Cube gélatineux",
+    "cr": "2",
+    "type": "Vase",
+    "size": "G",
+    "ac": 6,
+    "hp": 63
+  },
+  {
+    "name": "Cultiste",
+    "cr": "1/8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 12,
+    "hp": 9
+  },
+  {
+    "name": "Cultiste, d'Aberration",
+    "cr": "8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 14,
+    "hp": 137
+  },
+  {
+    "name": "Cultiste, d'Élémentaire",
+    "cr": "8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 135
+  },
+  {
+    "name": "Cultiste, de Fiélon",
+    "cr": "8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 127
+  },
+  {
+    "name": "Cultiste, fanatique",
+    "cr": "2",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 44
+  },
+  {
+    "name": "Cultiste, funeste",
+    "cr": "8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 17,
+    "hp": 127
+  },
+  {
+    "name": "Cultiste, hiérophante",
+    "cr": "10",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 144
+  },
+  {
+    "name": "Cyclope, oracle",
+    "cr": "10",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 16,
+    "hp": 207
+  },
+  {
+    "name": "Cyclope, sentinelle",
+    "cr": "6",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 14,
+    "hp": 138
+  },
+  {
+    "name": "Dao",
+    "cr": "11",
+    "type": "Élémentaire (génie)",
+    "size": "G",
+    "ac": 18,
+    "hp": 200
+  },
+  {
+    "name": "Demi-dragon",
+    "cr": "5",
+    "type": "Dragon",
+    "size": "M",
+    "ac": 18,
+    "hp": 105
+  },
+  {
+    "name": "Demi-liche",
+    "cr": "18",
+    "type": "Mort-vivant",
+    "size": "TP",
+    "ac": 20,
+    "hp": 180
+  },
+  {
+    "name": "Démon des ombres",
+    "cr": "4",
+    "type": "Fiélon (démon)",
+    "size": "M",
+    "ac": 14,
+    "hp": 66
+  },
+  {
+    "name": "Déva",
+    "cr": "10",
+    "type": "Céleste (ange)",
+    "size": "M",
+    "ac": 17,
+    "hp": 229
+  },
+  {
+    "name": "Dévoreur d'intellect",
+    "cr": "2",
+    "type": "Aberration",
+    "size": "TP",
+    "ac": 12,
+    "hp": 28
+  },
+  {
+    "name": "Diable barbelé",
+    "cr": "5",
+    "type": "Fiélon (diable)",
+    "size": "M",
+    "ac": 15,
+    "hp": 110
+  },
+  {
+    "name": "Diable barbu",
+    "cr": "3",
+    "type": "Fiélon (diable)",
+    "size": "M",
+    "ac": 13,
+    "hp": 58
+  },
+  {
+    "name": "Diable cornu",
+    "cr": "11",
+    "type": "Fiélon (diable)",
+    "size": "G",
+    "ac": 18,
+    "hp": 199
+  },
+  {
+    "name": "Diable des chaînes",
+    "cr": "8",
+    "type": "Fiélon (diable)",
+    "size": "M",
+    "ac": 15,
+    "hp": 85
+  },
+  {
+    "name": "Diable épineux",
+    "cr": "2",
+    "type": "Fiélon (diable)",
+    "size": "P",
+    "ac": 13,
+    "hp": 45
+  },
+  {
+    "name": "Diable gelé",
+    "cr": "14",
+    "type": "Fiélon (diable)",
+    "size": "G",
+    "ac": 18,
+    "hp": 228
+  },
+  {
+    "name": "Diable osseux",
+    "cr": "9",
+    "type": "Fiélon (diable)",
+    "size": "G",
+    "ac": 16,
+    "hp": 161
+  },
+  {
+    "name": "Diablotin",
+    "cr": "1",
+    "type": "Fiélon (diable)",
+    "size": "TP",
+    "ac": 13,
+    "hp": 21
+  },
+  {
+    "name": "Diantrefosse",
+    "cr": "20",
+    "type": "Fiélon (diable)",
+    "size": "G",
+    "ac": 21,
+    "hp": 337
+  },
+  {
+    "name": "Djinn",
+    "cr": "11",
+    "type": "Élémentaire (génie)",
+    "size": "G",
+    "ac": 17,
+    "hp": 218
+  },
+  {
+    "name": "Doppelganger",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 14,
+    "hp": 52
+  },
+  {
+    "name": "Dracoliche",
+    "cr": "17",
+    "type": "Mort-vivant",
+    "size": "TG ou Gig",
+    "ac": 20,
+    "hp": 225
+  },
+  {
+    "name": "Dragon blanc, adulte",
+    "cr": "13",
+    "type": "Dragon (chromatique)",
+    "size": "TG",
+    "ac": 18,
+    "hp": 200
+  },
+  {
+    "name": "Dragon blanc, ancien",
+    "cr": "20",
+    "type": "Dragon (chromatique)",
+    "size": "Gig",
+    "ac": 20,
+    "hp": 333
+  },
+  {
+    "name": "Dragon blanc, dragonnet",
+    "cr": "2",
+    "type": "Dragon (chromatique)",
+    "size": "M",
+    "ac": 16,
+    "hp": 32
+  },
+  {
+    "name": "Dragon blanc, jeune",
+    "cr": "6",
+    "type": "Dragon (chromatique)",
+    "size": "G",
+    "ac": 17,
+    "hp": 123
+  },
+  {
+    "name": "Dragon bleu, adulte",
+    "cr": "16",
+    "type": "Dragon (chromatique)",
+    "size": "TG",
+    "ac": 19,
+    "hp": 212
+  },
+  {
+    "name": "Dragon bleu, ancien",
+    "cr": "23",
+    "type": "Dragon (chromatique)",
+    "size": "Gig",
+    "ac": 22,
+    "hp": 481
+  },
+  {
+    "name": "Dragon bleu, dragonnet",
+    "cr": "3",
+    "type": "Dragon (chromatique)",
+    "size": "M",
+    "ac": 17,
+    "hp": 65
+  },
+  {
+    "name": "Dragon bleu, jeune",
+    "cr": "9",
+    "type": "Dragon (chromatique)",
+    "size": "G",
+    "ac": 18,
+    "hp": 152
+  },
+  {
+    "name": "Dragon d'airain, adulte",
+    "cr": "13",
+    "type": "Dragon (métallique)",
+    "size": "TG",
+    "ac": 18,
+    "hp": 172
+  },
+  {
+    "name": "Dragon d'airain, ancien",
+    "cr": "20",
+    "type": "Dragon (métallique)",
+    "size": "Gig",
+    "ac": 20,
+    "hp": 332
+  },
+  {
+    "name": "Dragon d'airain, dragonnet",
+    "cr": "1",
+    "type": "Dragon (métallique)",
+    "size": "M",
+    "ac": 15,
+    "hp": 22
+  },
+  {
+    "name": "Dragon d'airain, jeune",
+    "cr": "6",
+    "type": "Dragon (métallique)",
+    "size": "G",
+    "ac": 17,
+    "hp": 110
+  },
+  {
+    "name": "Dragon d'argent, adulte",
+    "cr": "16",
+    "type": "Dragon (métallique)",
+    "size": "TG",
+    "ac": 19,
+    "hp": 216
+  },
+  {
+    "name": "Dragon d'argent, ancien",
+    "cr": "23",
+    "type": "Dragon (métallique)",
+    "size": "Gig",
+    "ac": 22,
+    "hp": 468
+  },
+  {
+    "name": "Dragon d'argent, dragonnet",
+    "cr": "2",
+    "type": "Dragon (métallique)",
+    "size": "M",
+    "ac": 17,
+    "hp": 45
+  },
+  {
+    "name": "Dragon d'argent, jeune",
+    "cr": "9",
+    "type": "Dragon (métallique)",
+    "size": "G",
+    "ac": 18,
+    "hp": 168
+  },
+  {
+    "name": "Dragon d'ombre",
+    "cr": "13",
+    "type": "Dragon",
+    "size": "TG",
+    "ac": 16,
+    "hp": 189
+  },
+  {
+    "name": "Dragon d'ombre immature",
+    "cr": "4",
+    "type": "Dragon",
+    "size": "M",
+    "ac": 15,
+    "hp": 45
+  },
+  {
+    "name": "Dragon d'or, adulte",
+    "cr": "17",
+    "type": "Dragon (métallique)",
+    "size": "TG",
+    "ac": 19,
+    "hp": 243
+  },
+  {
+    "name": "Dragon d'or, ancien",
+    "cr": "24",
+    "type": "Dragon (métallique)",
+    "size": "Gig",
+    "ac": 22,
+    "hp": 546
+  },
+  {
+    "name": "Dragon d'or, dragonnet",
+    "cr": "3",
+    "type": "Dragon (métallique)",
+    "size": "M",
+    "ac": 17,
+    "hp": 60
+  },
+  {
+    "name": "Dragon d'or, jeune",
+    "cr": "10",
+    "type": "Dragon (métallique)",
+    "size": "G",
+    "ac": 18,
+    "hp": 178
+  },
+  {
+    "name": "Dragon de bronze, adulte",
+    "cr": "15",
+    "type": "Dragon (métallique)",
+    "size": "TG",
+    "ac": 18,
+    "hp": 212
+  },
+  {
+    "name": "Dragon de bronze, ancien",
+    "cr": "22",
+    "type": "Dragon (métallique)",
+    "size": "Gig",
+    "ac": 22,
+    "hp": 444
+  },
+  {
+    "name": "Dragon de bronze, dragonnet",
+    "cr": "2",
+    "type": "Dragon (métallique)",
+    "size": "M",
+    "ac": 15,
+    "hp": 39
+  },
+  {
+    "name": "Dragon de bronze, jeune",
+    "cr": "8",
+    "type": "Dragon (métallique)",
+    "size": "G",
+    "ac": 17,
+    "hp": 142
+  },
+  {
+    "name": "Dragon de cuivre, adulte",
+    "cr": "14",
+    "type": "Dragon (métallique)",
+    "size": "TG",
+    "ac": 18,
+    "hp": 184
+  },
+  {
+    "name": "Dragon de cuivre, ancien",
+    "cr": "21",
+    "type": "Dragon (métallique)",
+    "size": "Gig",
+    "ac": 21,
+    "hp": 367
+  },
+  {
+    "name": "Dragon de cuivre, dragonnet",
+    "cr": "1",
+    "type": "Dragon (métallique)",
+    "size": "M",
+    "ac": 16,
+    "hp": 22
+  },
+  {
+    "name": "Dragon de cuivre, jeune",
+    "cr": "7",
+    "type": "Dragon (métallique)",
+    "size": "G",
+    "ac": 17,
+    "hp": 119
+  },
+  {
+    "name": "Dragon féerique, adulte",
+    "cr": "2",
+    "type": "Dragon",
+    "size": "TP",
+    "ac": 15,
+    "hp": 35
+  },
+  {
+    "name": "Dragon féerique, juvénile",
+    "cr": "1",
+    "type": "Dragon",
+    "size": "TP",
+    "ac": 13,
+    "hp": 21
+  },
+  {
+    "name": "Dragon noir, adulte",
+    "cr": "14",
+    "type": "Dragon (chromatique)",
+    "size": "TG",
+    "ac": 19,
+    "hp": 195
+  },
+  {
+    "name": "Dragon noir, ancien",
+    "cr": "21",
+    "type": "Dragon (chromatique)",
+    "size": "Gig",
+    "ac": 22,
+    "hp": 367
+  },
+  {
+    "name": "Dragon noir, dragonnet",
+    "cr": "2",
+    "type": "Dragon (chromatique)",
+    "size": "M",
+    "ac": 17,
+    "hp": 33
+  },
+  {
+    "name": "Dragon noir, jeune",
+    "cr": "7",
+    "type": "Dragon (chromatique)",
+    "size": "G",
+    "ac": 18,
+    "hp": 127
+  },
+  {
+    "name": "Dragon rouge, adulte",
+    "cr": "17",
+    "type": "Dragon (chromatique)",
+    "size": "TG",
+    "ac": 19,
+    "hp": 256
+  },
+  {
+    "name": "Dragon rouge, ancien",
+    "cr": "24",
+    "type": "Dragon (chromatique)",
+    "size": "Gig",
+    "ac": 22,
+    "hp": 507
+  },
+  {
+    "name": "Dragon rouge, dragonnet",
+    "cr": "4",
+    "type": "Dragon (chromatique)",
+    "size": "M",
+    "ac": 17,
+    "hp": 75
+  },
+  {
+    "name": "Dragon rouge, jeune",
+    "cr": "10",
+    "type": "Dragon (chromatique)",
+    "size": "G",
+    "ac": 18,
+    "hp": 178
+  },
+  {
+    "name": "Dragon vert, adulte",
+    "cr": "15",
+    "type": "Dragon (chromatique)",
+    "size": "TG",
+    "ac": 19,
+    "hp": 207
+  },
+  {
+    "name": "Dragon vert, ancien",
+    "cr": "22",
+    "type": "Dragon (chromatique)",
+    "size": "Gig",
+    "ac": 21,
+    "hp": 402
+  },
+  {
+    "name": "Dragon vert, dragonnet",
+    "cr": "2",
+    "type": "Dragon (chromatique)",
+    "size": "M",
+    "ac": 17,
+    "hp": 38
+  },
+  {
+    "name": "Dragon vert, jeune",
+    "cr": "8",
+    "type": "Dragon (chromatique)",
+    "size": "G",
+    "ac": 18,
+    "hp": 136
+  },
+  {
+    "name": "Dragon-tortue",
+    "cr": "17",
+    "type": "Dragon",
+    "size": "Gig",
+    "ac": 20,
+    "hp": 356
+  },
+  {
+    "name": "Dretch",
+    "cr": "1/4",
+    "type": "Fiélon (démon)",
+    "size": "P",
+    "ac": 11,
+    "hp": 18
+  },
+  {
+    "name": "Drider",
+    "cr": "6",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 19,
+    "hp": 123
+  },
+  {
+    "name": "Druide",
+    "cr": "2",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 44
+  },
+  {
+    "name": "Dryade",
+    "cr": "1",
+    "type": "Fée",
+    "size": "M",
+    "ac": 16,
+    "hp": 22
+  },
+  {
+    "name": "Éclaireur",
+    "cr": "1/2",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 16
+  },
+  {
+    "name": "Éclaireur, capitaine",
+    "cr": "3",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 66
+  },
+  {
+    "name": "Éfrit",
+    "cr": "11",
+    "type": "Élémentaire (génie)",
+    "size": "G",
+    "ac": 17,
+    "hp": 212
+  },
+  {
+    "name": "Élan géant",
+    "cr": "2",
+    "type": "Céleste",
+    "size": "TG",
+    "ac": 14,
+    "hp": 42
+  },
+  {
+    "name": "Élan|Grand cervidé",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "G",
+    "ac": 10,
+    "hp": 11
+  },
+  {
+    "name": "Élémentaire de l'air",
+    "cr": "5",
+    "type": "Élémentaire",
+    "size": "G",
+    "ac": 15,
+    "hp": 90
+  },
+  {
+    "name": "Élémentaire de l'eau",
+    "cr": "5",
+    "type": "Élémentaire",
+    "size": "G",
+    "ac": 14,
+    "hp": 114
+  },
+  {
+    "name": "Élémentaire de la terre",
+    "cr": "5",
+    "type": "Élémentaire",
+    "size": "G",
+    "ac": 17,
+    "hp": 147
+  },
+  {
+    "name": "Élémentaire du feu",
+    "cr": "5",
+    "type": "Élémentaire",
+    "size": "G",
+    "ac": 13,
+    "hp": 93
+  },
+  {
+    "name": "Éléphant",
+    "cr": "4",
+    "type": "Bête",
+    "size": "TG",
+    "ac": 12,
+    "hp": 76
+  },
+  {
+    "name": "Empyréen",
+    "cr": "23",
+    "type": "Céleste ou Fiélon (titan)",
+    "size": "TG",
+    "ac": 22,
+    "hp": 346
+  },
+  {
+    "name": "Empyréen iota",
+    "cr": "1",
+    "type": "Céleste ou Fiélon (titan)",
+    "size": "M",
+    "ac": 13,
+    "hp": 22
+  },
+  {
+    "name": "Enlaceur",
+    "cr": "5",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 20,
+    "hp": 93
+  },
+  {
+    "name": "Épaulard",
+    "cr": "3",
+    "type": "Bête",
+    "size": "TG",
+    "ac": 12,
+    "hp": 90
+  },
+  {
+    "name": "Épée volante animée",
+    "cr": "1/4",
+    "type": "Artificiel",
+    "size": "P",
+    "ac": 17,
+    "hp": 14
+  },
+  {
+    "name": "Épouvantail",
+    "cr": "1",
+    "type": "Artificiel",
+    "size": "M",
+    "ac": 11,
+    "hp": 27
+  },
+  {
+    "name": "Érinye",
+    "cr": "12",
+    "type": "Fiélon (diable)",
+    "size": "M",
+    "ac": 18,
+    "hp": 178
+  },
+  {
+    "name": "Espion",
+    "cr": "1",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 12,
+    "hp": 27
+  },
+  {
+    "name": "Espion, maître",
+    "cr": "10",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 19,
+    "hp": 137
+  },
+  {
+    "name": "Esprit aberrant",
+    "cr": "aucun",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 11,
+    "hp": 40
+  },
+  {
+    "name": "Esprit artificiel",
+    "cr": "aucun",
+    "type": "Artificiel",
+    "size": "M",
+    "ac": 13,
+    "hp": 40
+  },
+  {
+    "name": "Esprit bestial",
+    "cr": "aucun",
+    "type": "Bête",
+    "size": "P",
+    "ac": 11,
+    "hp": 20
+  },
+  {
+    "name": "Esprit céleste",
+    "cr": "aucun",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 11,
+    "hp": 40
+  },
+  {
+    "name": "Esprit draconique",
+    "cr": "aucun",
+    "type": "Dragon",
+    "size": "G",
+    "ac": 14,
+    "hp": 50
+  },
+  {
+    "name": "Esprit élémentaire",
+    "cr": "aucun",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 11,
+    "hp": 50
+  },
+  {
+    "name": "Esprit féerique",
+    "cr": "aucun",
+    "type": "Fée",
+    "size": "P",
+    "ac": 12,
+    "hp": 30
+  },
+  {
+    "name": "Esprit fiélon",
+    "cr": "aucun",
+    "type": "Fiélon",
+    "size": "G",
+    "ac": 12,
+    "hp": 50
+  },
+  {
+    "name": "Esprit follet",
+    "cr": "1/4",
+    "type": "Fée",
+    "size": "TP",
+    "ac": 15,
+    "hp": 10
+  },
+  {
+    "name": "Esprit mort-vivant",
+    "cr": "aucun",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 11,
+    "hp": 30
+  },
+  {
+    "name": "Ettercap",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 13,
+    "hp": 44
+  },
+  {
+    "name": "Ettin",
+    "cr": "4",
+    "type": "Géant",
+    "size": "G",
+    "ac": 12,
+    "hp": 85
+  },
+  {
+    "name": "Familier de vampire",
+    "cr": "3",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 65
+  },
+  {
+    "name": "Fantôme",
+    "cr": "4",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 11,
+    "hp": 45
+  },
+  {
+    "name": "Faucon",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 13,
+    "hp": 1
+  },
+  {
+    "name": "Faucon de sang",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "P",
+    "ac": 12,
+    "hp": 7
+  },
+  {
+    "name": "Feu follet",
+    "cr": "2",
+    "type": "Mort-vivant",
+    "size": "TP",
+    "ac": 19,
+    "hp": 27
+  },
+  {
+    "name": "Flagelleur mental",
+    "cr": "7",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 15,
+    "hp": 99
+  },
+  {
+    "name": "Flagelleur mental, arcaniste",
+    "cr": "11",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 16,
+    "hp": 143
+  },
+  {
+    "name": "Flumph",
+    "cr": "1/8",
+    "type": "Aberration",
+    "size": "P",
+    "ac": 12,
+    "hp": 7
+  },
+  {
+    "name": "Fomoire",
+    "cr": "8",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 14,
+    "hp": 172
+  },
+  {
+    "name": "Galeb Duhr",
+    "cr": "6",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 16,
+    "hp": 123
+  },
+  {
+    "name": "Garde",
+    "cr": "1/8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 11
+  },
+  {
+    "name": "Garde bouclier|animé",
+    "cr": "7",
+    "type": "Artificiel",
+    "size": "G",
+    "ac": 17,
+    "hp": 142
+  },
+  {
+    "name": "Garde, capitaine",
+    "cr": "4",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 18,
+    "hp": 75
+  },
+  {
+    "name": "Gargouille",
+    "cr": "2",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 15,
+    "hp": 67
+  },
+  {
+    "name": "Garou-chacal",
+    "cr": "1/2",
+    "type": "Fiélon",
+    "size": "P",
+    "ac": 12,
+    "hp": 18
+  },
+  {
+    "name": "Géant des collines",
+    "cr": "5",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 13,
+    "hp": 105
+  },
+  {
+    "name": "Géant des nuages",
+    "cr": "9",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 14,
+    "hp": 200
+  },
+  {
+    "name": "Géant des pierres",
+    "cr": "7",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 17,
+    "hp": 126
+  },
+  {
+    "name": "Géant des tempêtes",
+    "cr": "13",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 16,
+    "hp": 230
+  },
+  {
+    "name": "Géant du feu",
+    "cr": "9",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 18,
+    "hp": 162
+  },
+  {
+    "name": "Géant du givre",
+    "cr": "8",
+    "type": "Géant",
+    "size": "TG",
+    "ac": 15,
+    "hp": 149
+  },
+  {
+    "name": "Gelée ocre",
+    "cr": "2",
+    "type": "Vase",
+    "size": "G",
+    "ac": 8,
+    "hp": 52
+  },
+  {
+    "name": "Githyanki, chevalier",
+    "cr": "8",
+    "type": "Aberration (gith)",
+    "size": "M",
+    "ac": 18,
+    "hp": 117
+  },
+  {
+    "name": "Githyanki, combattant",
+    "cr": "3",
+    "type": "Aberration (gith)",
+    "size": "M",
+    "ac": 17,
+    "hp": 49
+  },
+  {
+    "name": "Githyanki, dracomancien",
+    "cr": "16",
+    "type": "Aberration (gith)",
+    "size": "M",
+    "ac": 18,
+    "hp": 255
+  },
+  {
+    "name": "Githzerai, moine",
+    "cr": "2",
+    "type": "Aberration (gith)",
+    "size": "M",
+    "ac": 14,
+    "hp": 38
+  },
+  {
+    "name": "Githzerai, psion",
+    "cr": "12",
+    "type": "Aberration (gith)",
+    "size": "M",
+    "ac": 18,
+    "hp": 169
+  },
+  {
+    "name": "Githzerai, zerth",
+    "cr": "6",
+    "type": "Aberration (gith)",
+    "size": "M",
+    "ac": 17,
+    "hp": 84
+  },
+  {
+    "name": "Glabrezu",
+    "cr": "9",
+    "type": "Fiélon (démon)",
+    "size": "G",
+    "ac": 17,
+    "hp": 189
+  },
+  {
+    "name": "Gladiateur",
+    "cr": "5",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 112
+  },
+  {
+    "name": "Gnoll, chef de meute",
+    "cr": "2",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 15,
+    "hp": 49
+  },
+  {
+    "name": "Gnoll, croc de Yeenoghu",
+    "cr": "4",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 14,
+    "hp": 71
+  },
+  {
+    "name": "Gnoll, démoniaque",
+    "cr": "8",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 16,
+    "hp": 135
+  },
+  {
+    "name": "Gnoll, guerrier",
+    "cr": "1/2",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 15,
+    "hp": 27
+  },
+  {
+    "name": "Gobelin, chef",
+    "cr": "1",
+    "type": "Fée (gobelinoïde)",
+    "size": "P",
+    "ac": 17,
+    "hp": 21
+  },
+  {
+    "name": "Gobelin, guerrier",
+    "cr": "1/4",
+    "type": "Fée (gobelinoïde)",
+    "size": "P",
+    "ac": 15,
+    "hp": 10
+  },
+  {
+    "name": "Gobelin, maléficeur",
+    "cr": "3",
+    "type": "Fée (gobelinoïde)",
+    "size": "P",
+    "ac": 13,
+    "hp": 45
+  },
+  {
+    "name": "Gobelin, sbire",
+    "cr": "1/8",
+    "type": "Fée (gobelinoïde)",
+    "size": "P",
+    "ac": 12,
+    "hp": 7
+  },
+  {
+    "name": "Gobelours, guerrier",
+    "cr": "1",
+    "type": "Fée (gobelinoïde)",
+    "size": "M",
+    "ac": 14,
+    "hp": 33
+  },
+  {
+    "name": "Gobelours, traqueur",
+    "cr": "3",
+    "type": "Fée (gobelinoïde)",
+    "size": "M",
+    "ac": 15,
+    "hp": 65
+  },
+  {
+    "name": "Golem d'argile",
+    "cr": "9",
+    "type": "Artificiel",
+    "size": "G",
+    "ac": 14,
+    "hp": 123
+  },
+  {
+    "name": "Golem de chair",
+    "cr": "5",
+    "type": "Artificiel",
+    "size": "M",
+    "ac": 9,
+    "hp": 127
+  },
+  {
+    "name": "Golem de fer",
+    "cr": "16",
+    "type": "Artificiel",
+    "size": "G",
+    "ac": 20,
+    "hp": 252
+  },
+  {
+    "name": "Golem de pierre",
+    "cr": "10",
+    "type": "Artificiel",
+    "size": "G",
+    "ac": 18,
+    "hp": 220
+  },
+  {
+    "name": "Gorgon ardente",
+    "cr": "9",
+    "type": "Artificiel",
+    "size": "G",
+    "ac": 19,
+    "hp": 161
+  },
+  {
+    "name": "Gorgone",
+    "cr": "5",
+    "type": "Artificiel",
+    "size": "G",
+    "ac": 19,
+    "hp": 114
+  },
+  {
+    "name": "Goristro",
+    "cr": "17",
+    "type": "Fiélon (démon)",
+    "size": "TG",
+    "ac": 19,
+    "hp": 310
+  },
+  {
+    "name": "Goule",
+    "cr": "1",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 12,
+    "hp": 22
+  },
+  {
+    "name": "Goule lacédone",
+    "cr": "1",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 12,
+    "hp": 22
+  },
+  {
+    "name": "Grand singe",
+    "cr": "1/2",
+    "type": "Bête",
+    "size": "M",
+    "ac": 12,
+    "hp": 19
+  },
+  {
+    "name": "Grell",
+    "cr": "3",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 12,
+    "hp": 55
+  },
+  {
+    "name": "Grenouille",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 11,
+    "hp": 1
+  },
+  {
+    "name": "Grenouille géante",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "M",
+    "ac": 11,
+    "hp": 18
+  },
+  {
+    "name": "Grick",
+    "cr": "2",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 14,
+    "hp": 54
+  },
+  {
+    "name": "Grick vénérable",
+    "cr": "7",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 18,
+    "hp": 135
+  },
+  {
+    "name": "Griffe rampante|Sénestre",
+    "cr": "0",
+    "type": "Mort-vivant",
+    "size": "TP",
+    "ac": 12,
+    "hp": 2
+  },
+  {
+    "name": "Griffon",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 12,
+    "hp": 59
+  },
+  {
+    "name": "Gros-bras",
+    "cr": "1/2",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 12,
+    "hp": 32
+  },
+  {
+    "name": "Gros-bras, chef",
+    "cr": "4",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 82
+  },
+  {
+    "name": "Guenaude marine",
+    "cr": "2",
+    "type": "Fée",
+    "size": "M",
+    "ac": 14,
+    "hp": 52
+  },
+  {
+    "name": "Guenaude nocturne",
+    "cr": "5",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 17,
+    "hp": 112
+  },
+  {
+    "name": "Guenaude verte",
+    "cr": "3",
+    "type": "Fée",
+    "size": "M",
+    "ac": 17,
+    "hp": 82
+  },
+  {
+    "name": "Guêpe géante",
+    "cr": "1/2",
+    "type": "Bête",
+    "size": "M",
+    "ac": 13,
+    "hp": 22
+  },
+  {
+    "name": "Harpie",
+    "cr": "1",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 11,
+    "hp": 38
+  },
+  {
+    "name": "Hezrou",
+    "cr": "8",
+    "type": "Fiélon (démon)",
+    "size": "G",
+    "ac": 18,
+    "hp": 157
+  },
+  {
+    "name": "Hippocampe",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 12,
+    "hp": 1
+  },
+  {
+    "name": "Hippocampe géant",
+    "cr": "1/2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 14,
+    "hp": 16
+  },
+  {
+    "name": "Hippogriffe",
+    "cr": "1",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 11,
+    "hp": 26
+  },
+  {
+    "name": "Hippopotame",
+    "cr": "4",
+    "type": "Bête",
+    "size": "G",
+    "ac": 14,
+    "hp": 82
+  },
+  {
+    "name": "Hobgobelin, capitaine",
+    "cr": "3",
+    "type": "Fée (gobelinoïde)",
+    "size": "M",
+    "ac": 17,
+    "hp": 58
+  },
+  {
+    "name": "Hobgobelin, guerrier",
+    "cr": "1/2",
+    "type": "Fée (gobelinoïde)",
+    "size": "M",
+    "ac": 18,
+    "hp": 11
+  },
+  {
+    "name": "Hobgobelin, seigneur de guerre",
+    "cr": "6",
+    "type": "Fée (gobelinoïde)",
+    "size": "M",
+    "ac": 20,
+    "hp": 112
+  },
+  {
+    "name": "Homoncule",
+    "cr": "0",
+    "type": "Artificiel",
+    "size": "TP",
+    "ac": 13,
+    "hp": 4
+  },
+  {
+    "name": "Horreur casquée",
+    "cr": "4",
+    "type": "Artificiel",
+    "size": "M",
+    "ac": 20,
+    "hp": 67
+  },
+  {
+    "name": "Horreur crochue",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 15,
+    "hp": 75
+  },
+  {
+    "name": "Horriflamme",
+    "cr": "3",
+    "type": "Fiélon",
+    "size": "G",
+    "ac": 13,
+    "hp": 68
+  },
+  {
+    "name": "Hydre",
+    "cr": "8",
+    "type": "Monstruosité",
+    "size": "TG",
+    "ac": 15,
+    "hp": 184
+  },
+  {
+    "name": "Hyène",
+    "cr": "0",
+    "type": "Bête",
+    "size": "M",
+    "ac": 11,
+    "hp": 5
+  },
+  {
+    "name": "Hyène géante",
+    "cr": "1",
+    "type": "Bête",
+    "size": "G",
+    "ac": 12,
+    "hp": 45
+  },
+  {
+    "name": "Incube",
+    "cr": "4",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 15,
+    "hp": 66
+  },
+  {
+    "name": "Insecte géant",
+    "cr": "aucun",
+    "type": "Bête",
+    "size": "G",
+    "ac": 11,
+    "hp": 30
+  },
+  {
+    "name": "Kenku",
+    "cr": "1/4",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 13,
+    "hp": 13
+  },
+  {
+    "name": "Kobold ailé",
+    "cr": "1/4",
+    "type": "Dragon",
+    "size": "P",
+    "ac": 15,
+    "hp": 10
+  },
+  {
+    "name": "Kobold, guerrier",
+    "cr": "1/8",
+    "type": "Dragon",
+    "size": "P",
+    "ac": 14,
+    "hp": 7
+  },
+  {
+    "name": "Kraken",
+    "cr": "23",
+    "type": "Monstruosité (titan)",
+    "size": "Gig",
+    "ac": 18,
+    "hp": 481
+  },
+  {
+    "name": "Kuo-toa",
+    "cr": "1/4",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 13,
+    "hp": 18
+  },
+  {
+    "name": "Kuo-toa cornac",
+    "cr": "3",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 13,
+    "hp": 65
+  },
+  {
+    "name": "Kuo-toa fouet",
+    "cr": "1",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 11,
+    "hp": 45
+  },
+  {
+    "name": "Kuo-toa, archiprêtre",
+    "cr": "6",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 13,
+    "hp": 105
+  },
+  {
+    "name": "Lamie",
+    "cr": "4",
+    "type": "Fiélon",
+    "size": "G",
+    "ac": 13,
+    "hp": 97
+  },
+  {
+    "name": "Larve",
+    "cr": "0",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 9,
+    "hp": 9
+  },
+  {
+    "name": "Lémure",
+    "cr": "0",
+    "type": "Fiélon (diable)",
+    "size": "M",
+    "ac": 9,
+    "hp": 9
+  },
+  {
+    "name": "Lézard",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 10,
+    "hp": 2
+  },
+  {
+    "name": "Lézard géant",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "G",
+    "ac": 12,
+    "hp": 19
+  },
+  {
+    "name": "Liche",
+    "cr": "21",
+    "type": "Mort-vivant (magicien)",
+    "size": "M",
+    "ac": 20,
+    "hp": 315
+  },
+  {
+    "name": "Licorne",
+    "cr": "5",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 12,
+    "hp": 97
+  },
+  {
+    "name": "Lierreux",
+    "cr": "1/2",
+    "type": "Plante",
+    "size": "M",
+    "ac": 12,
+    "hp": 19
+  },
+  {
+    "name": "Lion",
+    "cr": "1",
+    "type": "Bête",
+    "size": "G",
+    "ac": 12,
+    "hp": 22
+  },
+  {
+    "name": "Loup",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "M",
+    "ac": 12,
+    "hp": 11
+  },
+  {
+    "name": "Loup arctique",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 13,
+    "hp": 75
+  },
+  {
+    "name": "Loup sanguinaire",
+    "cr": "1",
+    "type": "Bête",
+    "size": "G",
+    "ac": 14,
+    "hp": 22
+  },
+  {
+    "name": "Loup-garou",
+    "cr": "3",
+    "type": "Monstruosité (lycanthrope)",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 71
+  },
+  {
+    "name": "Mage",
+    "cr": "6",
+    "type": "Humanoïde (magicien)",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 81
+  },
+  {
+    "name": "Mage, apprenti",
+    "cr": "2",
+    "type": "Humanoïde (magicien)",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 49
+  },
+  {
+    "name": "Magmatique",
+    "cr": "1/2",
+    "type": "Élémentaire",
+    "size": "P",
+    "ac": 14,
+    "hp": 13
+  },
+  {
+    "name": "Mammouth",
+    "cr": "6",
+    "type": "Bête",
+    "size": "TG",
+    "ac": 13,
+    "hp": 126
+  },
+  {
+    "name": "Mâne",
+    "cr": "1/8",
+    "type": "Fiélon (démon)",
+    "size": "P",
+    "ac": 9,
+    "hp": 9
+  },
+  {
+    "name": "Mâne vaporeux",
+    "cr": "1",
+    "type": "Fiélon (démon)",
+    "size": "M",
+    "ac": 13,
+    "hp": 19
+  },
+  {
+    "name": "Mante obscure",
+    "cr": "1/2",
+    "type": "Aberration",
+    "size": "P",
+    "ac": 11,
+    "hp": 22
+  },
+  {
+    "name": "Manteleur",
+    "cr": "8",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 14,
+    "hp": 91
+  },
+  {
+    "name": "Manticore",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 14,
+    "hp": 68
+  },
+  {
+    "name": "Maride",
+    "cr": "11",
+    "type": "Élémentaire (génie)",
+    "size": "G",
+    "ac": 17,
+    "hp": 229
+  },
+  {
+    "name": "Marilith",
+    "cr": "16",
+    "type": "Fiélon (démon)",
+    "size": "G",
+    "ac": 16,
+    "hp": 220
+  },
+  {
+    "name": "Mastodonte des ombres",
+    "cr": "5",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 18,
+    "hp": 93
+  },
+  {
+    "name": "Méduse",
+    "cr": "6",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 15,
+    "hp": 127
+  },
+  {
+    "name": "Méphite boueux",
+    "cr": "1/4",
+    "type": "Élémentaire",
+    "size": "P",
+    "ac": 11,
+    "hp": 13
+  },
+  {
+    "name": "Méphite fumant",
+    "cr": "1/4",
+    "type": "Élémentaire",
+    "size": "P",
+    "ac": 12,
+    "hp": 13
+  },
+  {
+    "name": "Méphite gelé",
+    "cr": "1/2",
+    "type": "Élémentaire",
+    "size": "P",
+    "ac": 11,
+    "hp": 21
+  },
+  {
+    "name": "Méphite magmatique",
+    "cr": "1/2",
+    "type": "Élémentaire",
+    "size": "P",
+    "ac": 11,
+    "hp": 18
+  },
+  {
+    "name": "Méphite poussiéreux",
+    "cr": "1/2",
+    "type": "Élémentaire",
+    "size": "P",
+    "ac": 12,
+    "hp": 17
+  },
+  {
+    "name": "Méphite vaporeux",
+    "cr": "1/4",
+    "type": "Élémentaire",
+    "size": "P",
+    "ac": 10,
+    "hp": 17
+  },
+  {
+    "name": "Merrow",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 13,
+    "hp": 45
+  },
+  {
+    "name": "Mezzoloth",
+    "cr": "5",
+    "type": "Fiélon (yugoloth)",
+    "size": "M",
+    "ac": 18,
+    "hp": 75
+  },
+  {
+    "name": "Mille-pattes géant",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "P",
+    "ac": 14,
+    "hp": 9
+  },
+  {
+    "name": "Mimique",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 12,
+    "hp": 58
+  },
+  {
+    "name": "Minotaure de Baphomet",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 14,
+    "hp": 85
+  },
+  {
+    "name": "Minotaure squelette",
+    "cr": "2",
+    "type": "Mort-vivant",
+    "size": "G",
+    "ac": 12,
+    "hp": 45
+  },
+  {
+    "name": "Molosse",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "M",
+    "ac": 12,
+    "hp": 5
+  },
+  {
+    "name": "Momie",
+    "cr": "3",
+    "type": "Mort-vivant",
+    "size": "M ou P",
+    "ac": 11,
+    "hp": 58
+  },
+  {
+    "name": "Monture d'Outremonde",
+    "cr": "aucun",
+    "type": "Céleste ou Fée ou Fiélon",
+    "size": "G",
+    "ac": 10,
+    "hp": 5
+  },
+  {
+    "name": "Mule",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "M",
+    "ac": 10,
+    "hp": 11
+  },
+  {
+    "name": "Myconide, adulte",
+    "cr": "1/2",
+    "type": "Plante",
+    "size": "M",
+    "ac": 12,
+    "hp": 16
+  },
+  {
+    "name": "Myconide, pousse",
+    "cr": "0",
+    "type": "Plante",
+    "size": "P",
+    "ac": 10,
+    "hp": 3
+  },
+  {
+    "name": "Myconide, serviteur des spores",
+    "cr": "1",
+    "type": "Plante",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 37
+  },
+  {
+    "name": "Myconide, souverain",
+    "cr": "2",
+    "type": "Plante",
+    "size": "G",
+    "ac": 13,
+    "hp": 45
+  },
+  {
+    "name": "Naga corrupteur",
+    "cr": "8",
+    "type": "Fiélon",
+    "size": "G",
+    "ac": 17,
+    "hp": 135
+  },
+  {
+    "name": "Naga gardien",
+    "cr": "10",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 18,
+    "hp": 136
+  },
+  {
+    "name": "Naga osseux",
+    "cr": "4",
+    "type": "Mort-vivant",
+    "size": "G",
+    "ac": 15,
+    "hp": 65
+  },
+  {
+    "name": "Nalfeshnie",
+    "cr": "13",
+    "type": "Fiélon (démon)",
+    "size": "G",
+    "ac": 18,
+    "hp": 184
+  },
+  {
+    "name": "Nécrophage",
+    "cr": "3",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 14,
+    "hp": 82
+  },
+  {
+    "name": "Nielleux",
+    "cr": "1/8",
+    "type": "Plante",
+    "size": "P",
+    "ac": 14,
+    "hp": 7
+  },
+  {
+    "name": "Noble",
+    "cr": "1/8",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 9
+  },
+  {
+    "name": "Noble, prodige",
+    "cr": "10",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 148
+  },
+  {
+    "name": "Nothic",
+    "cr": "2",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 15,
+    "hp": 45
+  },
+  {
+    "name": "Nuée d'insectes",
+    "cr": "1/2",
+    "type": "Nuée de Bêtes TP",
+    "size": "M",
+    "ac": 11,
+    "hp": 19
+  },
+  {
+    "name": "Nuée de chauves-souris",
+    "cr": "1/4",
+    "type": "Nuée de Bêtes TP",
+    "size": "G",
+    "ac": 12,
+    "hp": 11
+  },
+  {
+    "name": "Nuée de corbeaux",
+    "cr": "1/4",
+    "type": "Nuée de Bêtes TP",
+    "size": "M",
+    "ac": 12,
+    "hp": 11
+  },
+  {
+    "name": "Nuée de Dretches",
+    "cr": "4",
+    "type": "Nuée de Fiélons (démon) P",
+    "size": "G",
+    "ac": 12,
+    "hp": 45
+  },
+  {
+    "name": "Nuée de griffes rampantes|sénestres",
+    "cr": "3",
+    "type": "Nuée de Morts-vivants TP",
+    "size": "M",
+    "ac": 12,
+    "hp": 49
+  },
+  {
+    "name": "Nuée de larves",
+    "cr": "1",
+    "type": "Nuée de Fiélons M",
+    "size": "G",
+    "ac": 13,
+    "hp": 22
+  },
+  {
+    "name": "Nuée de lémures",
+    "cr": "3",
+    "type": "Nuée de Fiélons (diable) M",
+    "size": "G",
+    "ac": 12,
+    "hp": 45
+  },
+  {
+    "name": "Nuée de piranhas",
+    "cr": "1",
+    "type": "Nuée de Bêtes TP",
+    "size": "M",
+    "ac": 13,
+    "hp": 28
+  },
+  {
+    "name": "Nuée de serpents venimeux",
+    "cr": "2",
+    "type": "Nuée de Bêtes TP",
+    "size": "M",
+    "ac": 14,
+    "hp": 36
+  },
+  {
+    "name": "Nuée de striges",
+    "cr": "2",
+    "type": "Nuée de Monstruosités TP",
+    "size": "M",
+    "ac": 14,
+    "hp": 36
+  },
+  {
+    "name": "Nuée des rats",
+    "cr": "1/4",
+    "type": "Nuée de Bêtes TP",
+    "size": "M",
+    "ac": 10,
+    "hp": 14
+  },
+  {
+    "name": "Nycaloth",
+    "cr": "9",
+    "type": "Fiélon (yugoloth)",
+    "size": "G",
+    "ac": 18,
+    "hp": 152
+  },
+  {
+    "name": "Objet animé",
+    "cr": "aucun",
+    "type": "Artificiel",
+    "size": "TG ou inferieur",
+    "ac": 15,
+    "hp": 10
+  },
+  {
+    "name": "Ogre",
+    "cr": "2",
+    "type": "Géant",
+    "size": "G",
+    "ac": 11,
+    "hp": 68
+  },
+  {
+    "name": "Ogre zombi",
+    "cr": "2",
+    "type": "Mort-vivant",
+    "size": "G",
+    "ac": 8,
+    "hp": 85
+  },
+  {
+    "name": "Ogrillon Ogre",
+    "cr": "1",
+    "type": "Géant",
+    "size": "G",
+    "ac": 12,
+    "hp": 52
+  },
+  {
+    "name": "Ombre",
+    "cr": "1/2",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 12,
+    "hp": 27
+  },
+  {
+    "name": "Oni",
+    "cr": "7",
+    "type": "Fiélon",
+    "size": "G",
+    "ac": 17,
+    "hp": 119
+  },
+  {
+    "name": "Otyugh",
+    "cr": "5",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 14,
+    "hp": 104
+  },
+  {
+    "name": "Ours brun",
+    "cr": "1",
+    "type": "Bête",
+    "size": "G",
+    "ac": 11,
+    "hp": 22
+  },
+  {
+    "name": "Ours noir",
+    "cr": "1/2",
+    "type": "Bête",
+    "size": "M",
+    "ac": 11,
+    "hp": 19
+  },
+  {
+    "name": "Ours polaire",
+    "cr": "2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 12,
+    "hp": 42
+  },
+  {
+    "name": "Ours-garou",
+    "cr": "5",
+    "type": "Monstruosité (lycanthrope)",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 135
+  },
+  {
+    "name": "Ours-hibou primitif",
+    "cr": "7",
+    "type": "Monstruosité",
+    "size": "TG",
+    "ac": 16,
+    "hp": 126
+  },
+  {
+    "name": "Ours-hibou|Hibours",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 13,
+    "hp": 59
+  },
+  {
+    "name": "Oxydeur",
+    "cr": "1/2",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 14,
+    "hp": 33
+  },
+  {
+    "name": "Panthère",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "M",
+    "ac": 13,
+    "hp": 13
+  },
+  {
+    "name": "Pégase",
+    "cr": "2",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 12,
+    "hp": 59
+  },
+  {
+    "name": "Perceur|Perforateur",
+    "cr": "1/2",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 15,
+    "hp": 22
+  },
+  {
+    "name": "Péryton",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 13,
+    "hp": 33
+  },
+  {
+    "name": "Pieuvre",
+    "cr": "0",
+    "type": "Bête",
+    "size": "P",
+    "ac": 12,
+    "hp": 3
+  },
+  {
+    "name": "Pieuvre géante",
+    "cr": "1",
+    "type": "Bête",
+    "size": "G",
+    "ac": 11,
+    "hp": 45
+  },
+  {
+    "name": "Piranha",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 13,
+    "hp": 1
+  },
+  {
+    "name": "Pirate",
+    "cr": "1",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 14,
+    "hp": 33
+  },
+  {
+    "name": "Pirate, amiral",
+    "cr": "12",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 20,
+    "hp": 182
+  },
+  {
+    "name": "Pirate, capitaine",
+    "cr": "6",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 17,
+    "hp": 84
+  },
+  {
+    "name": "Pixie",
+    "cr": "1/4",
+    "type": "Fée",
+    "size": "TP",
+    "ac": 15,
+    "hp": 9
+  },
+  {
+    "name": "Pixie émerveilleuse",
+    "cr": "5",
+    "type": "Fée",
+    "size": "TP",
+    "ac": 15,
+    "hp": 60
+  },
+  {
+    "name": "Planétar",
+    "cr": "16",
+    "type": "Céleste (ange)",
+    "size": "G",
+    "ac": 19,
+    "hp": 262
+  },
+  {
+    "name": "Plésiosaure",
+    "cr": "2",
+    "type": "Bête (Dinosaure)",
+    "size": "G",
+    "ac": 13,
+    "hp": 68
+  },
+  {
+    "name": "Poltergeist",
+    "cr": "2",
+    "type": "Mort-vivant",
+    "size": "M ou P",
+    "ac": 12,
+    "hp": 22
+  },
+  {
+    "name": "Poney",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "M",
+    "ac": 10,
+    "hp": 11
+  },
+  {
+    "name": "Pouding noir",
+    "cr": "4",
+    "type": "Vase",
+    "size": "G",
+    "ac": 7,
+    "hp": 68
+  },
+  {
+    "name": "Prêtre",
+    "cr": "2",
+    "type": "Humanoïde (clerc)",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 38
+  },
+  {
+    "name": "Prêtre, acolyte",
+    "cr": "1/4",
+    "type": "Humanoïde (clerc)",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 11
+  },
+  {
+    "name": "Pseudodragon",
+    "cr": "1/4",
+    "type": "Dragon",
+    "size": "TP",
+    "ac": 14,
+    "hp": 10
+  },
+  {
+    "name": "Ptéranodon",
+    "cr": "1/4",
+    "type": "Bête (Dinosaure)",
+    "size": "M",
+    "ac": 13,
+    "hp": 13
+  },
+  {
+    "name": "Quaggoth",
+    "cr": "2",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 13,
+    "hp": 45
+  },
+  {
+    "name": "Quaggoth thonot",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 15,
+    "hp": 67
+  },
+  {
+    "name": "Quasit",
+    "cr": "1",
+    "type": "Fiélon (démon)",
+    "size": "TP",
+    "ac": 13,
+    "hp": 25
+  },
+  {
+    "name": "Rakshasa",
+    "cr": "13",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 17,
+    "hp": 221
+  },
+  {
+    "name": "Rat",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 10,
+    "hp": 1
+  },
+  {
+    "name": "Rat géant",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "P",
+    "ac": 13,
+    "hp": 7
+  },
+  {
+    "name": "Rat-garou",
+    "cr": "2",
+    "type": "Monstruosité (lycanthrope)",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 60
+  },
+  {
+    "name": "Remorhaz",
+    "cr": "11",
+    "type": "Monstruosité",
+    "size": "TG",
+    "ac": 17,
+    "hp": 195
+  },
+  {
+    "name": "Remorhaz, jeune",
+    "cr": "5",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 14,
+    "hp": 93
+  },
+  {
+    "name": "Requin de récif",
+    "cr": "1/2",
+    "type": "Bête",
+    "size": "M",
+    "ac": 12,
+    "hp": 22
+  },
+  {
+    "name": "Requin géant",
+    "cr": "5",
+    "type": "Bête",
+    "size": "TG",
+    "ac": 13,
+    "hp": 92
+  },
+  {
+    "name": "Requin-chasseur",
+    "cr": "2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 12,
+    "hp": 45
+  },
+  {
+    "name": "Résineux",
+    "cr": "1/4",
+    "type": "Plante",
+    "size": "M",
+    "ac": 12,
+    "hp": 16
+  },
+  {
+    "name": "Revenant",
+    "cr": "5",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 13,
+    "hp": 127
+  },
+  {
+    "name": "Revenant, charnier",
+    "cr": "7",
+    "type": "Mort-vivant",
+    "size": "TG",
+    "ac": 14,
+    "hp": 161
+  },
+  {
+    "name": "Revenant, tourmenteur",
+    "cr": "10",
+    "type": "Mort-vivant",
+    "size": "Gig",
+    "ac": 20,
+    "hp": 203
+  },
+  {
+    "name": "Rhinocéros",
+    "cr": "2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 13,
+    "hp": 45
+  },
+  {
+    "name": "Roturier",
+    "cr": "0",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 10,
+    "hp": 4
+  },
+  {
+    "name": "Rouilleux de Gulthias",
+    "cr": "16",
+    "type": "Plante",
+    "size": "Gig",
+    "ac": 20,
+    "hp": 264
+  },
+  {
+    "name": "Rukh",
+    "cr": "11",
+    "type": "Monstruosité",
+    "size": "Gig",
+    "ac": 15,
+    "hp": 248
+  },
+  {
+    "name": "Sahuagin, baron",
+    "cr": "5",
+    "type": "Fiélon",
+    "size": "G",
+    "ac": 16,
+    "hp": 76
+  },
+  {
+    "name": "Sahuagin, guerrier",
+    "cr": "1/2",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 12,
+    "hp": 22
+  },
+  {
+    "name": "Sahuagin, prêtre",
+    "cr": "2",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 12,
+    "hp": 38
+  },
+  {
+    "name": "Salamandre",
+    "cr": "5",
+    "type": "Élémentaire",
+    "size": "G",
+    "ac": 15,
+    "hp": 90
+  },
+  {
+    "name": "Salamandre, maîtresse des fournaises",
+    "cr": "15",
+    "type": "Élémentaire",
+    "size": "G",
+    "ac": 18,
+    "hp": 256
+  },
+  {
+    "name": "Salamandre, serpent de feu",
+    "cr": "1",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 14,
+    "hp": 27
+  },
+  {
+    "name": "Saltimbanque",
+    "cr": "1/2",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 13,
+    "hp": 27
+  },
+  {
+    "name": "Saltimbanque, légende",
+    "cr": "10",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 20,
+    "hp": 162
+  },
+  {
+    "name": "Saltimbanque, maestro",
+    "cr": "6",
+    "type": "Humanoïde",
+    "size": "M ou P",
+    "ac": 18,
+    "hp": 110
+  },
+  {
+    "name": "Sanglier",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "M",
+    "ac": 11,
+    "hp": 13
+  },
+  {
+    "name": "Sanglier géant",
+    "cr": "2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 13,
+    "hp": 42
+  },
+  {
+    "name": "Sanglier-garou",
+    "cr": "4",
+    "type": "Monstruosité (lycanthrope)",
+    "size": "M ou P",
+    "ac": 15,
+    "hp": 97
+  },
+  {
+    "name": "Satyre",
+    "cr": "1/2",
+    "type": "Fée",
+    "size": "M",
+    "ac": 13,
+    "hp": 31
+  },
+  {
+    "name": "Satyre, maître des réjouissances",
+    "cr": "6",
+    "type": "Fée",
+    "size": "M",
+    "ac": 17,
+    "hp": 82
+  },
+  {
+    "name": "Saurien, géomancien",
+    "cr": "2",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 13,
+    "hp": 33
+  },
+  {
+    "name": "Saurien, souverain",
+    "cr": "4",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 15,
+    "hp": 78
+  },
+  {
+    "name": "Scarabée de feu géant",
+    "cr": "0",
+    "type": "Bête",
+    "size": "P",
+    "ac": 13,
+    "hp": 4
+  },
+  {
+    "name": "Scorpion",
+    "cr": "0",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 11,
+    "hp": 1
+  },
+  {
+    "name": "Scorpion géant",
+    "cr": "3",
+    "type": "Bête",
+    "size": "G",
+    "ac": 15,
+    "hp": 52
+  },
+  {
+    "name": "Seigneur des bêtes",
+    "cr": "20",
+    "type": "Céleste",
+    "size": "M",
+    "ac": 19,
+    "hp": 323
+  },
+  {
+    "name": "Seigneur momie",
+    "cr": "15",
+    "type": "Mort-vivant (clerc)",
+    "size": "M ou P",
+    "ac": 17,
+    "hp": 187
+  },
+  {
+    "name": "Serpent constricteur",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "G",
+    "ac": 13,
+    "hp": 13
+  },
+  {
+    "name": "Serpent constricteur géant",
+    "cr": "2",
+    "type": "Bête",
+    "size": "TG",
+    "ac": 12,
+    "hp": 60
+  },
+  {
+    "name": "Serpent venimeux",
+    "cr": "1/8",
+    "type": "Bête",
+    "size": "TP",
+    "ac": 12,
+    "hp": 5
+  },
+  {
+    "name": "Serpent venimeux géant",
+    "cr": "1/4",
+    "type": "Bête",
+    "size": "M",
+    "ac": 14,
+    "hp": 11
+  },
+  {
+    "name": "Serpent volant",
+    "cr": "1/8",
+    "type": "Monstruosité",
+    "size": "TP",
+    "ac": 14,
+    "hp": 5
+  },
+  {
+    "name": "Sibylle de l'eau",
+    "cr": "3",
+    "type": "Élémentaire",
+    "size": "G",
+    "ac": 13,
+    "hp": 65
+  },
+  {
+    "name": "Singe géant",
+    "cr": "7",
+    "type": "Bête",
+    "size": "TG",
+    "ac": 12,
+    "hp": 168
+  },
+  {
+    "name": "Slaad bleu",
+    "cr": "7",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 15,
+    "hp": 133
+  },
+  {
+    "name": "Slaad funeste",
+    "cr": "10",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 18,
+    "hp": 178
+  },
+  {
+    "name": "Slaad gris",
+    "cr": "9",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 18,
+    "hp": 150
+  },
+  {
+    "name": "Slaad rouge",
+    "cr": "5",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 14,
+    "hp": 93
+  },
+  {
+    "name": "Slaad vert",
+    "cr": "8",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 16,
+    "hp": 144
+  },
+  {
+    "name": "Slaad, têtard",
+    "cr": "1/8",
+    "type": "Aberration",
+    "size": "TP",
+    "ac": 12,
+    "hp": 7
+  },
+  {
+    "name": "Solar",
+    "cr": "21",
+    "type": "Céleste (ange)",
+    "size": "G",
+    "ac": 21,
+    "hp": 297
+  },
+  {
+    "name": "Spectateur",
+    "cr": "3",
+    "type": "Aberration (beholder)",
+    "size": "M",
+    "ac": 14,
+    "hp": 45
+  },
+  {
+    "name": "Spectre",
+    "cr": "1",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 12,
+    "hp": 22
+  },
+  {
+    "name": "Sphinx érudit",
+    "cr": "11",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 17,
+    "hp": 170
+  },
+  {
+    "name": "Sphinx merveilleux",
+    "cr": "1",
+    "type": "Céleste",
+    "size": "TP",
+    "ac": 13,
+    "hp": 24
+  },
+  {
+    "name": "Sphinx mystérieux",
+    "cr": "8",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 16,
+    "hp": 136
+  },
+  {
+    "name": "Sphinx valeureux",
+    "cr": "17",
+    "type": "Céleste",
+    "size": "G",
+    "ac": 17,
+    "hp": 199
+  },
+  {
+    "name": "Squelette",
+    "cr": "1/4",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 14,
+    "hp": 13
+  },
+  {
+    "name": "Squelette enflammé",
+    "cr": "3",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 15,
+    "hp": 65
+  },
+  {
+    "name": "Strige",
+    "cr": "1/8",
+    "type": "Monstruosité",
+    "size": "TP",
+    "ac": 13,
+    "hp": 5
+  },
+  {
+    "name": "Succube",
+    "cr": "4",
+    "type": "Fiélon",
+    "size": "M",
+    "ac": 15,
+    "hp": 71
+  },
+  {
+    "name": "Sylvanien",
+    "cr": "9",
+    "type": "Plante",
+    "size": "TG",
+    "ac": 16,
+    "hp": 138
+  },
+  {
+    "name": "Tapis étrangleur animé",
+    "cr": "2",
+    "type": "Artificiel",
+    "size": "G",
+    "ac": 12,
+    "hp": 27
+  },
+  {
+    "name": "Tarasque",
+    "cr": "30",
+    "type": "Monstruosité (titan)",
+    "size": "Gig",
+    "ac": 25,
+    "hp": 697
+  },
+  {
+    "name": "Tertre",
+    "cr": "5",
+    "type": "Plante",
+    "size": "G",
+    "ac": 15,
+    "hp": 110
+  },
+  {
+    "name": "Thalasséen, dompteur de l'onde",
+    "cr": "6",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 14,
+    "hp": 97
+  },
+  {
+    "name": "Thalasséen, tirailleur",
+    "cr": "1/8",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 11,
+    "hp": 11
+  },
+  {
+    "name": "Thallophyte violette",
+    "cr": "1/4",
+    "type": "Plante",
+    "size": "M",
+    "ac": 5,
+    "hp": 18
+  },
+  {
+    "name": "Thallophyte, criard",
+    "cr": "0",
+    "type": "Plante",
+    "size": "M",
+    "ac": 5,
+    "hp": 13
+  },
+  {
+    "name": "Thallophyte, mastonécrofonge",
+    "cr": "7",
+    "type": "Plante",
+    "size": "G",
+    "ac": 17,
+    "hp": 123
+  },
+  {
+    "name": "Thallophyte, spore gazeuse",
+    "cr": "1/2",
+    "type": "Plante",
+    "size": "G",
+    "ac": 8,
+    "hp": 13
+  },
+  {
+    "name": "Thri-kreen, maraudeur",
+    "cr": "1",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 15,
+    "hp": 33
+  },
+  {
+    "name": "Thri-kreen, psion",
+    "cr": "8",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 16,
+    "hp": 149
+  },
+  {
+    "name": "Tigre",
+    "cr": "1",
+    "type": "Bête",
+    "size": "G",
+    "ac": 13,
+    "hp": 30
+  },
+  {
+    "name": "Tigre à dents de sabre",
+    "cr": "2",
+    "type": "Bête",
+    "size": "G",
+    "ac": 13,
+    "hp": 52
+  },
+  {
+    "name": "Tigre-garou",
+    "cr": "4",
+    "type": "Monstruosité (lycanthrope)",
+    "size": "M ou P",
+    "ac": 12,
+    "hp": 120
+  },
+  {
+    "name": "Torve",
+    "cr": "1/4",
+    "type": "Aberration",
+    "size": "M",
+    "ac": 11,
+    "hp": 11
+  },
+  {
+    "name": "Traqueur invisible",
+    "cr": "6",
+    "type": "Élémentaire",
+    "size": "G",
+    "ac": 14,
+    "hp": 97
+  },
+  {
+    "name": "Tricératops",
+    "cr": "5",
+    "type": "Bête (Dinosaure)",
+    "size": "TG",
+    "ac": 14,
+    "hp": 114
+  },
+  {
+    "name": "Troglodyte",
+    "cr": "1/4",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 11,
+    "hp": 13
+  },
+  {
+    "name": "Troll",
+    "cr": "5",
+    "type": "Géant",
+    "size": "G",
+    "ac": 15,
+    "hp": 94
+  },
+  {
+    "name": "Tyramort",
+    "cr": "14",
+    "type": "Mort-vivant (beholder)",
+    "size": "G",
+    "ac": 19,
+    "hp": 195
+  },
+  {
+    "name": "Tyrannoeil",
+    "cr": "13",
+    "type": "Aberration",
+    "size": "G",
+    "ac": 18,
+    "hp": 190
+  },
+  {
+    "name": "Tyrannoeil zombi",
+    "cr": "5",
+    "type": "Mort-vivant",
+    "size": "G",
+    "ac": 15,
+    "hp": 93
+  },
+  {
+    "name": "Tyrannosaure Rex",
+    "cr": "8",
+    "type": "Bête (Dinosaure)",
+    "size": "TG",
+    "ac": 13,
+    "hp": 136
+  },
+  {
+    "name": "Ultroloth",
+    "cr": "13",
+    "type": "Fiélon (yugoloth)",
+    "size": "M",
+    "ac": 19,
+    "hp": 221
+  },
+  {
+    "name": "Vampire",
+    "cr": "13",
+    "type": "Mort-vivant",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 195
+  },
+  {
+    "name": "Vampire, héraut de la nuit",
+    "cr": "8",
+    "type": "Mort-vivant",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 142
+  },
+  {
+    "name": "Vampire, seigneur des ombres",
+    "cr": "15",
+    "type": "Or P Mort-vivant",
+    "size": "M",
+    "ac": 16,
+    "hp": 187
+  },
+  {
+    "name": "Vampirien",
+    "cr": "5",
+    "type": "Mort-vivant",
+    "size": "M ou P",
+    "ac": 16,
+    "hp": 90
+  },
+  {
+    "name": "Vase grise",
+    "cr": "1/2",
+    "type": "Vase",
+    "size": "M",
+    "ac": 9,
+    "hp": 22
+  },
+  {
+    "name": "Vase grise psychique",
+    "cr": "1",
+    "type": "Vase",
+    "size": "M",
+    "ac": 9,
+    "hp": 37
+  },
+  {
+    "name": "Vautour",
+    "cr": "0",
+    "type": "Bête",
+    "size": "M",
+    "ac": 10,
+    "hp": 5
+  },
+  {
+    "name": "Vautour géant",
+    "cr": "1",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 10,
+    "hp": 25
+  },
+  {
+    "name": "Ver pourpre",
+    "cr": "15",
+    "type": "Monstruosité",
+    "size": "Gig",
+    "ac": 18,
+    "hp": 247
+  },
+  {
+    "name": "Vrock",
+    "cr": "6",
+    "type": "Fiélon (démon)",
+    "size": "G",
+    "ac": 15,
+    "hp": 152
+  },
+  {
+    "name": "Worg",
+    "cr": "1/2",
+    "type": "Fée",
+    "size": "G",
+    "ac": 13,
+    "hp": 26
+  },
+  {
+    "name": "Worg sanguinaire",
+    "cr": "10",
+    "type": "Fée",
+    "size": "TG",
+    "ac": 16,
+    "hp": 147
+  },
+  {
+    "name": "Wyverne|Vouivre",
+    "cr": "6",
+    "type": "Dragon",
+    "size": "G",
+    "ac": 14,
+    "hp": 127
+  },
+  {
+    "name": "Xorn",
+    "cr": "5",
+    "type": "Élémentaire",
+    "size": "M",
+    "ac": 19,
+    "hp": 84
+  },
+  {
+    "name": "Yéti",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 12,
+    "hp": 51
+  },
+  {
+    "name": "Yéti abominable",
+    "cr": "9",
+    "type": "Monstruosité",
+    "size": "TG",
+    "ac": 15,
+    "hp": 137
+  },
+  {
+    "name": "Yochlol",
+    "cr": "10",
+    "type": "Fiélon (démon)",
+    "size": "M",
+    "ac": 15,
+    "hp": 153
+  },
+  {
+    "name": "Yuan-ti, abomination",
+    "cr": "7",
+    "type": "Monstruosité",
+    "size": "G",
+    "ac": 15,
+    "hp": 127
+  },
+  {
+    "name": "Yuan-ti, infiltrateur",
+    "cr": "1",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 11,
+    "hp": 40
+  },
+  {
+    "name": "Yuan-ti, malfice (type 1)",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 12,
+    "hp": 66
+  },
+  {
+    "name": "Yuan-ti, malfice (type 2)",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 12,
+    "hp": 66
+  },
+  {
+    "name": "Yuan-ti, malfice (type 3)",
+    "cr": "3",
+    "type": "Monstruosité",
+    "size": "M",
+    "ac": 12,
+    "hp": 66
+  },
+  {
+    "name": "Zombi",
+    "cr": "1/4",
+    "type": "Mort-vivant",
+    "size": "M",
+    "ac": 8,
+    "hp": 15
+  }
+]

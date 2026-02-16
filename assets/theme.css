@@ -1,0 +1,133 @@
+/* Theme overrides (loaded after styles.css) */
+[data-theme="dark"] body {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .container {
+  background: #0f172a;
+  border-color: #1f2a44;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .panel {
+  background: #111c2f;
+  border-color: #1f2a44;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] h1,
+[data-theme="dark"] .map-header h2,
+[data-theme="dark"] .map-controls-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .subtitle,
+[data-theme="dark"] .badge-label,
+[data-theme="dark"] .form-row label,
+[data-theme="dark"] .controls,
+[data-theme="dark"] .dice-header,
+[data-theme="dark"] .dice-history,
+[data-theme="dark"] .map-hint,
+[data-theme="dark"] .muted {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .chip {
+  background: #111c2f;
+  border-color: #1f2a44;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="number"],
+[data-theme="dark"] select,
+[data-theme="dark"] input[type="color"] {
+  background: #0b1220;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .token-color-input {
+  background: #0b1220;
+  border-color: #334155;
+}
+
+[data-theme="dark"] input[type="text"]:focus,
+[data-theme="dark"] input[type="number"]:focus,
+[data-theme="dark"] select:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+  background: #0b1220;
+}
+
+[data-theme="dark"] .inline-check-row,
+[data-theme="dark"] .check-inline,
+[data-theme="dark"] .tool-buttons,
+[data-theme="dark"] .icon-btn,
+[data-theme="dark"] .table-icon-btn,
+[data-theme="dark"] .turnbar,
+[data-theme="dark"] .turnbar-item {
+  background: #0b1220;
+  border-color: #1f2a44;
+}
+
+[data-theme="dark"] button.secondary {
+  background: #111c2f;
+  border-color: #1f2a44;
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] table {
+  background: #0b1220;
+  border-color: #1f2a44;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] th {
+  background: #1f2a44;
+  color: #cbd5f5;
+}
+
+[data-theme="dark"] th,
+[data-theme="dark"] td {
+  border-bottom-color: #1f2a44;
+}
+
+[data-theme="dark"] tbody tr:nth-child(even) {
+  background: #0f172a;
+}
+
+[data-theme="dark"] tbody tr:nth-child(odd) {
+  background: #0b1220;
+}
+
+[data-theme="dark"] tr.active {
+  background: rgba(59, 130, 246, 0.25) !important;
+  box-shadow: inset 0 0 0 2px rgba(96, 165, 250, 0.7);
+}
+
+[data-theme="dark"] tr.active td {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .dice-result-value {
+  background: #1e293b;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .hp-bar {
+  background: #1e293b;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .map-realtime {
+  background: #0b1220;
+  border-color: #334155;
+}
+
+[data-theme="dark"] #map {
+  background: #0b1220;
+  border-color: #1f2a44;
+}
