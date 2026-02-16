@@ -140,6 +140,19 @@ h1 {
   background: var(--bg-panel);
   border: 1px solid var(--border);
   color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.chip-value {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--accent-light);
+  font-variant-numeric: tabular-nums;
 }
 
 .badge-label {
@@ -207,6 +220,24 @@ h1 {
   margin-bottom: 2px;
 }
 
+/* Form groups */
+.form-group {
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-radius: var(--radius-md);
+  background: rgba(0,0,0,0.12);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.form-group-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
 input[type="text"],
 input[type="number"],
 select {
@@ -217,8 +248,14 @@ select {
   color: var(--text);
   min-width: 120px;
   outline: none;
-  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s, transform 0.1s;
   font-size: 0.85rem;
+}
+
+input[type="text"]:hover,
+input[type="number"]:hover,
+select:hover {
+  border-color: var(--border-accent);
 }
 
 input[type="color"] {
@@ -346,18 +383,27 @@ button:disabled {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 12px 0 8px;
-  gap: 12px;
+  margin: 12px 0 4px;
+  gap: 10px;
   flex-wrap: wrap;
   font-size: 0.8rem;
   color: var(--text-secondary);
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+}
+
+.controls-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 /* ===== Dice Panel ===== */
 .dice-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .dice-header {
@@ -372,60 +418,108 @@ button:disabled {
   font-weight: 600;
 }
 
-.dice-buttons {
+/* Featured d20 button */
+.dice-featured {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  justify-content: center;
 }
 
-.dice-buttons button {
+.dice-btn {
   background: var(--bg-input);
   border: 1px solid var(--border);
   color: var(--text);
   font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: 'Cinzel', 'Georgia', serif;
+  text-align: center;
+  min-width: 0;
 }
 
-.dice-buttons button:hover:not(:disabled) {
+.dice-btn:hover {
   border-color: var(--accent);
   color: var(--accent-light);
-  box-shadow: 0 0 12px var(--accent-glow);
+  box-shadow: 0 0 16px var(--accent-glow);
+  transform: translateY(-2px);
 }
 
+.dice-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.dice-btn--d20 {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(145deg, var(--bg-panel), var(--bg-input));
+  border: 2px solid var(--accent);
+  color: var(--accent-light);
+  box-shadow:
+    0 0 20px var(--accent-glow),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  position: relative;
+}
+
+.dice-btn--d20:hover {
+  box-shadow:
+    0 0 30px rgba(201,149,43,0.4),
+    0 4px 20px rgba(0,0,0,0.3);
+  transform: translateY(-3px) scale(1.05);
+  border-color: var(--accent-light);
+}
+
+/* Dice grid */
+.dice-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+/* Dice result */
 .dice-result {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 0.9rem;
   color: var(--text);
+  padding: 8px 0;
 }
 
 .dice-result-value {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 800;
-  min-width: 42px;
+  min-width: 52px;
   text-align: center;
-  padding: 4px 10px;
+  padding: 6px 14px;
   border-radius: var(--radius-pill);
-  background: linear-gradient(135deg, rgba(201,149,43,0.2), rgba(201,149,43,0.1));
-  border: 1px solid var(--accent);
+  background: linear-gradient(135deg, rgba(201,149,43,0.2), rgba(201,149,43,0.08));
+  border: 2px solid var(--accent);
   color: var(--accent-light);
+  font-family: 'Cinzel', 'Georgia', serif;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 
 .dice-rolling {
-  animation: dice-pop 0.4s ease-out;
+  animation: dice-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes dice-pop {
   0% {
-    transform: scale(0.7);
+    transform: scale(0.5) rotate(-10deg);
     opacity: 0;
   }
   50% {
-    transform: scale(1.25);
+    transform: scale(1.2) rotate(3deg);
     opacity: 1;
   }
   100% {
-    transform: scale(1);
+    transform: scale(1) rotate(0);
     opacity: 1;
   }
 }
@@ -433,7 +527,7 @@ button:disabled {
 .dice-history {
   font-size: 0.75rem;
   color: var(--text-secondary);
-  max-height: 92px;
+  max-height: 100px;
   overflow-y: auto;
   border-top: 1px dashed var(--border);
   padding-top: 6px;
@@ -463,7 +557,12 @@ button:disabled {
 .dice-history-entry {
   display: flex;
   justify-content: space-between;
-  padding: 1px 0;
+  padding: 2px 0;
+  transition: color 0.15s;
+}
+
+.dice-history-entry:hover {
+  color: var(--text);
 }
 
 /* ===== Initiative Table ===== */
@@ -661,14 +760,6 @@ tr.active td {
   font-size: 0.75rem;
 }
 
-.empty {
-  text-align: center;
-  padding: 12px;
-  color: var(--text-muted);
-  font-style: italic;
-  background: var(--bg-panel);
-}
-
 /* Concentration */
 .concentration-toggle {
   margin-top: 6px;
@@ -694,6 +785,51 @@ tr.active td {
   border: 1px solid rgba(74,222,128,0.3);
   text-transform: uppercase;
   letter-spacing: 0.08em;
+}
+
+/* Table row hover */
+tbody tr {
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+tbody tr:hover:not(.active) {
+  background: rgba(201,149,43,0.06) !important;
+}
+
+/* Section dividers */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 18px 0 4px;
+}
+
+.section-divider::before,
+.section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+}
+
+.section-divider span {
+  font-family: 'Cinzel', 'Georgia', serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  padding: 24px 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  background: var(--bg-panel);
+  font-size: 0.9rem;
 }
 
 @media (max-width: 700px) {
@@ -959,6 +1095,50 @@ button.is-active {
   font-size: 0.85rem;
   line-height: 1.1;
   color: var(--text-secondary);
+}
+
+/* ===== Global scrollbar theming ===== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dim);
+}
+
+/* ===== Panel hover lift ===== */
+.panel {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.top-layout > .panel:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+  border-color: var(--border-accent);
+}
+
+/* ===== Button improvements ===== */
+button.secondary:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-light);
+}
+
+button.primary:hover:not(:disabled) {
+  box-shadow: 0 0 20px var(--accent-glow), var(--shadow-btn);
 }
 
 /* === Turn bar (player) === */

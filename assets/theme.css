@@ -216,3 +216,51 @@
 [data-theme="light"] .content > .panel.map-controls {
   border-right-color: var(--border);
 }
+
+/* Form groups in light theme */
+[data-theme="light"] .form-group {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.04);
+}
+
+/* Dice d20 in light theme */
+[data-theme="light"] .dice-btn--d20 {
+  background: linear-gradient(145deg, var(--bg-input), var(--bg-panel));
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+[data-theme="light"] .dice-btn {
+  background: var(--bg-input);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme="light"] .dice-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Section divider in light theme */
+[data-theme="light"] .section-divider::before,
+[data-theme="light"] .section-divider::after {
+  background: linear-gradient(90deg, transparent, var(--border-accent), transparent);
+}
+
+[data-theme="light"] .section-divider span {
+  color: var(--accent);
+}
+
+/* Table hover in light theme */
+[data-theme="light"] tbody tr:hover:not(.active) {
+  background: rgba(139,105,20,0.06) !important;
+}
+
+/* Scrollbar light theme */
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dim);
+}
