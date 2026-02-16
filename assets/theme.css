@@ -1,133 +1,218 @@
-/* Theme overrides (loaded after styles.css) */
-[data-theme="dark"] body {
-  background: #0f172a;
-  color: #e2e8f0;
+/* ===== Theme overrides (loaded after styles.css) ===== */
+/* Default = Dark Fantasy (variables in styles.css :root) */
+/* Light = Parchment / warm medieval feel              */
+
+/* ===== LIGHT THEME — "Parchemin" ===== */
+[data-theme="light"] {
+  --bg:           #e8dcc8;
+  --bg-surface:   #f5efe2;
+  --bg-panel:     #ede5d4;
+  --bg-input:     #faf6ee;
+  --bg-table:     #f5efe2;
+  --bg-table-alt: #ede5d4;
+  --bg-table-head:#ddd2bc;
+  --bg-active:    rgba(180,130,40,0.15);
+
+  --text:         #2c1810;
+  --text-secondary:#6b5744;
+  --text-heading: #1a0e08;
+  --text-muted:   #9a8b6f;
+
+  --border:       #c9b896;
+  --border-light: #d8ccb4;
+  --border-accent:#a08650;
+
+  --accent:       #8b6914;
+  --accent-light: #a57d1a;
+  --accent-glow:  rgba(139,105,20,0.2);
+  --accent-dim:   #6b5010;
+
+  --danger:       #8b2020;
+  --danger-light: #b52a2a;
+
+  --hp-ok:        #1a8a3e;
+  --hp-low:       #c27812;
+  --hp-dead:      #b52a2a;
+
+  --shadow-soft:  0 12px 40px rgba(100,80,40,0.18);
+  --shadow-panel: 0 6px 20px rgba(100,80,40,0.1);
+  --shadow-btn:   0 4px 12px rgba(100,80,40,0.15);
 }
 
-[data-theme="dark"] .container {
-  background: #0f172a;
-  border-color: #1f2a44;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+[data-theme="light"] body {
+  background: var(--bg);
 }
 
-[data-theme="dark"] .panel {
-  background: #111c2f;
-  border-color: #1f2a44;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.35);
+[data-theme="light"] .container {
+  background: var(--bg-surface);
+  border-color: var(--border);
+  box-shadow: var(--shadow-soft);
 }
 
-[data-theme="dark"] h1,
-[data-theme="dark"] .map-header h2,
-[data-theme="dark"] .map-controls-title {
-  color: #f8fafc;
+[data-theme="light"] .container::before {
+  background: linear-gradient(90deg, transparent, #a08650, #c9952b, #a08650, transparent);
 }
 
-[data-theme="dark"] .subtitle,
-[data-theme="dark"] .badge-label,
-[data-theme="dark"] .form-row label,
-[data-theme="dark"] .controls,
-[data-theme="dark"] .dice-header,
-[data-theme="dark"] .dice-history,
-[data-theme="dark"] .map-hint,
-[data-theme="dark"] .muted {
-  color: #94a3b8;
+[data-theme="light"] body::before {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(160,134,80,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse at 80% 20%, rgba(139,105,20,0.05) 0%, transparent 60%);
 }
 
-[data-theme="dark"] .chip {
-  background: #111c2f;
-  border-color: #1f2a44;
-  color: #e2e8f0;
+[data-theme="light"] h1,
+[data-theme="light"] .brand .title,
+[data-theme="light"] .map-header h2 {
+  color: var(--accent);
 }
 
-[data-theme="dark"] input[type="text"],
-[data-theme="dark"] input[type="number"],
-[data-theme="dark"] select,
-[data-theme="dark"] input[type="color"] {
-  background: #0b1220;
-  border-color: #334155;
-  color: #e2e8f0;
+[data-theme="light"] .map-controls-title,
+[data-theme="light"] .form-title,
+[data-theme="light"] .dice-header {
+  color: var(--accent);
 }
 
-[data-theme="dark"] .token-color-input {
-  background: #0b1220;
-  border-color: #334155;
+[data-theme="light"] th {
+  background: var(--bg-table-head);
+  color: var(--accent);
 }
 
-[data-theme="dark"] input[type="text"]:focus,
-[data-theme="dark"] input[type="number"]:focus,
-[data-theme="dark"] select:focus {
-  border-color: #60a5fa;
-  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
-  background: #0b1220;
+[data-theme="light"] .panel {
+  background: var(--bg-panel);
+  border-color: var(--border);
+  box-shadow: var(--shadow-panel);
 }
 
-[data-theme="dark"] .inline-check-row,
-[data-theme="dark"] .check-inline,
-[data-theme="dark"] .tool-buttons,
-[data-theme="dark"] .icon-btn,
-[data-theme="dark"] .table-icon-btn,
-[data-theme="dark"] .turnbar,
-[data-theme="dark"] .turnbar-item {
-  background: #0b1220;
-  border-color: #1f2a44;
+[data-theme="light"] .chip {
+  background: var(--bg-panel);
+  border-color: var(--border);
+  color: var(--text);
 }
 
-[data-theme="dark"] button.secondary {
-  background: #111c2f;
-  border-color: #1f2a44;
-  color: #e2e8f0;
+[data-theme="light"] input[type="text"],
+[data-theme="light"] input[type="number"],
+[data-theme="light"] select,
+[data-theme="light"] input[type="color"] {
+  background: var(--bg-input);
+  border-color: var(--border);
+  color: var(--text);
 }
 
-[data-theme="dark"] table {
-  background: #0b1220;
-  border-color: #1f2a44;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+[data-theme="light"] input[type="text"]:focus,
+[data-theme="light"] input[type="number"]:focus,
+[data-theme="light"] select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-[data-theme="dark"] th {
-  background: #1f2a44;
-  color: #cbd5f5;
+[data-theme="light"] button.primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  color: #faf6ee;
+  border-color: var(--accent-light);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-[data-theme="dark"] th,
-[data-theme="dark"] td {
-  border-bottom-color: #1f2a44;
+[data-theme="light"] button.secondary {
+  background: var(--bg-input);
+  border-color: var(--border);
+  color: var(--text);
 }
 
-[data-theme="dark"] tbody tr:nth-child(even) {
-  background: #0f172a;
+[data-theme="light"] button.danger {
+  color: #fef2f2;
 }
 
-[data-theme="dark"] tbody tr:nth-child(odd) {
-  background: #0b1220;
+[data-theme="light"] table {
+  background: var(--bg-table);
+  border-color: var(--border);
+  box-shadow: var(--shadow-panel);
 }
 
-[data-theme="dark"] tr.active {
-  background: rgba(59, 130, 246, 0.25) !important;
-  box-shadow: inset 0 0 0 2px rgba(96, 165, 250, 0.7);
+[data-theme="light"] th,
+[data-theme="light"] td {
+  border-bottom-color: var(--border-light);
 }
 
-[data-theme="dark"] tr.active td {
-  color: #e2e8f0;
+[data-theme="light"] tbody tr:nth-child(even) {
+  background: var(--bg-table-alt);
 }
 
-[data-theme="dark"] .dice-result-value {
-  background: #1e293b;
-  border-color: #334155;
-  color: #f8fafc;
+[data-theme="light"] tbody tr:nth-child(odd) {
+  background: var(--bg-table);
 }
 
-[data-theme="dark"] .hp-bar {
-  background: #1e293b;
-  border-color: #334155;
+[data-theme="light"] tr.active {
+  background: var(--bg-active) !important;
+  box-shadow: inset 0 0 0 2px rgba(139,105,20,0.4);
 }
 
-[data-theme="dark"] .map-realtime {
-  background: #0b1220;
-  border-color: #334155;
+[data-theme="light"] tr.active td {
+  color: var(--accent);
 }
 
-[data-theme="dark"] #map {
-  background: #0b1220;
-  border-color: #1f2a44;
+[data-theme="light"] .dice-result-value {
+  background: linear-gradient(135deg, rgba(139,105,20,0.15), rgba(139,105,20,0.08));
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+[data-theme="light"] .hp-bar {
+  background: var(--border-light);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .map-realtime {
+  background: var(--bg-input);
+  border-color: var(--border);
+}
+
+[data-theme="light"] #map {
+  background: var(--bg-panel);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .inline-check-row,
+[data-theme="light"] .check-inline,
+[data-theme="light"] .tool-buttons,
+[data-theme="light"] .icon-btn,
+[data-theme="light"] .table-icon-btn,
+[data-theme="light"] .turnbar,
+[data-theme="light"] .turnbar-item {
+  background: var(--bg-input);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .token-color-input {
+  background: var(--bg-input);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .concentration-badge {
+  background: rgba(26,138,62,0.12);
+  color: var(--hp-ok);
+  border-color: rgba(26,138,62,0.25);
+}
+
+[data-theme="light"] .player-pill {
+  background: var(--bg-input);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme="light"] .player-color {
+  border-color: rgba(0,0,0,.2);
+}
+
+[data-theme="light"] .topbar {
+  background: var(--bg-surface);
+  border-bottom-color: var(--border);
+}
+
+[data-theme="light"] .pill {
+  background: var(--bg-panel);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme="light"] .content > .panel.map-controls {
+  border-right-color: var(--border);
 }
