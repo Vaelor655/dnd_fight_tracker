@@ -124,6 +124,10 @@
 [data-theme="light"] table {
   background: var(--bg-table);
   border-color: var(--border);
+}
+
+[data-theme="light"] .table-wrapper {
+  border-color: var(--border);
   box-shadow: var(--shadow-panel);
 }
 
@@ -138,6 +142,10 @@
 
 [data-theme="light"] tbody tr:nth-child(odd) {
   background: var(--bg-table);
+}
+
+[data-theme="light"] tbody tr:hover {
+  background: rgba(139,105,20,0.06);
 }
 
 [data-theme="light"] tr.active {
@@ -215,4 +223,23 @@
 
 [data-theme="light"] .content > .panel.map-controls {
   border-right-color: var(--border);
+}
+
+/* Light theme: new elements */
+[data-theme="light"] .combat-actions-bar {
+  background: var(--bg-panel);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .form-group {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.06);
+}
+
+[data-theme="light"] .form-group-label {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .section-details summary::before {
+  border-left-color: var(--accent);
 }

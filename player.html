@@ -24,71 +24,86 @@
 
     <div class="content">
       <div class="panel map-controls">
-        <div class="map-controls-title">Connexion</div>
+        <details class="section-details" open>
+          <summary class="map-controls-title">Connexion</summary>
 
-        <div class="form-row">
-          <label>Room</label>
-          <div class="inline-row">
-            <input id="rtRoom" type="text" />
-            <button id="rtConnectBtn" class="secondary small" type="button">Reconnect</button>
+          <div class="form-row">
+            <label>Room</label>
+            <div class="inline-row">
+              <input id="rtRoom" type="text" />
+              <button id="rtConnectBtn" class="secondary small" type="button">Reconnect</button>
+            </div>
           </div>
-        </div>
 
-        <div class="form-row inline-check-row">
-          <input id="followCamera" type="checkbox" checked />
-          <label for="followCamera" style="margin:0">Suivre la caméra du MJ</label>
-        </div>
+          <div class="form-row inline-check-row" style="margin-top: 8px;">
+            <input id="followCamera" type="checkbox" checked />
+            <label for="followCamera" style="margin:0">Suivre la caméra du MJ</label>
+          </div>
 
-        <div class="map-hint">
-          Si tu décoches, tu peux zoom/pan localement (ça ne bouge pas les tokens).
-        
-<div class="map-controls-title">Joueurs en ligne</div>
-<div id="onlinePlayers" class="online-players-list online-players-list--sidebar">
-  <span class="muted">—</span>
-</div>
-</div>
+          <div class="map-hint">
+            Si tu décoches, tu peux zoom/pan localement (ça ne bouge pas les tokens).
+          </div>
+        </details>
+
+        <details class="section-details" open>
+          <summary class="map-controls-title">Joueurs en ligne</summary>
+          <div id="onlinePlayers" class="online-players-list online-players-list--sidebar">
+            <span class="muted">—</span>
+          </div>
+        </details>
 
         <hr class="sep"/>
 
-        <div class="map-controls-title">Outils</div>
+        <details class="section-details" open>
+          <summary class="map-controls-title">Outils</summary>
 
-<div class="toolbar-row">
-  <button id="toolMeasure" class="icon-btn" type="button" title="Mesure (clique-drag)">
-    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 7v10m4-10v6m4-6v10m4-10v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-  </button>
+          <div class="toolbar-row">
+            <button id="toolMeasure" class="icon-btn" type="button" title="Mesure (clique-drag)">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 7v10m4-10v6m4-6v10m4-10v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
 
-  <button id="toolPing" class="icon-btn" type="button" title="Ping (clique sur la carte)">
-    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M2 12h4M18 12h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-  </button>
+            <button id="toolPing" class="icon-btn" type="button" title="Ping (clique sur la carte)">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M2 12h4M18 12h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+            </button>
 
-  <label class="check-inline" title="Afficher la grille (local)">
-    <input id="playerGridToggle" type="checkbox" checked />
-    <span>Grille</span>
-  </label>
-</div>
+            <label class="check-inline" title="Afficher la grille (local)">
+              <input id="playerGridToggle" type="checkbox" checked />
+              <span>Grille</span>
+            </label>
+          </div>
 
-<div class="toolbar-row">
-  <label class="field-inline field-inline--range" title="Zoom de la carte">
-    <span>Zoom <b id="playerZoomValue">100%</b></span>
-    <input id="playerZoomRange" type="range" min="0.2" max="5" step="0.01" value="1" />
-  </label>
-</div>
+          <div class="toolbar-row">
+            <label class="field-inline field-inline--range" title="Zoom de la carte">
+              <span>Zoom <b id="playerZoomValue">100%</b></span>
+              <input id="playerZoomRange" type="range" min="0.2" max="5" step="0.01" value="1" />
+            </label>
+          </div>
+        </details>
 
-<div class="form-row" id="pingNameRow">
-  <label>Nom (pour les pings)</label>
-  <input id="pingName" type="text" placeholder="ex: Théo" />
-</div>
+        <details class="section-details" open>
+          <summary class="map-controls-title">Ping</summary>
 
-<div class="form-row" id="pingColorRow">
-  <label>Couleur (pour les pings)</label>
-  <input id="pingColor" type="color" value="#f59e0b" />
-</div>
+          <div class="form-group">
+            <div class="form-row">
+              <label>
+                <span>Nom (pour les pings)</span>
+                <input id="pingName" type="text" placeholder="ex: Théo" />
+              </label>
+            </div>
+            <div class="form-row" style="margin-top: 6px;">
+              <label>
+                <span>Couleur (pour les pings)</span>
+                <input id="pingColor" type="color" value="#f59e0b" />
+              </label>
+            </div>
+          </div>
 
-<div class="map-hint">
-  <b>Mesure</b> : clique-drag pour mesurer. Re-clique sur l’icône pour quitter.<br/>
-  <b>Ping</b> : clique sur la carte pour ping. Si c'est hors champ, une flèche apparaît sur le bord.
-</div>
-</div>
+          <div class="map-hint">
+            <b>Mesure</b> : clique-drag pour mesurer. Re-clique sur l'icône pour quitter.<br/>
+            <b>Ping</b> : clique sur la carte pour ping. Si c'est hors champ, une flèche apparaît sur le bord.
+          </div>
+        </details>
+      </div>
 
       <div class="panel map-canvas">
         <div id="turnBar" class="turnbar" aria-label="Ordre des tours"></div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grimoire d’Initiative + Battlemap</title>
+  <title>Grimoire d'Initiative + Battlemap</title>
   <link rel="stylesheet" href="assets/styles.css" />
   <link rel="stylesheet" href="assets/theme.css" />
 </head>
@@ -11,7 +11,7 @@
 <div class="container">
     <div class="header-row">
       <div>
-        <h1>Grimoire d’Initiative</h1>
+        <h1>Grimoire d'Initiative</h1>
       </div>
       <div class="header-right">
         <label class="theme-control">
@@ -37,110 +37,135 @@
       </div>
     </div>
 
+    <!-- Combat controls bar - always visible -->
+    <div class="combat-actions-bar">
+      <button id="nextBtn" class="primary next-turn-btn" disabled>
+        <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l15 8-15 8z" fill="currentColor"/></svg>
+        Tour suivant
+      </button>
+      <button id="resetBtn" class="danger">Reset combat</button>
+      <div class="combat-actions-secondary">
+        <button id="exportCombatBtn" class="secondary small">Exporter JSON</button>
+        <button id="importCombatBtn" class="secondary small">Importer JSON</button>
+        <input id="importCombatFile" type="file" accept="application/json" hidden />
+      </div>
+    </div>
+
     <div class="top-layout">
       <!-- Formulaire d'ajout -->
       <div class="panel">
-        <div class="form-title">Ajout de combattants</div>
-        <div class="form-row" style="margin-bottom: 10px;">
-          <label style="flex: 1 1 220px;">
-            <span>Monstre préfait</span>
-            <select id="presetMonsterSelect">
-              <option value="">– Choisir un monstre –</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Nom</span>
-            <input type="text" id="nameInput" placeholder="Gobelin, Guerrier, Magicien..." />
-          </label>
-          <label>
-            <span>Initiative</span>
-            <input type="number" id="initiativeInput" placeholder="Ex: 15" />
-          </label>
-          <label>
-            <span>CA de base</span>
-            <input type="number" id="acBaseInput" placeholder="Ex: 16" />
-          </label>
-          <label>
-            <span>Bonus CA (temp.)</span>
-            <input type="number" id="acTempInput" placeholder="Ex: 2" />
-          </label>
-          <label>
-            <span>PV max</span>
-            <input type="number" id="hpInput" placeholder="Ex: 12" />
-          </label>
-        </div>
-
-        <div class="form-row" style="margin-bottom: 6px;">
-          <label>
-            <span>PV bonus</span>
-            <input type="number" id="hpTempInput" placeholder="Ex: 5" />
-          </label>
-          <label>
-            <span>Quantité</span>
-            <input type="number" id="quantityInput" value="1" min="1" />
-          </label>
-
-          <label class="inline-check" style="flex: 1 1 220px;">
-            <span style="margin-bottom: 2px;">Token</span>
-            <span class="inline-check-row">
-              <input type="checkbox" id="createTokenOnAdd" checked />
-              <span>Créer token sur la map</span>
-            </span>
-          </label>
-          <label style="flex: 1 1 220px;">
-            <span>Taille du token (non préfait)</span>
-            <select id="tokenSizeSelect">
-              <option value="0.5">TP (1/2 case)</option>
-              <option value="1" selected>P/M (1 case)</option>
-              <option value="2">G (2 cases)</option>
-              <option value="3">TG (3 cases)</option>
-              <option value="4">Gig (4 cases)</option>
-            </select>
-          </label>
-
-          <label style="flex: 1 1 220px;">
-            <span>Conditions</span>
-            <input
-              type="text"
-              id="conditionsInput"
-              class="conditions-input"
-              placeholder="Texte libre : Empoisonné, Concentration..."
-            />
-            <select id="conditionSelect" class="condition-select">
-              <option value="">+ Ajouter une condition D&D</option>
-              <option value="Aveuglé (Blinded)">Aveuglé (Blinded)</option>
-              <option value="Charmé (Charmed)">Charmé (Charmed)</option>
-              <option value="Assourdi (Deafened)">Assourdi (Deafened)</option>
-              <option value="Effrayé (Frightened)">Effrayé (Frightened)</option>
-              <option value="Agrippé (Grappled)">Agrippé (Grappled)</option>
-              <option value="Neutralisé (Incapacitated)">Neutralisé (Incapacitated)</option>
-              <option value="Invisible (Invisible)">Invisible (Invisible)</option>
-              <option value="Paralysé (Paralyzed)">Paralysé (Paralyzed)</option>
-              <option value="Pétrifié (Petrified)">Pétrifié (Petrified)</option>
-              <option value="Empoisonné (Poisoned)">Empoisonné (Poisoned)</option>
-              <option value="À terre (Prone)">À terre (Prone)</option>
-              <option value="Entravé (Restrained)">Entravé (Restrained)</option>
-              <option value="Étourdi (Stunned)">Étourdi (Stunned)</option>
-              <option value="Inconscient (Unconscious)">Inconscient (Unconscious)</option>
-              <option value="Exténué (Exhaustion)">Exténué (Exhaustion)</option>
-            </select>
-          </label>
-          <div style="display:flex; align-items:flex-end;">
-            <button id="addBtn" class="primary">Ajouter</button>
+        <details class="section-details" open>
+          <summary class="form-title">Ajout de combattants</summary>
+          <div class="form-group">
+            <div class="form-group-label">Monstre préfait</div>
+            <div class="form-row">
+              <label style="flex: 1 1 100%;">
+                <select id="presetMonsterSelect">
+                  <option value="">– Choisir un monstre –</option>
+                </select>
+              </label>
+            </div>
           </div>
-        </div>
 
-        <!-- Contrôles globaux -->
-        <div class="controls">
-          <div>
-            <button id="nextBtn" class="secondary" disabled>Tour suivant</button>
-            <button id="resetBtn" class="danger">Reset combat</button>
-            <button id="exportCombatBtn" class="secondary">Exporter JSON</button>
-            <button id="importCombatBtn" class="secondary">Importer JSON</button>
-            <input id="importCombatFile" type="file" accept="application/json" hidden />
+          <div class="form-group">
+            <div class="form-group-label">Identité</div>
+            <div class="form-row">
+              <label style="flex: 2 1 180px;">
+                <span>Nom</span>
+                <input type="text" id="nameInput" placeholder="Gobelin, Guerrier..." />
+              </label>
+              <label style="flex: 1 1 90px;">
+                <span>Initiative</span>
+                <input type="number" id="initiativeInput" placeholder="15" />
+              </label>
+              <label style="flex: 1 1 80px;">
+                <span>Quantité</span>
+                <input type="number" id="quantityInput" value="1" min="1" />
+              </label>
+            </div>
           </div>
-        </div>
+
+          <div class="form-group">
+            <div class="form-group-label">Stats</div>
+            <div class="form-row">
+              <label>
+                <span>CA de base</span>
+                <input type="number" id="acBaseInput" placeholder="16" />
+              </label>
+              <label>
+                <span>Bonus CA</span>
+                <input type="number" id="acTempInput" placeholder="0" />
+              </label>
+              <label>
+                <span>PV max</span>
+                <input type="number" id="hpInput" placeholder="12" />
+              </label>
+              <label>
+                <span>PV bonus</span>
+                <input type="number" id="hpTempInput" placeholder="0" />
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-group-label">Options</div>
+            <div class="form-row">
+              <label class="inline-check" style="flex: 1 1 200px;">
+                <span style="margin-bottom: 2px;">Token</span>
+                <span class="inline-check-row">
+                  <input type="checkbox" id="createTokenOnAdd" checked />
+                  <span>Créer token sur la map</span>
+                </span>
+              </label>
+              <label style="flex: 1 1 200px;">
+                <span>Taille du token (non préfait)</span>
+                <select id="tokenSizeSelect">
+                  <option value="0.5">TP (1/2 case)</option>
+                  <option value="1" selected>P/M (1 case)</option>
+                  <option value="2">G (2 cases)</option>
+                  <option value="3">TG (3 cases)</option>
+                  <option value="4">Gig (4 cases)</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-group-label">Conditions</div>
+            <div class="form-row">
+              <label style="flex: 1 1 100%;">
+                <input
+                  type="text"
+                  id="conditionsInput"
+                  class="conditions-input"
+                  placeholder="Texte libre : Empoisonné, Concentration..."
+                />
+                <select id="conditionSelect" class="condition-select">
+                  <option value="">+ Ajouter une condition D&D</option>
+                  <option value="Aveuglé (Blinded)">Aveuglé (Blinded)</option>
+                  <option value="Charmé (Charmed)">Charmé (Charmed)</option>
+                  <option value="Assourdi (Deafened)">Assourdi (Deafened)</option>
+                  <option value="Effrayé (Frightened)">Effrayé (Frightened)</option>
+                  <option value="Agrippé (Grappled)">Agrippé (Grappled)</option>
+                  <option value="Neutralisé (Incapacitated)">Neutralisé (Incapacitated)</option>
+                  <option value="Invisible (Invisible)">Invisible (Invisible)</option>
+                  <option value="Paralysé (Paralyzed)">Paralysé (Paralyzed)</option>
+                  <option value="Pétrifié (Petrified)">Pétrifié (Petrified)</option>
+                  <option value="Empoisonné (Poisoned)">Empoisonné (Poisoned)</option>
+                  <option value="À terre (Prone)">À terre (Prone)</option>
+                  <option value="Entravé (Restrained)">Entravé (Restrained)</option>
+                  <option value="Étourdi (Stunned)">Étourdi (Stunned)</option>
+                  <option value="Inconscient (Unconscious)">Inconscient (Unconscious)</option>
+                  <option value="Exténué (Exhaustion)">Exténué (Exhaustion)</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-submit-row">
+            <button id="addBtn" class="primary">Ajouter le combattant</button>
+          </div>
+        </details>
       </div>
 
       <!-- Panel de dés -->
@@ -166,25 +191,27 @@
     </div>
 
     <!-- Tableau d'initiative -->
-    <table>
-      <thead>
-        <tr>
-          <th class="col-n">#</th>
-          <th class="col-hide" title="Cacher pour les players">Cacher</th>
-          <th>Nom</th>
-          <th>Init</th>
-          <th>CA</th>
-          <th>PV</th>
-          <th>Conditions / notes</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="trackerBody">
-        <tr>
-          <td colspan="8" class="empty">Aucune créature pour l'instant.</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="col-n">#</th>
+            <th class="col-hide" title="Cacher pour les players">Cacher</th>
+            <th>Nom</th>
+            <th>Init</th>
+            <th>CA</th>
+            <th>PV</th>
+            <th>Conditions / notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="trackerBody">
+          <tr>
+            <td colspan="8" class="empty">Aucune créature pour l'instant.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Battlemap -->
     <div class="map-section">
@@ -202,7 +229,9 @@
 
       <div class="map-layout map-layout--stack">
         <div class="panel map-controls">
-          <div class="map-controls-title">Outils</div>
+
+          <details class="section-details" open>
+            <summary class="map-controls-title">Outils de dessin</summary>
 
 <!-- Hidden legacy selects (kept for compatibility) -->
 <select id="toolSelect" class="sr-only" aria-hidden="true" tabindex="-1">
@@ -262,8 +291,10 @@
     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6V4h8v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6l1 16h10l1-16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
 </div>
+          </details>
 
-<div class="map-controls-title">Grille / Mesure / Ping</div>
+          <details class="section-details" open>
+            <summary class="map-controls-title">Grille / Mesure / Ping</summary>
 
 <div class="toolbar-row">
   <label class="field-inline field-inline--range" title="Taille d'une case (en pixels)">
@@ -305,10 +336,11 @@
     <span>Cacher noms (players)</span>
   </label>
 </div>
+          </details>
 
+          <details class="section-details">
+            <summary class="map-controls-title">Temps réel (Supabase)</summary>
 <div class="map-realtime">
-            <div class="map-controls-title">Temps réel (Supabase)</div>
-
             <div class="form-row">
               <label>Room (partie)</label>
               <div class="inline-row">
@@ -339,9 +371,10 @@
               </div>
             </div>
           </div>
+          </details>
 
 <div class="map-hint">
-            Outil “Déplacer la map” : drag pour déplacer l’image • Clic droit + drag (ou espace/shift) : déplacer la caméra • Molette : zoom • “Map” dans le tableau : focus token.
+            Outil "Déplacer la map" : drag pour déplacer l'image. Clic droit + drag (ou espace/shift) : déplacer la caméra. Molette : zoom. "Map" dans le tableau : focus token.
           </div>
         </div>
 
