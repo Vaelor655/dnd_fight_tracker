@@ -2,6 +2,28 @@ import { createBattlemapController } from "./battlemap/controller.js";
 import { screenToWorld, worldToCell } from "./battlemap/render.js";
 import { initMapRealtimeMJ } from "./realtime/mapSync.js";
 
+// ========= TOAST NOTIFICATIONS =========
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const icons = {
+        success: '<svg class="toast-icon" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>',
+        info: '<svg class="toast-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>',
+        danger: '<svg class="toast-icon" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>',
+      };
+
+      const toast = document.createElement('div');
+      toast.className = `toast toast--${type}`;
+      toast.innerHTML = `${icons[type] || icons.info}<span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.add('toast-out');
+        toast.addEventListener('animationend', () => toast.remove());
+      }, 2500);
+    }
+
 // ========= CONSTANTES & ÉTAT =========
     const STORAGE_KEY = "initiativeTrackerState_v15_parchment_with_map";
     const THEME_STORAGE_KEY = "initiativeTrackerTheme";
@@ -460,6 +482,7 @@ function monsterSizeToCells(sizeRaw){
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+      showToast('Combat exporté', 'success');
     }
 
     async function importCombatStateFromFile(file) {
@@ -971,6 +994,9 @@ function monsterSizeToCells(sizeRaw){
       saveState();
       render();
       nameInput.focus();
+
+      const label = quantity > 1 ? `${quantity}x ${name}` : name;
+      showToast(`${label} ajouté au combat`, 'success');
     }
 
     function nextTurn() {
@@ -979,6 +1005,7 @@ function monsterSizeToCells(sizeRaw){
       if (currentIndex >= combatants.length) {
         currentIndex = 0;
         roundNumber++;
+        showToast(`Round ${roundNumber}`, 'info');
       }
       saveState();
       render();
