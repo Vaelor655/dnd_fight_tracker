@@ -150,7 +150,10 @@
 
 [data-theme="light"] tr.active {
   background: var(--bg-active) !important;
-  box-shadow: inset 0 0 0 2px rgba(139,105,20,0.4);
+}
+
+[data-theme="light"] tr.active::before {
+  background: linear-gradient(to bottom, var(--accent-light), var(--accent));
 }
 
 [data-theme="light"] tr.active td {
@@ -234,6 +237,11 @@
 [data-theme="light"] .form-group {
   background: rgba(0,0,0,0.04);
   border-color: rgba(0,0,0,0.06);
+  border-left-color: var(--accent-dim);
+}
+
+[data-theme="light"] .form-group:hover {
+  border-left-color: var(--accent);
 }
 
 [data-theme="light"] .form-group-label {
@@ -242,4 +250,72 @@
 
 [data-theme="light"] .section-details summary::before {
   border-left-color: var(--accent);
+}
+
+/* Light theme: new UI elements */
+[data-theme="light"] .header-icon {
+  color: var(--accent);
+  filter: drop-shadow(0 2px 4px rgba(139,105,20,0.2));
+}
+
+[data-theme="light"] .header-subtitle {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .chip-icon {
+  color: var(--accent);
+}
+
+[data-theme="light"] .section-divider-line {
+  background: linear-gradient(90deg, transparent, var(--border), var(--accent-dim), var(--border), transparent);
+}
+
+[data-theme="light"] .section-divider-icon {
+  color: var(--accent);
+}
+
+[data-theme="light"] .combat-actions-divider {
+  background: var(--border);
+}
+
+[data-theme="light"] .dice-btn {
+  background: var(--bg-input);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+[data-theme="light"] .dice-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+[data-theme="light"] .dice-btn--d20 {
+  background: linear-gradient(135deg, rgba(139,105,20,0.1), var(--bg-input));
+  border-color: var(--accent-dim);
+}
+
+[data-theme="light"] .dice-result {
+  background: rgba(0,0,0,0.03);
+}
+
+[data-theme="light"] .toast {
+  background: var(--bg-surface);
+  border-color: var(--border);
+  box-shadow: 0 8px 24px rgba(100,80,40,0.2);
+}
+
+[data-theme="light"] .topbar::after {
+  background: linear-gradient(90deg, transparent, var(--accent-dim), var(--accent), var(--accent-dim), transparent);
+}
+
+[data-theme="light"] .turnbar-item.is-active {
+  background: linear-gradient(135deg, rgba(139,105,20,0.1), var(--bg-input));
+}
+
+[data-theme="light"] th {
+  border-bottom-color: var(--accent-dim);
+}
+
+[data-theme="light"] ::selection {
+  background: rgba(139,105,20,0.25);
 }
