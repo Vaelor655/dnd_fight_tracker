@@ -9,23 +9,6 @@ function colorFromId(id){
   return `hsl(${hue} 70% 45%)`;
 }
 
-const TOKEN_OUTLINE_COLORS = {
-  red: "#ef4444",
-  orange: "#f59e0b",
-  green: "#22c55e",
-  blue: "#3b82f6",
-};
-
-function normalizeOutlineKey(value){
-  const key = String(value || "").trim().toLowerCase();
-  return Object.prototype.hasOwnProperty.call(TOKEN_OUTLINE_COLORS, key) ? key : "none";
-}
-
-function getOutlineColor(value){
-  const key = normalizeOutlineKey(value);
-  return TOKEN_OUTLINE_COLORS[key] || null;
-}
-
 export function createBattlemapController(dom){
   const canvas = dom.canvas;
   const ctx = canvas.getContext("2d");
@@ -492,8 +475,6 @@ dom.bgFile?.addEventListener("change", async () => {
         hiddenForPlayers: !!combatant.hiddenFromPlayers,
         hideNameForPlayers: !!combatant.hideNameForPlayers,
         censorLabel: (typeof combatant.censorLabel === "string" && combatant.censorLabel.trim()) ? combatant.censorLabel.trim().toUpperCase() : null,
-        outlineColor: normalizeOutlineKey(combatant.outlineColor),
-        outlineColorValue: getOutlineColor(combatant.outlineColor),
         hp: combatant.hpCurrent ?? "",
         hpTemp: combatant.hpTemp ?? 0,
         ac: (combatant.acBase ?? 10) + (combatant.acTemp ?? 0),
@@ -516,8 +497,6 @@ dom.bgFile?.addEventListener("change", async () => {
     if(combatant.hideNameForPlayers){
       t.censorLabel = (typeof combatant.censorLabel === "string" && combatant.censorLabel.trim()) ? combatant.censorLabel.trim().toUpperCase() : (t.censorLabel || null);
     }
-    t.outlineColor = normalizeOutlineKey(combatant.outlineColor);
-    t.outlineColorValue = getOutlineColor(combatant.outlineColor);
     if(combatant.tokenColor) t.color = combatant.tokenColor;
     if(!t.color) t.color = colorFromId(combatant.id);
     dirty = true;
