@@ -158,8 +158,15 @@ export function draw(canvas, ctx, state, overlay){
     ctx.fill();
 
     const isSelected = (state.selectedTokenId === t.id);
+    const outlineColor = (typeof t.outlineColorValue === "string" && t.outlineColorValue.trim()) ? t.outlineColorValue.trim() : null;
     ctx.lineWidth = (isSelected ? 3 : 1.5) / camera.zoom;
-    ctx.strokeStyle = isSelected ? "rgba(245,158,11,0.95)" : "rgba(0,0,0,0.25)";
+    if(isSelected){
+      ctx.strokeStyle = "rgba(245,158,11,0.95)";
+    }else if(outlineColor){
+      ctx.strokeStyle = outlineColor;
+    }else{
+      ctx.strokeStyle = "rgba(0,0,0,0.25)";
+    }
     ctx.beginPath();
     ctx.arc(cxTok, cyTok, r, 0, Math.PI*2);
     ctx.stroke();
