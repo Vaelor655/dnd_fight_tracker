@@ -46,23 +46,6 @@ import { initMapRealtimeMJ } from "./realtime/mapSync.js";
       "Exténué (Exhaustion)",
     ];
 
-    const OUTLINE_COLORS = {
-      red: "#ef4444",
-      orange: "#f59e0b",
-      green: "#22c55e",
-      blue: "#3b82f6",
-    };
-
-    function normalizeOutlineKey(value) {
-      const v = String(value || "").trim().toLowerCase();
-      return Object.prototype.hasOwnProperty.call(OUTLINE_COLORS, v) ? v : "none";
-    }
-
-    function getOutlineHex(value) {
-      const key = normalizeOutlineKey(value);
-      return OUTLINE_COLORS[key] || null;
-    }
-
     /**
      * @typedef {Object} Combatant
      * @property {number} id
@@ -273,7 +256,6 @@ function monsterSizeToCells(sizeRaw){
       if(!c) return;
       if(typeof c.hiddenFromPlayers !== "boolean") c.hiddenFromPlayers = !!(c.hiddenFromPlayers ?? false);
       if(typeof c.hideNameForPlayers !== "boolean") c.hideNameForPlayers = !!(c.hideNameForPlayers ?? false);
-      c.outlineColor = normalizeOutlineKey(c.outlineColor);
       if(c.hideNameForPlayers && (typeof c.censorLabel !== "string" || c.censorLabel.trim().length !== 6)){
         c.censorLabel = generateCensorLabel();
       }
@@ -436,7 +418,6 @@ function monsterSizeToCells(sizeRaw){
         hiddenFromPlayers: !!(c.hiddenFromPlayers ?? c.hiddenForPlayers ?? c.hidden ?? false),
         hideNameForPlayers: !!(c.hideNameForPlayers ?? false),
         censorLabel: (typeof c.censorLabel === "string") ? c.censorLabel.trim() : null,
-        outlineColor: normalizeOutlineKey(c.outlineColor),
       };
       updateUnconsciousCondition(obj);
       return obj;
@@ -610,12 +591,6 @@ function monsterSizeToCells(sizeRaw){
 
       combatants.forEach((c, index) => {
         const tr = document.createElement("tr");
-        ensureCombatantExtras(c);
-        const rowOutlineColor = getOutlineHex(c.outlineColor);
-        if (rowOutlineColor) {
-          tr.classList.add("combatant-outline-row");
-          tr.style.setProperty("--combatant-outline", rowOutlineColor);
-        }
         if (index === currentIndex) {
           tr.classList.add("active");
         }
@@ -633,6 +608,7 @@ function monsterSizeToCells(sizeRaw){
         tr.appendChild(orderTd);
 
         // Visibilité (players) + Masquer nom (players)
+        ensureCombatantExtras(c);
 
         const hideTd = document.createElement("td");
         const toolsWrap = document.createElement("div");
@@ -691,30 +667,6 @@ function monsterSizeToCells(sizeRaw){
           render();
         });
         colorRow.appendChild(colorInput);
-
-        const outlineSelect = document.createElement("select");
-        outlineSelect.classList.add("token-outline-select");
-        outlineSelect.title = "Couleur d'outline (token + ligne)";
-        outlineSelect.innerHTML = `
-          <option value="none">Outline: aucune</option>
-          <option value="red">Outline: rouge</option>
-          <option value="orange">Outline: orange</option>
-          <option value="green">Outline: vert</option>
-          <option value="blue">Outline: bleu</option>
-        `;
-        outlineSelect.value = normalizeOutlineKey(c.outlineColor);
-        outlineSelect.addEventListener("change", () => {
-          c.outlineColor = normalizeOutlineKey(outlineSelect.value);
-          saveState();
-          if (battlemap && typeof c.mapTokenId === "number") {
-            battlemap.upsertTokenForCombatant(c);
-            battlemap.invalidate();
-            window.__mapDirtyTs = Date.now();
-            realtime?.markDirty?.();
-          }
-          render();
-        });
-        colorRow.appendChild(outlineSelect);
         nameTd.appendChild(colorRow);
 
         if (c.isConcentrating) {
@@ -1013,7 +965,6 @@ function monsterSizeToCells(sizeRaw){
           tokenColor: null,
           tokenSize: tokenSizeCells,
           hiddenFromPlayers: false,
-          outlineColor: "none",
         };
 
         updateUnconsciousCondition(newCombatant);
