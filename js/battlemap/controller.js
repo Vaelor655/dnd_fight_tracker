@@ -196,6 +196,10 @@ function markDirty(full=true){
   if(dom.fillMode && dom.fillMode.type === "checkbox") dom.fillMode.checked = (state.ui.fillMode === "fill");
   if(dom.snapMode && dom.snapMode.type === "checkbox") dom.snapMode.checked = (state.ui.snapMode !== "off");
 
+  // Toolbar icon-button sync for fill/snap
+  dom.fillModeBtn?.classList.toggle("is-active", state.ui.fillMode === "fill");
+  dom.snapModeBtn?.classList.toggle("is-active", state.ui.snapMode !== "off");
+
   // Value readouts (sliders)
   dom.drawWidthValue && (dom.drawWidthValue.textContent = String(state.ui.drawWidth || 3));
   dom.cellPxValue && (dom.cellPxValue.textContent = String(state.grid.cellPx || 40));
@@ -350,6 +354,7 @@ dom.bgFile?.addEventListener("change", async () => {
     }else{
       state.ui.fillMode = dom.fillMode.value || "none";
     }
+    syncFillSnapBtns();
     dirty = true;
     markDirty(false);
   });
@@ -359,9 +364,47 @@ dom.bgFile?.addEventListener("change", async () => {
     }else{
       state.ui.snapMode = dom.snapMode.value || "on";
     }
+    syncFillSnapBtns();
     dirty = true;
     markDirty(false);
   });
+
+  // Toolbar icon-button toggles for fill/snap (new floating toolbar)
+  dom.fillModeBtn?.addEventListener("click", () => {
+    state.ui.fillMode = (state.ui.fillMode === "fill") ? "none" : "fill";
+    if(dom.fillMode && dom.fillMode.type === "checkbox") dom.fillMode.checked = (state.ui.fillMode === "fill");
+    syncFillSnapBtns();
+    dirty = true;
+    markDirty(false);
+  });
+  dom.snapModeBtn?.addEventListener("click", () => {
+    state.ui.snapMode = (state.ui.snapMode === "off") ? "on" : "off";
+    if(dom.snapMode && dom.snapMode.type === "checkbox") dom.snapMode.checked = (state.ui.snapMode !== "off");
+    syncFillSnapBtns();
+    dirty = true;
+    markDirty(false);
+  });
+
+  function syncFillSnapBtns(){
+    dom.fillModeBtn?.classList.toggle("is-active", state.ui.fillMode === "fill");
+    dom.snapModeBtn?.classList.toggle("is-active", state.ui.snapMode !== "off");
+  }
+
+  // Toolbar collapse/expand
+  if(dom.toolbarToggle && dom.mapToolbar){
+    const TOOLBAR_PREF_KEY = "battlemap_toolbar_collapsed";
+    try{
+      if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1"){
+        dom.mapToolbar.classList.add("is-collapsed");
+        dom.toolbarToggle.setAttribute("aria-expanded", "false");
+      }
+    }catch{}
+    dom.toolbarToggle.addEventListener("click", () => {
+      const collapsed = dom.mapToolbar.classList.toggle("is-collapsed");
+      dom.toolbarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      try{ localStorage.setItem(TOOLBAR_PREF_KEY, collapsed ? "1" : "0"); }catch{}
+    });
+  }
 
   dom.undoDrawBtn?.addEventListener("click", () => { undoShape(state); dirty = true; markDirty(false); });
   dom.clearDrawBtn?.addEventListener("click", () => { clearShapes(state); dirty = true; markDirty(false); });
