@@ -1324,6 +1324,7 @@ function monsterSizeToCells(sizeRaw){
       toggleGridBtn: document.getElementById("toggleGridBtn"),
       toolbarToggle: document.getElementById("toolbarToggle"),
       mapToolbar: document.getElementById("mapToolbar"),
+      drawOptionsBar: document.getElementById("drawOptionsBar"),
 
       onDirty: () => {
         // debounce légère via timer (évite spam localStorage pendant drag)

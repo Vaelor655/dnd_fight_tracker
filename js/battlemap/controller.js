@@ -212,6 +212,12 @@ function markDirty(full=true){
       b.classList.toggle("is-active", (b.getAttribute("data-tool") || "") === (state.ui.tool || "tokens"));
     });
   }
+
+  // Show/hide draw options sub-bar
+  if(dom.drawOptionsBar){
+    const drawTools = ["rect", "circle", "pen"];
+    dom.drawOptionsBar.classList.toggle("is-visible", drawTools.includes(state.ui.tool));
+  }
 }
 
   function fitBackgroundToView(){
@@ -393,17 +399,20 @@ dom.bgFile?.addEventListener("change", async () => {
   // Toolbar collapse/expand
   if(dom.toolbarToggle && dom.mapToolbar){
     const TOOLBAR_PREF_KEY = "battlemap_toolbar_collapsed";
-    try{
-      if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1"){
-        dom.mapToolbar.classList.add("is-collapsed");
-        dom.toolbarToggle.setAttribute("aria-expanded", "false");
-      }
-    }catch{}
-    dom.toolbarToggle.addEventListener("click", () => {
-      const collapsed = dom.mapToolbar.classList.toggle("is-collapsed");
+    const toolbarExpand = dom.mapToolbar.querySelector(".map-toolbar__expand");
+
+    function setToolbarCollapsed(collapsed){
+      dom.mapToolbar.classList.toggle("is-collapsed", collapsed);
       dom.toolbarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
       try{ localStorage.setItem(TOOLBAR_PREF_KEY, collapsed ? "1" : "0"); }catch{}
-    });
+    }
+
+    try{
+      if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1") setToolbarCollapsed(true);
+    }catch{}
+
+    dom.toolbarToggle.addEventListener("click", () => setToolbarCollapsed(true));
+    toolbarExpand?.addEventListener("click", () => setToolbarCollapsed(false));
   }
 
   dom.undoDrawBtn?.addEventListener("click", () => { undoShape(state); dirty = true; markDirty(false); });

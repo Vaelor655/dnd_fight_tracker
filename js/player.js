@@ -156,17 +156,20 @@ gridToggle?.addEventListener("click", () => {
 // Toolbar collapse/expand (player)
 if(toolbarToggle && mapToolbar){
   const TOOLBAR_PREF_KEY = "battlemap_toolbar_collapsed_player";
-  try{
-    if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1"){
-      mapToolbar.classList.add("is-collapsed");
-      toolbarToggle.setAttribute("aria-expanded", "false");
-    }
-  }catch{}
-  toolbarToggle.addEventListener("click", () => {
-    const collapsed = mapToolbar.classList.toggle("is-collapsed");
+  const toolbarExpand = document.getElementById("toolbarExpand");
+
+  function setToolbarCollapsed(collapsed){
+    mapToolbar.classList.toggle("is-collapsed", collapsed);
     toolbarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
     try{ localStorage.setItem(TOOLBAR_PREF_KEY, collapsed ? "1" : "0"); }catch{}
-  });
+  }
+
+  try{
+    if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1") setToolbarCollapsed(true);
+  }catch{}
+
+  toolbarToggle.addEventListener("click", () => setToolbarCollapsed(true));
+  toolbarExpand?.addEventListener("click", () => setToolbarCollapsed(false));
 }
 
 zoomRange?.addEventListener("input", () => {
