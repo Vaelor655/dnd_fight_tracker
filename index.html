@@ -362,18 +362,23 @@
                 <div class="map-toolbar__group" id="toolButtons" role="group" aria-label="Outils">
                   <button type="button" class="map-toolbar__btn is-active" data-tool="tokens" title="Déplacer tokens">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 3h-2v4h4V7l3 3-3 3v-2h-4v4h2l-3 3-3-3h2v-4H7v2l-3-3 3-3v2h4V5H9l3-3z"/></svg>
+                    <span class="map-toolbar__label">Tokens</span>
                   </button>
                   <button type="button" class="map-toolbar__btn" data-tool="background" title="Déplacer la map">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="2" fill="currentColor"/><path d="M5 17l5-5 3 3 4-4 3 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="map-toolbar__label">Fond</span>
                   </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="rect" title="Rectangle">
+                  <button type="button" class="map-toolbar__btn" data-tool="rect" title="Dessiner un rectangle">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M6 8h12v8H6z" fill="none"/></svg>
+                    <span class="map-toolbar__label">Rect</span>
                   </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="circle" title="Cercle">
+                  <button type="button" class="map-toolbar__btn" data-tool="circle" title="Dessiner un cercle">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>
+                    <span class="map-toolbar__label">Cercle</span>
                   </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="pen" title="Main levée">
+                  <button type="button" class="map-toolbar__btn" data-tool="pen" title="Dessin à main levée">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17c3-1 4-3 6-4s4 1 6 0 3-3 4-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 21c4-2 8 0 14-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span class="map-toolbar__label">Stylo</span>
                   </button>
                 </div>
 
@@ -383,16 +388,19 @@
                 <div class="map-toolbar__group" role="group" aria-label="Options de dessin">
                   <label class="map-toolbar__color" title="Couleur de dessin">
                     <input id="drawColor" type="color" value="#22c55e" />
+                    <span class="map-toolbar__label">Couleur</span>
                   </label>
                   <label class="map-toolbar__range" title="Épaisseur du trait">
                     <input id="drawWidth" type="range" min="1" max="16" value="3" />
                     <span id="drawWidthValue" class="map-toolbar__range-val">3</span>
                   </label>
-                  <button type="button" class="map-toolbar__btn map-toolbar__btn--toggle" id="fillModeBtn" title="Remplir les formes">
+                  <button type="button" class="map-toolbar__btn map-toolbar__btn--toggle" id="fillModeBtn" title="Remplir les formes (rectangle/cercle)">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z" fill="currentColor" opacity="0.4"/><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <span class="map-toolbar__label">Remplir</span>
                   </button>
-                  <button type="button" class="map-toolbar__btn map-toolbar__btn--toggle is-active" id="snapModeBtn" title="Snap sur la grille">
+                  <button type="button" class="map-toolbar__btn map-toolbar__btn--toggle is-active" id="snapModeBtn" title="Aligner sur la grille">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 7h4v4H7zM13 13h4v4h-4z" fill="currentColor" opacity="0.6"/></svg>
+                    <span class="map-toolbar__label">Snap</span>
                   </button>
                 </div>
 
@@ -402,9 +410,11 @@
                 <div class="map-toolbar__group" role="group" aria-label="Actions">
                   <button id="undoDrawBtn" class="map-toolbar__btn" type="button" title="Annuler le dernier dessin">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="map-toolbar__label">Annuler</span>
                   </button>
                   <button id="clearDrawBtn" class="map-toolbar__btn map-toolbar__btn--danger" type="button" title="Effacer tous les dessins">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6V4h8v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6l1 16h10l1-16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="map-toolbar__label">Effacer</span>
                   </button>
                 </div>
 
@@ -412,14 +422,17 @@
 
                 <!-- Measure / Grid / Ping -->
                 <div class="map-toolbar__group" role="group" aria-label="Mesure et grille">
-                  <button id="measureBtn" class="map-toolbar__btn" type="button" title="Mesure (clique-drag)">
+                  <button id="measureBtn" class="map-toolbar__btn" type="button" title="Mesurer une distance (clique-drag)">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 7v10m4-10v6m4-6v10m4-10v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span class="map-toolbar__label">Mesure</span>
                   </button>
                   <button id="toggleGridBtn" class="map-toolbar__btn map-toolbar__btn--toggle is-active" type="button" title="Afficher / Masquer la grille" aria-pressed="true">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6"/></svg>
+                    <span class="map-toolbar__label">Grille</span>
                   </button>
                   <button id="mjPingBtn" class="map-toolbar__btn" type="button" title="Ping (maintenir G + clic gauche)">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M2 12h4M18 12h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <span class="map-toolbar__label">Ping</span>
                   </button>
                 </div>
               </div>
