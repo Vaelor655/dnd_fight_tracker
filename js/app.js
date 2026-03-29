@@ -1309,6 +1309,8 @@ function monsterSizeToCells(sizeRaw){
       drawWidthValue: document.getElementById("drawWidthValue"),
       fillMode: document.getElementById("fillMode"),
       snapMode: document.getElementById("snapMode"),
+      fillModeBtn: document.getElementById("fillModeBtn"),
+      snapModeBtn: document.getElementById("snapModeBtn"),
       undoDrawBtn: document.getElementById("undoDrawBtn"),
       clearDrawBtn: document.getElementById("clearDrawBtn"),
 
@@ -1320,6 +1322,8 @@ function monsterSizeToCells(sizeRaw){
       distanceRule: document.getElementById("distanceRule"),
       measureBtn: document.getElementById("measureBtn"),
       toggleGridBtn: document.getElementById("toggleGridBtn"),
+      toolbarToggle: document.getElementById("toolbarToggle"),
+      mapToolbar: document.getElementById("mapToolbar"),
 
       onDirty: () => {
         // debounce légère via timer (évite spam localStorage pendant drag)

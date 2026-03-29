@@ -270,56 +270,13 @@
   <option value="chebyshev" selected>Diag = 1 case</option>
 </select>
 
-<div class="toolbar-row">
-  <div id="toolButtons" class="tool-buttons" role="toolbar" aria-label="Outils de la battlemap">
-    <button type="button" class="icon-btn is-active" data-tool="tokens" title="Déplacer tokens">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 3h-2v4h4V7l3 3-3 3v-2h-4v4h2l-3 3-3-3h2v-4H7v2l-3-3 3-3v2h4V5H9l3-3z"/></svg>
-    </button>
-    <button type="button" class="icon-btn" data-tool="background" title="Déplacer la map">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="2" fill="currentColor"/><path d="M5 17l5-5 3 3 4-4 3 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-    <button type="button" class="icon-btn" data-tool="rect" title="Rectangle">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M6 8h12v8H6z" fill="none"/></svg>
-    </button>
-    <button type="button" class="icon-btn" data-tool="circle" title="Cercle">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>
-    </button>
-    <button type="button" class="icon-btn" data-tool="pen" title="Main levée">
-      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17c3-1 4-3 6-4s4 1 6 0 3-3 4-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 21c4-2 8 0 14-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-  </div>
-
-  <label class="field-inline" title="Couleur de dessin">
-    <span>Couleur</span>
-    <input id="drawColor" type="color" value="#22c55e" />
-  </label>
-
-  <label class="field-inline field-inline--range" title="Épaisseur du trait">
-    <span>Épaisseur <b id="drawWidthValue">3</b></span>
-    <input id="drawWidth" type="range" min="1" max="16" value="3" />
-  </label>
-
-  <label class="check-inline" title="Remplir les formes (rectangle/cercle)">
-    <input id="fillMode" type="checkbox" />
-    <span>Remplir</span>
-  </label>
-
-  <label class="check-inline" title="Snap sur la grille">
-    <input id="snapMode" type="checkbox" checked />
-    <span>Snap</span>
-  </label>
-
-  <button id="undoDrawBtn" class="icon-btn" type="button" title="Annuler le dernier dessin">
-    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
-  <button id="clearDrawBtn" class="icon-btn danger" type="button" title="Effacer tous les dessins">
-    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6V4h8v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6l1 16h10l1-16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  </button>
+<div class="map-hint" style="margin-top:0">
+  Les outils de dessin sont maintenant dans la barre flottante sur la carte. Utilisez le bouton <b>◀</b> pour la réduire.
 </div>
           </details>
 
           <details class="section-details" open>
-            <summary class="map-controls-title">Grille / Mesure / Ping</summary>
+            <summary class="map-controls-title">Grille / Mesure</summary>
 
 <div class="toolbar-row">
   <label class="field-inline field-inline--range" title="Taille d'une case (en pixels)">
@@ -340,19 +297,6 @@
   <div class="hint-inline">
     <span class="muted">Distance :</span> <b>diag = 1 case</b> (<span class="muted">règle auto</span>)
   </div>
-
-  <button id="measureBtn" class="icon-btn" type="button" title="Mesure (clique-drag)">
-    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 7v10m4-10v6m4-6v10m4-10v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-  </button>
-
-  <label class="check-inline" title="Afficher la grille">
-    <input id="toggleGridBtn" type="checkbox" checked />
-    <span>Grille</span>
-  </label>
-
-  <button id="mjPingBtn" class="icon-btn" type="button" title="Ping (maintenir G + clic gauche)">
-    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M2 12h4M18 12h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-  </button>
 </div>
 
 <div class="toolbar-row">
@@ -404,12 +348,92 @@
         </div>
 
         <div class="panel map-canvas">
-          <canvas id="map"></canvas>
+          <div class="map-canvas-wrap">
+            <canvas id="map"></canvas>
+
+            <!-- Floating toolbar overlay -->
+            <div id="mapToolbar" class="map-toolbar" role="toolbar" aria-label="Outils de la battlemap">
+              <button type="button" class="map-toolbar__toggle" id="toolbarToggle" title="Réduire / Agrandir la barre d'outils" aria-expanded="true">
+                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 19l-7-7 7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+
+              <div class="map-toolbar__body">
+                <!-- Tool selection group -->
+                <div class="map-toolbar__group" id="toolButtons" role="group" aria-label="Outils">
+                  <button type="button" class="map-toolbar__btn is-active" data-tool="tokens" title="Déplacer tokens">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3 3h-2v4h4V7l3 3-3 3v-2h-4v4h2l-3 3-3-3h2v-4H7v2l-3-3 3-3v2h4V5H9l3-3z"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="background" title="Déplacer la map">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="2" fill="currentColor"/><path d="M5 17l5-5 3 3 4-4 3 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="rect" title="Rectangle">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4z"/><path d="M6 8h12v8H6z" fill="none"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="circle" title="Cercle">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="pen" title="Main levée">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17c3-1 4-3 6-4s4 1 6 0 3-3 4-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 21c4-2 8 0 14-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </button>
+                </div>
+
+                <div class="map-toolbar__sep"></div>
+
+                <!-- Drawing options -->
+                <div class="map-toolbar__group" role="group" aria-label="Options de dessin">
+                  <label class="map-toolbar__color" title="Couleur de dessin">
+                    <input id="drawColor" type="color" value="#22c55e" />
+                  </label>
+                  <label class="map-toolbar__range" title="Épaisseur du trait">
+                    <input id="drawWidth" type="range" min="1" max="16" value="3" />
+                    <span id="drawWidthValue" class="map-toolbar__range-val">3</span>
+                  </label>
+                  <button type="button" class="map-toolbar__btn map-toolbar__btn--toggle" id="fillModeBtn" title="Remplir les formes">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z" fill="currentColor" opacity="0.4"/><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn map-toolbar__btn--toggle is-active" id="snapModeBtn" title="Snap sur la grille">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 7h4v4H7zM13 13h4v4h-4z" fill="currentColor" opacity="0.6"/></svg>
+                  </button>
+                </div>
+
+                <div class="map-toolbar__sep"></div>
+
+                <!-- Actions -->
+                <div class="map-toolbar__group" role="group" aria-label="Actions">
+                  <button id="undoDrawBtn" class="map-toolbar__btn" type="button" title="Annuler le dernier dessin">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <button id="clearDrawBtn" class="map-toolbar__btn map-toolbar__btn--danger" type="button" title="Effacer tous les dessins">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 6V4h8v2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 6l1 16h10l1-16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+
+                <div class="map-toolbar__sep"></div>
+
+                <!-- Measure / Grid / Ping -->
+                <div class="map-toolbar__group" role="group" aria-label="Mesure et grille">
+                  <button id="measureBtn" class="map-toolbar__btn" type="button" title="Mesure (clique-drag)">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6 7v10m4-10v6m4-6v10m4-10v6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </button>
+                  <button id="toggleGridBtn" class="map-toolbar__btn map-toolbar__btn--toggle is-active" type="button" title="Afficher / Masquer la grille" aria-pressed="true">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6"/></svg>
+                  </button>
+                  <button id="mjPingBtn" class="map-toolbar__btn" type="button" title="Ping (maintenir G + clic gauche)">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2v4M12 18v4M2 12h4M18 12h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
   </div>
+
+  <!-- Hidden legacy elements (kept for compatibility) -->
+  <input id="fillMode" type="checkbox" class="sr-only" aria-hidden="true" tabindex="-1" />
+  <input id="snapMode" type="checkbox" class="sr-only" aria-hidden="true" tabindex="-1" checked />
 
   <div id="toastContainer" class="toast-container" aria-live="polite"></div>
   <script type="module" src="js/app.js"></script>

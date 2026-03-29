@@ -19,6 +19,8 @@ const zoomValue = document.getElementById("playerZoomValue");
 const pingNameInput = document.getElementById("pingName");
 const pingColorInput = document.getElementById("pingColor");
 const turnBarEl = document.getElementById("turnBar");
+const toolbarToggle = document.getElementById("toolbarToggle");
+const mapToolbar = document.getElementById("mapToolbar");
 
 // ===== Theme =====
 const THEME_STORAGE_KEY = "initiativeTrackerTheme";
@@ -129,19 +131,43 @@ if(pingBtn && !pingBtn.getAttribute("title")) pingBtn.setAttribute("title", "Pin
 
 // Local (player-side) grid toggle preference
 const GRID_PREF_KEY = "battlemap_player_grid";
+let _gridPref = true;
 try{
-  if(gridToggle){
-    const saved = localStorage.getItem(GRID_PREF_KEY);
-    if(saved === "0") gridToggle.checked = false;
-    if(saved === "1") gridToggle.checked = true;
-  }
+  const saved = localStorage.getItem(GRID_PREF_KEY);
+  if(saved === "0") _gridPref = false;
+  if(saved === "1") _gridPref = true;
 }catch{}
 
-gridToggle?.addEventListener("change", () => {
-  try{ localStorage.setItem(GRID_PREF_KEY, gridToggle.checked ? "1" : "0"); }catch{}
-  if(state?.grid) state.grid.show = !!gridToggle.checked;
+function syncGridBtn(){
+  if(!gridToggle) return;
+  gridToggle.classList.toggle("is-active", _gridPref);
+  gridToggle.setAttribute("aria-pressed", _gridPref ? "true" : "false");
+}
+syncGridBtn();
+
+gridToggle?.addEventListener("click", () => {
+  _gridPref = !_gridPref;
+  try{ localStorage.setItem(GRID_PREF_KEY, _gridPref ? "1" : "0"); }catch{}
+  if(state?.grid) state.grid.show = _gridPref;
+  syncGridBtn();
   dirty = true;
 });
+
+// Toolbar collapse/expand (player)
+if(toolbarToggle && mapToolbar){
+  const TOOLBAR_PREF_KEY = "battlemap_toolbar_collapsed_player";
+  try{
+    if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1"){
+      mapToolbar.classList.add("is-collapsed");
+      toolbarToggle.setAttribute("aria-expanded", "false");
+    }
+  }catch{}
+  toolbarToggle.addEventListener("click", () => {
+    const collapsed = mapToolbar.classList.toggle("is-collapsed");
+    toolbarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
+    try{ localStorage.setItem(TOOLBAR_PREF_KEY, collapsed ? "1" : "0"); }catch{}
+  });
+}
 
 zoomRange?.addEventListener("input", () => {
   const v = Number(zoomRange.value || 1);
@@ -227,7 +253,7 @@ function applyCameraZoom(newZoom, anchorScreen){
 
 function renderNow(){
   // apply local grid preference (does not affect MJ)
-  if(gridToggle && state?.grid) state.grid.show = !!gridToggle.checked;
+  if(state?.grid) state.grid.show = _gridPref;
 
   const overlay = {
     measure: computeMeasureOverlay(),
