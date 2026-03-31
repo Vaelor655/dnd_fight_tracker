@@ -406,25 +406,6 @@ dom.bgFile?.addEventListener("change", async () => {
     dom.snapModeBtn?.classList.toggle("is-active", state.ui.snapMode !== "off");
   }
 
-  // Toolbar collapse/expand
-  if(dom.toolbarToggle && dom.mapToolbar){
-    const TOOLBAR_PREF_KEY = "battlemap_toolbar_collapsed";
-    const toolbarExpand = dom.mapToolbar.querySelector(".map-toolbar__expand");
-
-    function setToolbarCollapsed(collapsed){
-      dom.mapToolbar.classList.toggle("is-collapsed", collapsed);
-      dom.toolbarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
-      try{ localStorage.setItem(TOOLBAR_PREF_KEY, collapsed ? "1" : "0"); }catch{}
-    }
-
-    try{
-      if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1") setToolbarCollapsed(true);
-    }catch{}
-
-    dom.toolbarToggle.addEventListener("click", () => setToolbarCollapsed(true));
-    toolbarExpand?.addEventListener("click", () => setToolbarCollapsed(false));
-  }
-
   dom.undoDrawBtn?.addEventListener("click", () => { undoShape(state); dirty = true; markDirty(false); });
   dom.clearDrawBtn?.addEventListener("click", () => { clearShapes(state); dirty = true; markDirty(false); });
 

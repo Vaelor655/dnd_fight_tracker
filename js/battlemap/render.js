@@ -228,11 +228,12 @@ export function draw(canvas, ctx, state, overlay){
       ctx.restore();
     }
 
-    // ── HP bar (under token) ──
+    // ── HP bar (under token) — hidden for players ──
     const hpMax = typeof t.hpMax === "number" ? t.hpMax : 0;
     const hpCur = (t.hp != null && t.hp !== "") ? Number(t.hp) : -1;
     const tempHpValue = typeof t.hpTemp === "number" ? t.hpTemp : Number(t.hpTemp || 0);
-    if(hpMax > 0 && hpCur >= 0){
+    const showHpBar = !isPlayerView && hpMax > 0 && hpCur >= 0;
+    if(showHpBar){
       const barW = diameter * 0.8;
       const barH = Math.max(4, grid.cellPx * 0.08);
       const barX = cxTok - barW / 2;
@@ -336,7 +337,7 @@ export function draw(canvas, ctx, state, overlay){
     }
 
     // ── Name label under token ──
-    const nameYOffset = (hpMax > 0 && hpCur >= 0)
+    const nameYOffset = showHpBar
       ? r + 3 / camera.zoom + Math.max(4, grid.cellPx * 0.08) + 6 / camera.zoom
       : r + 8 / camera.zoom;
     const name = (t.name || "Token").trim();
