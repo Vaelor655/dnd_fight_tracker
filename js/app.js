@@ -1401,6 +1401,7 @@ function monsterSizeToCells(sizeRaw){
       zoomRange: document.getElementById("mapZoomRange"),
       zoomValue: document.getElementById("mapZoomValue"),
       metersPerCell: document.getElementById("metersPerCell"),
+      gridLayout: document.getElementById("gridLayout"),
       distanceRule: document.getElementById("distanceRule"),
       measureBtn: document.getElementById("measureBtn"),
       toggleGridBtn: document.getElementById("toggleGridBtn"),
