@@ -216,6 +216,13 @@ function markDirty(full=true){
     });
   }
 
+  // Fog toggle sync
+  if(dom.fogToggle){
+    const fogOn = !!state.fog?.enabled;
+    dom.fogToggle.classList.toggle("is-active", fogOn);
+    dom.fogToggle.setAttribute("aria-pressed", fogOn ? "true" : "false");
+  }
+
   // Show/hide draw options sub-bar
   if(dom.drawOptionsBar){
     const drawTools = ["rect", "circle", "pen", "spell-cone", "spell-line", "spell-cube", "spell-sphere"];

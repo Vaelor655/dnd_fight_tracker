@@ -245,21 +245,23 @@ export function draw(canvas, ctx, state, overlay){
       ctx.fill();
 
       // HP fill
-      if(ratio > 0){
+      const fillW = barW * ratio;
+      if(ratio > 0 && fillW >= 1){
         const hpColor = ratio > 0.5 ? "#22c55e" : ratio > 0.25 ? "#f59e0b" : "#ef4444";
         ctx.fillStyle = hpColor;
-        roundRect(ctx, barX, barY, barW * ratio, barH, barH / 2);
+        roundRect(ctx, barX, barY, Math.max(fillW, barH), barH, barH / 2);
         ctx.fill();
       }
 
       // Temp HP overlay (gold, stacked on top)
       if(tempHpValue > 0){
         const tempRatio = Math.min(1, tempHpValue / hpMax);
-        ctx.fillStyle = "rgba(250,204,21,0.6)";
-        const tempW = barW * tempRatio;
-        const tempX = barX + barW * ratio;
-        if(tempX + tempW <= barX + barW + 1){
-          roundRect(ctx, tempX, barY, Math.min(tempW, barX + barW - tempX), barH, barH / 2);
+        const tempW = Math.max(barW * tempRatio, barH);
+        const tempX = barX + fillW;
+        const maxTempW = barX + barW - tempX;
+        if(maxTempW > 1){
+          ctx.fillStyle = "rgba(250,204,21,0.6)";
+          roundRect(ctx, tempX, barY, Math.min(tempW, maxTempW), barH, barH / 2);
           ctx.fill();
         }
       }
@@ -379,6 +381,7 @@ export function draw(canvas, ctx, state, overlay){
         // counter-clockwise circle
         ctx.moveTo(area.cx + area.r, area.cy);
         ctx.arc(area.cx, area.cy, area.r, 0, Math.PI * 2, true);
+        ctx.closePath();
       }
     }
     ctx.fill("evenodd");

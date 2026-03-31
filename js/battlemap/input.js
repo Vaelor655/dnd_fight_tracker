@@ -1,5 +1,5 @@
 import { screenToWorld, worldToCell, pickTokenAt } from "./render.js";
-import { updateTokenPosition, addShape, addFogArea, undoFogArea } from "./model.js";
+import { updateTokenPosition, addShape, addFogArea } from "./model.js";
 import { clamp } from "./utils.js";
 
 function snapWorld(state, world){
@@ -245,20 +245,19 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       updateTokenPosition(state, dragTokenId, snapped.x, snapped.y);
       // Track movement path
       const tok = state.tokens.find(x => x.id === dragTokenId);
-      if(tok && Array.isArray(tok.movementPath)){
-        const last = tok.movementPath[tok.movementPath.length - 1];
-        if(!last || last.x !== snapped.x || last.y !== snapped.y){
-          tok.movementPath.push({ x: snapped.x, y: snapped.y });
+      if(tok){
+        if(!Array.isArray(tok.movementPath)){
+          tok.movementPath = [{ x: snapped.x, y: snapped.y }];
+          tok.turnStartX = snapped.x;
+          tok.turnStartY = snapped.y;
+        }else{
+          const last = tok.movementPath[tok.movementPath.length - 1];
+          if(!last || last.x !== snapped.x || last.y !== snapped.y){
+            tok.movementPath.push({ x: snapped.x, y: snapped.y });
+          }
         }
       }
       state.ui?.onTokenMoved?.(dragTokenId, snapped.x, snapped.y);
-      onChange();
-      return;
-    }
-
-    if(dragMode === "background" && dragBackgroundOffset && state.background){
-      state.background.x = world.x - dragBackgroundOffset.x;
-      state.background.y = world.y - dragBackgroundOffset.y;
       onChange();
       return;
     }
@@ -402,7 +401,7 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       const t = state.tokens.find(x => x.id === state.selectedTokenId);
       if(t){
         const step = e.shiftKey ? -45 : 45;
-        t.rotation = ((t.rotation || 0) + step) % 360;
+        t.rotation = (((t.rotation || 0) + step) % 360 + 360) % 360;
         onChange();
       }
     }
