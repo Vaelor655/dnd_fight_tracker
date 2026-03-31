@@ -698,6 +698,46 @@ function hexDistance(a, b){
 }
 
 function drawHexGrid(ctx, camera, radius, left, right, top, bottom){
+  const pad = Math.max(4, Math.ceil(3 / Math.max(0.25, camera.zoom)));
+  const corners = [
+    { x: left, y: top },
+    { x: right, y: top },
+    { x: right, y: bottom },
+    { x: left, y: bottom },
+  ];
+  let qMinF = Infinity, qMaxF = -Infinity, rMinF = Infinity, rMaxF = -Infinity;
+  for(const p of corners){
+    const qf = ((Math.sqrt(3) / 3) * p.x - (1 / 3) * p.y) / radius;
+    const rf = ((2 / 3) * p.y) / radius;
+    qMinF = Math.min(qMinF, qf);
+    qMaxF = Math.max(qMaxF, qf);
+    rMinF = Math.min(rMinF, rf);
+    rMaxF = Math.max(rMaxF, rf);
+  }
+  const qMin = Math.floor(qMinF) - pad;
+  const qMax = Math.ceil(qMaxF) + pad;
+  const rMin = Math.floor(rMinF) - pad;
+  const rMax = Math.ceil(rMaxF) + pad;
+
+  ctx.lineWidth = 1 / camera.zoom;
+  ctx.strokeStyle = "rgba(0,0,0,0.16)";
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  for(let r = rMin; r <= rMax; r++){
+    ctx.beginPath();
+    for(let q = qMin; q <= qMax; q++){
+      const cx = radius * Math.sqrt(3) * (q + r / 2);
+      const cy = radius * 1.5 * r;
+      const a0 = -Math.PI / 6; // -30°
+      ctx.moveTo(cx + radius * Math.cos(a0), cy + radius * Math.sin(a0));
+      for(let i = 1; i <= 6; i++){
+        const a = (Math.PI / 180) * (60 * i - 30);
+        ctx.lineTo(cx + radius * Math.cos(a), cy + radius * Math.sin(a));
+      }
+      ctx.closePath();
+    }
+    ctx.stroke();
+  }
   const w = Math.sqrt(3) * radius;
   const h = 2 * radius;
   const vStep = 1.5 * radius;
