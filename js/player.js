@@ -1,5 +1,5 @@
 import { createInitialState, migrateState } from "./battlemap/model.js";
-import { draw, screenToWorld, worldToCell } from "./battlemap/render.js";
+import { draw, screenToWorld, worldToCell, cellToWorld } from "./battlemap/render.js";
 import { initMapRealtimePlayer } from "./realtime/mapSync.js";
 
 const canvas = document.getElementById("map");
@@ -392,7 +392,13 @@ function computeMeasureOverlay(){
   let label = "";
 
   const rule = state.grid.distanceRule || "chebyshev";
-  if(rule === "chebyshev"){
+  if(state.grid?.layout === "hex"){
+    const dq = a.x - b.x;
+    const dr = a.y - b.y;
+    const ds = -dq - dr;
+    distCells = (Math.abs(dq) + Math.abs(dr) + Math.abs(ds)) / 2;
+    label = fmtMeters(distCells * mpc);
+  }else if(rule === "chebyshev"){
     distCells = Math.max(dx, dy);
     label = fmtMeters(distCells * mpc);
   }else if(rule === "euclid"){
@@ -407,8 +413,8 @@ function computeMeasureOverlay(){
     label = fmtMeters(distCells * mpc) + " (alt)";
   }
 
-  const aWorld = { x: a.x * state.grid.cellPx, y: a.y * state.grid.cellPx };
-  const bWorld = { x: b.x * state.grid.cellPx, y: b.y * state.grid.cellPx };
+  const aWorld = cellToWorld(state, a);
+  const bWorld = cellToWorld(state, b);
   return { aWorld, bWorld, label };
 }
 
@@ -422,7 +428,7 @@ function computePingOverlay(){
   if(!cell || !isFinite(cell.x) || !isFinite(cell.y)) return null;
 
   return {
-    world: { x: cell.x * state.grid.cellPx, y: cell.y * state.grid.cellPx },
+    world: cellToWorld(state, cell),
     ts: lastPing.ts || now,
     label: lastPing.from ? String(lastPing.from) : "PING",
     color: lastPing.color || null,
@@ -458,7 +464,9 @@ canvas.addEventListener("pointerdown", async (e) => {
   const { sx, sy } = canvasEventToScreen(e);
   const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
   const cell = worldToCell(state, world);
-  const pingCell = { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
+  const pingCell = state.grid?.layout === "hex"
+    ? { x: Math.round(cell.x), y: Math.round(cell.y) }
+    : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
 
   const payload = { x: pingCell.x, y: pingCell.y, ts: Date.now(), from: getPingName(), color: getPingColor(), kind: "player" };
 
@@ -487,7 +495,9 @@ canvas.addEventListener("pointerdown", async (e) => {
 
   if(toolMode === "measure"){
     measureDragging = true;
-    measureStartCell = { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
+    measureStartCell = state.grid?.layout === "hex"
+      ? { x: Math.round(cell.x), y: Math.round(cell.y) }
+      : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
     measureEndCell = { ...measureStartCell };
     dirty = true;
     return;
@@ -495,7 +505,9 @@ canvas.addEventListener("pointerdown", async (e) => {
 
   if(toolMode === "ping"){
     // snap to 0.5 cell for readability
-    const pingCell = { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
+    const pingCell = state.grid?.layout === "hex"
+      ? { x: Math.round(cell.x), y: Math.round(cell.y) }
+      : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
     const payload = { x: pingCell.x, y: pingCell.y, ts: Date.now(), from: getPingName(), color: getPingColor(), kind: "player" };
 
     // show locally immediately
@@ -520,7 +532,9 @@ canvas.addEventListener("pointermove", (e) => {
   const { sx, sy } = canvasEventToScreen(e);
   const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
   const cell = worldToCell(state, world);
-  measureEndCell = { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
+  measureEndCell = state.grid?.layout === "hex"
+    ? { x: Math.round(cell.x), y: Math.round(cell.y) }
+    : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
   dirty = true;
 });
 
