@@ -245,228 +245,141 @@
           <h2>Battlemap</h2>
         </div>
         <div class="online-players">
-            <span class="badge-label">Joueurs en ligne</span>
-            <div id="onlinePlayers" class="online-players-list">
-              <span class="muted">—</span>
-            </div>
-          </div>
-      </div>
-
-      <div class="map-layout map-layout--stack">
-        <div class="panel map-controls">
-
-          <details class="section-details" open>
-            <summary class="map-controls-title">Outils de dessin</summary>
-
-<!-- Hidden legacy selects (kept for compatibility) -->
-<select id="toolSelect" class="sr-only" aria-hidden="true" tabindex="-1">
-  <option value="tokens" selected>Déplacer tokens</option>
-  <option value="background">Déplacer la map</option>
-  <option value="rect">Rectangle</option>
-  <option value="circle">Cercle</option>
-  <option value="pen">Main levée</option>
-</select>
-<select id="distanceRule" class="sr-only" aria-hidden="true" tabindex="-1">
-  <option value="chebyshev" selected>Diag = 1 case</option>
-</select>
-
-<div class="map-hint" style="margin-top:0">
-  Les outils de dessin sont maintenant dans la barre flottante sur la carte. Utilisez le bouton <b>◀</b> pour la réduire.
-</div>
-          </details>
-
-          <details class="section-details" open>
-            <summary class="map-controls-title">Grille / Mesure</summary>
-
-<div class="toolbar-row">
-  <label class="field-inline field-inline--range" title="Taille d'une case (en pixels)">
-    <span>Case <b id="cellPxValue">40</b> px</span>
-    <input id="cellPx" type="range" min="10" max="200" value="40" />
-  </label>
-
-  <label class="field-inline field-inline--range" title="Zoom de la carte">
-    <span>Zoom <b id="mapZoomValue">100%</b></span>
-    <input id="mapZoomRange" type="range" min="0.25" max="3.5" step="0.01" value="1" />
-  </label>
-
-  <label class="field-inline" title="Distance : diagonale = 1 case ; 1 case = 1 mètre (modifiable)">
-    <span>Mètres / case</span>
-    <input id="metersPerCell" type="number" min="0.1" max="50" value="1" />
-  </label>
-
-  <div class="hint-inline">
-    <span class="muted">Distance :</span> <b>diag = 1 case</b> (<span class="muted">règle auto</span>)
-  </div>
-</div>
-
-<div class="toolbar-row">
-  <label class="check-inline" title="Cacher les noms des tokens côté joueur (contrôlé par le MJ)">
-    <input id="hideTokenNamesPlayer" type="checkbox" />
-    <span>Cacher noms (players)</span>
-  </label>
-</div>
-          </details>
-
-          <details class="section-details">
-            <summary class="map-controls-title">Temps réel (Supabase)</summary>
-<div class="map-realtime">
-            <div class="form-row">
-              <label>Room (partie)</label>
-              <div class="inline-row">
-                <input id="rtRoom" type="text" placeholder="ex: table-1" />
-                <button id="rtConnectBtn" class="secondary small" type="button">Realtime : OFF</button>
-              </div>
-              <div class="map-hint" style="margin-top:6px">
-                Statut : <span id="rtStatus">non configuré</span>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <label>Lien joueurs</label>
-              <div class="inline-row">
-                <input id="rtPlayerLink" type="text" readonly />
-                <button id="rtCopyBtn" class="secondary small" type="button">Copier</button>
-              </div>
-            </div>
-
-            <div class="form-row">
-              <label>Fond via URL (recommandé pour partager la map)</label>
-              <div class="inline-row">
-                <input id="bgUrl" type="text" placeholder="https://.../map.png (ou /assets/map.png)" />
-                <button id="bgUrlBtn" class="secondary small" type="button">Charger</button>
-              </div>
-              <div class="map-hint" style="margin-top:6px">
-                Astuce : évite les fonds en base64 (upload fichier) si tu veux que les joueurs voient la même image.
-              </div>
-            </div>
-          </div>
-          </details>
-
-<div class="map-hint">
-            Outil "Déplacer la map" : drag pour déplacer l'image. Clic droit + drag (ou espace/shift) : déplacer la caméra. Molette : zoom. "Map" dans le tableau : focus token.
+          <span class="badge-label">Joueurs en ligne</span>
+          <div id="onlinePlayers" class="online-players-list">
+            <span class="muted">—</span>
           </div>
         </div>
+      </div>
 
+      <!-- Hidden legacy selects -->
+      <select id="toolSelect" class="sr-only" aria-hidden="true" tabindex="-1">
+        <option value="tokens" selected>Déplacer tokens</option>
+      </select>
+      <select id="distanceRule" class="sr-only" aria-hidden="true" tabindex="-1">
+        <option value="chebyshev" selected>Diag = 1 case</option>
+      </select>
+
+      <!-- 2-column: canvas + token list -->
+      <div class="map-layout map-layout--stack">
         <div class="panel map-canvas">
           <div class="map-canvas-wrap">
             <canvas id="map"></canvas>
+          </div>
 
-            <!-- Floating toolbar (Excalidraw-style) -->
-            <div id="mapToolbar" class="map-toolbar" role="toolbar" aria-label="Outils de la battlemap">
+          <!-- Ribbon toolbar (permanent, below canvas) -->
+          <div id="mapToolbar" class="map-ribbon" role="toolbar" aria-label="Outils battlemap">
+            <div class="map-ribbon__main" id="toolButtons">
 
-              <!-- Sub-bar: draw options (visible only when a draw tool is active) -->
-              <div class="map-toolbar__sub" id="drawOptionsBar">
-                <label class="map-toolbar__color" title="Couleur">
-                  <input id="drawColor" type="color" value="#22c55e" />
-                </label>
-                <span class="map-toolbar__sep-v"></span>
-                <label class="map-toolbar__slider" title="Épaisseur">
+              <div class="map-ribbon__group">
+                <button type="button" class="map-ribbon__btn is-active" data-tool="tokens" title="Sélection / Déplacer tokens">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                  <span class="map-ribbon__label">Sélection</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-tool="background" title="Déplacer le fond de carte">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2v20M2 12h20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span class="map-ribbon__label">Fond</span>
+                </button>
+              </div>
+
+              <span class="map-ribbon__sep"></span>
+
+              <div class="map-ribbon__group">
+                <button type="button" class="map-ribbon__btn" data-tool="rect" title="Rectangle">
+                  <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                  <span class="map-ribbon__label">Rect</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-tool="circle" title="Cercle">
+                  <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                  <span class="map-ribbon__label">Cercle</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-tool="pen" title="Dessin libre">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 17c3-2 5-6 9-6s4 4 9 1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span class="map-ribbon__label">Libre</span>
+                </button>
+              </div>
+
+              <span class="map-ribbon__sep"></span>
+
+              <div class="map-ribbon__group">
+                <button type="button" class="map-ribbon__btn" data-tool="spell-cone" title="Cône">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M12 4l-8 16h16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                  <span class="map-ribbon__label">Cône</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-tool="spell-sphere" title="Sphère">
+                  <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>
+                  <span class="map-ribbon__label">Sphère</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-tool="spell-line" title="Ligne">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M4 20L20 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                  <span class="map-ribbon__label">Ligne</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-tool="spell-cube" title="Cube">
+                  <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>
+                  <span class="map-ribbon__label">Cube</span>
+                </button>
+              </div>
+
+              <span class="map-ribbon__sep"></span>
+
+              <!-- Draw options (inline, contextual) -->
+              <div class="map-ribbon__options" id="drawOptionsBar">
+                <label class="map-ribbon__color" title="Couleur"><input id="drawColor" type="color" value="#22c55e" /></label>
+                <label class="map-ribbon__slider" title="Épaisseur">
                   <input id="drawWidth" type="range" min="1" max="16" value="3" />
-                  <span id="drawWidthValue" class="map-toolbar__val">3</span>
+                  <span id="drawWidthValue" class="map-ribbon__val">3</span>
                 </label>
-                <span class="map-toolbar__sep-v"></span>
-                <button type="button" class="map-toolbar__btn map-toolbar__btn--toggle" id="fillModeBtn" title="Remplir">
-                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5z" fill="currentColor" opacity="0.35"/><path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                <button type="button" class="map-ribbon__btn map-ribbon__btn--toggle" id="fillModeBtn" title="Remplir">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M5 5h14v14H5z" fill="currentColor" opacity="0.35"/><path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
                 </button>
-                <button type="button" class="map-toolbar__btn map-toolbar__btn--toggle is-active" id="snapModeBtn" title="Snap grille">
-                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="15" r="1.5" fill="currentColor"/></svg>
+                <button type="button" class="map-ribbon__btn map-ribbon__btn--toggle is-active" id="snapModeBtn" title="Snap grille">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 3v18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="15" r="1.5" fill="currentColor"/></svg>
                 </button>
-                <span class="map-toolbar__sep-v"></span>
-                <button id="undoDrawBtn" class="map-toolbar__btn" type="button" title="Annuler">
-                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <button id="undoDrawBtn" class="map-ribbon__btn" type="button" title="Annuler dernier dessin">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
-                <button id="clearDrawBtn" class="map-toolbar__btn map-toolbar__btn--danger" type="button" title="Tout effacer">
-                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <button id="clearDrawBtn" class="map-ribbon__btn map-ribbon__btn--danger" type="button" title="Tout effacer">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
               </div>
 
-              <!-- Main bar -->
-              <div class="map-toolbar__main" id="toolButtons">
-                <button type="button" class="map-toolbar__toggle" id="toolbarToggle" title="Réduire" aria-expanded="true">
-                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9l-7 7-7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="map-ribbon__sep"></span>
+
+              <div class="map-ribbon__group">
+                <button id="fogToggle" class="map-ribbon__btn map-ribbon__btn--toggle" type="button" title="Brouillard de guerre ON/OFF" aria-pressed="false">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 15c2-3 5-5 9-5s7 2 9 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 9c2 2 5 3 9 3s7-1 9-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span class="map-ribbon__label">Fog</span>
                 </button>
-
-                <span class="map-toolbar__sep-v"></span>
-
-                <div class="map-toolbar__group">
-                  <button type="button" class="map-toolbar__btn is-active" data-tool="tokens" title="Sélection / Déplacer tokens">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-                  </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="background" title="Déplacer le fond de carte">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2v20M2 12h20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  </button>
-                </div>
-
-                <span class="map-toolbar__sep-v"></span>
-
-                <div class="map-toolbar__group">
-                  <button type="button" class="map-toolbar__btn" data-tool="rect" title="Rectangle">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                  </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="circle" title="Cercle">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                  </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="pen" title="Dessin libre">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17c3-2 5-6 9-6s4 4 9 1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  </button>
-                </div>
-
-                <span class="map-toolbar__sep-v"></span>
-
-                <div class="map-toolbar__group">
-                  <button type="button" class="map-toolbar__btn" data-tool="spell-cone" title="Cône">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l-8 16h16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-                  </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="spell-sphere" title="Sphère">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>
-                  </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="spell-line" title="Ligne">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L20 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
-                  </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="spell-cube" title="Cube">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>
-                  </button>
-                </div>
-
-                <span class="map-toolbar__sep-v"></span>
-
-                <div class="map-toolbar__group">
-                  <button id="fogToggle" class="map-toolbar__btn map-toolbar__btn--toggle" type="button" title="Brouillard de guerre ON/OFF" aria-pressed="false">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c2-3 5-5 9-5s7 2 9 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 9c2 2 5 3 9 3s7-1 9-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="fog-rect" title="Révéler zone (rectangle)">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  </button>
-                  <button type="button" class="map-toolbar__btn" data-tool="fog-circle" title="Révéler zone (cercle)">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  </button>
-                  <button id="undoFogBtn" class="map-toolbar__btn" type="button" title="Annuler dernière zone révélée">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
-                  <button id="clearFogBtn" class="map-toolbar__btn map-toolbar__btn--danger" type="button" title="Effacer toutes les zones révélées">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
-                </div>
-
-                <span class="map-toolbar__sep-v"></span>
-
-                <div class="map-toolbar__group">
-                  <button id="measureBtn" class="map-toolbar__btn" type="button" title="Mesurer (clic-drag)">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h20M6 8v8M12 8v8M18 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  </button>
-                  <button id="toggleGridBtn" class="map-toolbar__btn map-toolbar__btn--toggle is-active" type="button" title="Grille" aria-pressed="true">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                  </button>
-                  <button id="mjPingBtn" class="map-toolbar__btn" type="button" title="Ping (G + clic)">
-                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                  </button>
-                </div>
+                <button type="button" class="map-ribbon__btn" data-tool="fog-rect" title="Révéler zone (rectangle)">
+                  <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-tool="fog-circle" title="Révéler zone (cercle)">
+                  <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <button id="undoFogBtn" class="map-ribbon__btn" type="button" title="Annuler dernière zone">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button id="clearFogBtn" class="map-ribbon__btn map-ribbon__btn--danger" type="button" title="Effacer zones révélées">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
               </div>
 
-              <!-- Expand pill (visible when collapsed) -->
-              <button type="button" class="map-toolbar__expand" id="toolbarExpand" title="Afficher les outils">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
+              <span class="map-ribbon__sep"></span>
+
+              <div class="map-ribbon__group">
+                <button id="measureBtn" class="map-ribbon__btn" type="button" title="Mesurer (clic-drag)">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M2 12h20M6 8v8M12 8v8M18 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  <span class="map-ribbon__label">Mesure</span>
+                </button>
+                <button id="toggleGridBtn" class="map-ribbon__btn map-ribbon__btn--toggle is-active" type="button" title="Grille" aria-pressed="true">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                  <span class="map-ribbon__label">Grille</span>
+                </button>
+                <button id="mjPingBtn" class="map-ribbon__btn" type="button" title="Ping (G + clic)">
+                  <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                  <span class="map-ribbon__label">Ping</span>
+                </button>
+              </div>
 
             </div>
           </div>
@@ -483,11 +396,61 @@
           </div>
         </div>
       </div>
+
+      <!-- Settings below map (collapsible) -->
+      <details class="map-settings-panel">
+        <summary class="map-settings-summary">Paramètres carte</summary>
+        <div class="map-settings-body">
+          <div class="map-settings-row">
+            <label class="field-inline field-inline--range" title="Taille d'une case (en pixels)">
+              <span>Case <b id="cellPxValue">40</b> px</span>
+              <input id="cellPx" type="range" min="10" max="200" value="40" />
+            </label>
+            <label class="field-inline field-inline--range" title="Zoom de la carte">
+              <span>Zoom <b id="mapZoomValue">100%</b></span>
+              <input id="mapZoomRange" type="range" min="0.25" max="3.5" step="0.01" value="1" />
+            </label>
+            <label class="field-inline" title="Mètres par case">
+              <span>m / case</span>
+              <input id="metersPerCell" type="number" min="0.1" max="50" value="1" style="width:60px" />
+            </label>
+            <label class="check-inline">
+              <input id="hideTokenNamesPlayer" type="checkbox" />
+              <span>Cacher noms (players)</span>
+            </label>
+          </div>
+          <details class="map-settings-sub">
+            <summary>Fond de carte</summary>
+            <div class="map-settings-row">
+              <label class="field-inline"><span>Image</span><input id="bgFile" type="file" accept="image/*" /></label>
+              <label class="field-inline field-inline--range"><span>Opacité</span><input id="bgOpacity" type="range" min="0" max="100" value="85" /></label>
+              <button id="bgFitBtn" class="secondary small" type="button">Ajuster</button>
+              <button id="bgClearBtn" class="secondary small" type="button">Supprimer</button>
+            </div>
+          </details>
+          <details class="map-settings-sub">
+            <summary>Temps réel (Supabase)</summary>
+            <div class="map-settings-row">
+              <label class="field-inline"><span>Room</span><input id="rtRoom" type="text" placeholder="table-1" style="width:120px" /></label>
+              <button id="rtConnectBtn" class="secondary small" type="button">Realtime : OFF</button>
+              <span class="map-hint">Statut : <span id="rtStatus">non configuré</span></span>
+            </div>
+            <div class="map-settings-row">
+              <label class="field-inline" style="flex:1"><span>Lien joueurs</span><input id="rtPlayerLink" type="text" readonly /></label>
+              <button id="rtCopyBtn" class="secondary small" type="button">Copier</button>
+            </div>
+            <div class="map-settings-row">
+              <label class="field-inline" style="flex:1"><span>Fond URL</span><input id="bgUrl" type="text" placeholder="https://.../map.png" /></label>
+              <button id="bgUrlBtn" class="secondary small" type="button">Charger</button>
+            </div>
+          </details>
+        </div>
+      </details>
     </div>
 
   </div>
 
-  <!-- Hidden legacy elements (kept for compatibility) -->
+  <!-- Hidden legacy elements -->
   <input id="fillMode" type="checkbox" class="sr-only" aria-hidden="true" tabindex="-1" />
   <input id="snapMode" type="checkbox" class="sr-only" aria-hidden="true" tabindex="-1" checked />
 

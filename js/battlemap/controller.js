@@ -216,6 +216,13 @@ function markDirty(full=true){
     });
   }
 
+  // Fog toggle sync
+  if(dom.fogToggle){
+    const fogOn = !!state.fog?.enabled;
+    dom.fogToggle.classList.toggle("is-active", fogOn);
+    dom.fogToggle.setAttribute("aria-pressed", fogOn ? "true" : "false");
+  }
+
   // Show/hide draw options sub-bar
   if(dom.drawOptionsBar){
     const drawTools = ["rect", "circle", "pen", "spell-cone", "spell-line", "spell-cube", "spell-sphere"];
@@ -397,25 +404,6 @@ dom.bgFile?.addEventListener("change", async () => {
   function syncFillSnapBtns(){
     dom.fillModeBtn?.classList.toggle("is-active", state.ui.fillMode === "fill");
     dom.snapModeBtn?.classList.toggle("is-active", state.ui.snapMode !== "off");
-  }
-
-  // Toolbar collapse/expand
-  if(dom.toolbarToggle && dom.mapToolbar){
-    const TOOLBAR_PREF_KEY = "battlemap_toolbar_collapsed";
-    const toolbarExpand = dom.mapToolbar.querySelector(".map-toolbar__expand");
-
-    function setToolbarCollapsed(collapsed){
-      dom.mapToolbar.classList.toggle("is-collapsed", collapsed);
-      dom.toolbarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
-      try{ localStorage.setItem(TOOLBAR_PREF_KEY, collapsed ? "1" : "0"); }catch{}
-    }
-
-    try{
-      if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1") setToolbarCollapsed(true);
-    }catch{}
-
-    dom.toolbarToggle.addEventListener("click", () => setToolbarCollapsed(true));
-    toolbarExpand?.addEventListener("click", () => setToolbarCollapsed(false));
   }
 
   dom.undoDrawBtn?.addEventListener("click", () => { undoShape(state); dirty = true; markDirty(false); });
