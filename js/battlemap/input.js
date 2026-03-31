@@ -1,5 +1,5 @@
 import { screenToWorld, worldToCell, pickTokenAt } from "./render.js";
-import { updateTokenPosition, addShape } from "./model.js";
+import { updateTokenPosition, addShape, addFogArea, undoFogArea } from "./model.js";
 import { clamp } from "./utils.js";
 
 function snapWorld(state, world){
@@ -39,8 +39,8 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
     else if(dragMode === "background") canvas.style.cursor = "grabbing";
     else if(state.ui.tool === "background") canvas.style.cursor = "grab";
     else if(state.ui.measureMode) canvas.style.cursor = "crosshair";
-    else if(state.ui.tool !== "tokens") canvas.style.cursor = "crosshair";
-    else canvas.style.cursor = "default";
+    else if(state.ui.tool === "tokens") canvas.style.cursor = "default";
+    else canvas.style.cursor = "crosshair";
   }
 
   const onContextMenu = (e) => { e.preventDefault(); };
@@ -89,7 +89,12 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
     }
 
     // Drawing tools
-    if(state.ui.tool !== "tokens"){
+    const drawTools = ["rect", "circle", "pen"];
+    const spellTools = ["spell-cone", "spell-line", "spell-cube", "spell-sphere"];
+    const isDrawTool = drawTools.includes(state.ui.tool);
+    const isSpellTool = spellTools.includes(state.ui.tool);
+
+    if(isDrawTool || isSpellTool){
       drawStart = world;
 
       if(state.ui.tool === "rect"){
@@ -114,6 +119,44 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
           fillAlpha: 0.18,
         };
         onStatus("Cercle…");
+      }else if(state.ui.tool === "spell-cone"){
+        dragMode = "draw-spell";
+        state.ui.previewShape = {
+          type: "cone",
+          cx: drawStart.x, cy: drawStart.y, length: 0, angle: 0,
+          stroke: "#f59e0b", strokeWidth: 2,
+          fill: "#f59e0b", fillAlpha: 0.22,
+          spellSize: state.ui.spellSize || 9,
+        };
+        onStatus("Cône…");
+      }else if(state.ui.tool === "spell-line"){
+        dragMode = "draw-spell";
+        state.ui.previewShape = {
+          type: "line-template",
+          x1: drawStart.x, y1: drawStart.y, x2: drawStart.x, y2: drawStart.y,
+          width: (state.ui.spellSize || 1.5) * state.grid.cellPx,
+          stroke: "#3b82f6", strokeWidth: 2,
+          fill: "#3b82f6", fillAlpha: 0.22,
+        };
+        onStatus("Ligne…");
+      }else if(state.ui.tool === "spell-cube"){
+        dragMode = "draw-spell";
+        state.ui.previewShape = {
+          type: "rect",
+          x: drawStart.x, y: drawStart.y, w: 0, h: 0,
+          stroke: "#ef4444", strokeWidth: 2,
+          fill: "#ef4444", fillAlpha: 0.22,
+        };
+        onStatus("Cube…");
+      }else if(state.ui.tool === "spell-sphere"){
+        dragMode = "draw-spell";
+        state.ui.previewShape = {
+          type: "circle",
+          cx: drawStart.x, cy: drawStart.y, r: 0,
+          stroke: "#a855f7", strokeWidth: 2,
+          fill: "#a855f7", fillAlpha: 0.22,
+        };
+        onStatus("Sphère…");
       }else{
         dragMode = "draw-pen";
         state.ui.previewShape = {
@@ -125,6 +168,23 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
         onStatus("Main levée…");
       }
 
+      setCursor();
+      onChange();
+      return;
+    }
+
+    // Fog reveal tools
+    if(state.ui.tool === "fog-rect" || state.ui.tool === "fog-circle"){
+      drawStart = world;
+      if(state.ui.tool === "fog-rect"){
+        dragMode = "fog-rect";
+        state.ui.fogPreview = { type: "rect", x: drawStart.x, y: drawStart.y, w: 0, h: 0 };
+        onStatus("Révéler zone (rect)…");
+      }else{
+        dragMode = "fog-circle";
+        state.ui.fogPreview = { type: "circle", cx: drawStart.x, cy: drawStart.y, r: 0 };
+        onStatus("Révéler zone (cercle)…");
+      }
       setCursor();
       onChange();
       return;
@@ -183,6 +243,14 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       const cell = worldToCell(state, world);
       const snapped = snapCellForToken(state, cell);
       updateTokenPosition(state, dragTokenId, snapped.x, snapped.y);
+      // Track movement path
+      const tok = state.tokens.find(x => x.id === dragTokenId);
+      if(tok && Array.isArray(tok.movementPath)){
+        const last = tok.movementPath[tok.movementPath.length - 1];
+        if(!last || last.x !== snapped.x || last.y !== snapped.y){
+          tok.movementPath.push({ x: snapped.x, y: snapped.y });
+        }
+      }
       state.ui?.onTokenMoved?.(dragTokenId, snapped.x, snapped.y);
       onChange();
       return;
@@ -217,6 +285,50 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       return;
     }
 
+    if(dragMode === "fog-rect" && state.ui.fogPreview){
+      state.ui.fogPreview.w = worldSnap.x - drawStart.x;
+      state.ui.fogPreview.h = worldSnap.y - drawStart.y;
+      onChange();
+      return;
+    }
+
+    if(dragMode === "fog-circle" && state.ui.fogPreview){
+      const dx = worldSnap.x - drawStart.x;
+      const dy = worldSnap.y - drawStart.y;
+      state.ui.fogPreview.r = Math.sqrt(dx*dx + dy*dy);
+      onChange();
+      return;
+    }
+
+    if(dragMode === "draw-spell" && state.ui.previewShape){
+      const s = state.ui.previewShape;
+      if(s.type === "cone"){
+        const dx = worldSnap.x - drawStart.x;
+        const dy = worldSnap.y - drawStart.y;
+        s.length = Math.sqrt(dx*dx + dy*dy);
+        s.angle = Math.atan2(dy, dx);
+        onChange();
+      }else if(s.type === "line-template"){
+        s.x2 = worldSnap.x;
+        s.y2 = worldSnap.y;
+        onChange();
+      }else if(s.type === "rect"){
+        // Cube: constrain to square
+        const dx = worldSnap.x - drawStart.x;
+        const dy = worldSnap.y - drawStart.y;
+        const side = Math.max(Math.abs(dx), Math.abs(dy));
+        s.w = Math.sign(dx) * side;
+        s.h = Math.sign(dy) * side;
+        onChange();
+      }else if(s.type === "circle"){
+        const dx = worldSnap.x - drawStart.x;
+        const dy = worldSnap.y - drawStart.y;
+        s.r = Math.sqrt(dx*dx + dy*dy);
+        onChange();
+      }
+      return;
+    }
+
     if(dragMode === "draw-pen" && state.ui.previewShape){
       const pts = state.ui.previewShape.points;
       const last = pts[pts.length - 1];
@@ -242,8 +354,20 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       onChange();
     }
 
+    if(dragMode?.startsWith("fog") && state.ui.fogPreview){
+      const fp = state.ui.fogPreview;
+      if(fp.type === "rect" && (Math.abs(fp.w) > 5 && Math.abs(fp.h) > 5)){
+        addFogArea(state, { ...fp });
+      }else if(fp.type === "circle" && fp.r > 5){
+        addFogArea(state, { ...fp });
+      }
+      state.ui.fogPreview = null;
+      onChange();
+    }
+
     if(dragMode === "measure") onStatus("Prêt");
     else if(dragMode?.startsWith("draw")) onStatus("Prêt");
+    else if(dragMode?.startsWith("fog")) onStatus("Prêt");
     else if(dragMode === "background") onStatus("Prêt");
     dragMode = null;
     dragTokenId = null;
@@ -271,7 +395,18 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
     onChange();
   };
 
-  const onKeyDown = (e) => { if(e.code === "Space"){ state.ui.spaceDown = true; setCursor(); } };
+  const onKeyDown = (e) => {
+    if(e.code === "Space"){ state.ui.spaceDown = true; setCursor(); }
+    // Rotate selected token with R / Shift+R
+    if(e.code === "KeyR" && state.selectedTokenId != null && !e.ctrlKey && !e.metaKey && !e.altKey){
+      const t = state.tokens.find(x => x.id === state.selectedTokenId);
+      if(t){
+        const step = e.shiftKey ? -45 : 45;
+        t.rotation = ((t.rotation || 0) + step) % 360;
+        onChange();
+      }
+    }
+  };
   const onKeyUp = (e) => { if(e.code === "Space"){ state.ui.spaceDown = false; setCursor(); } };
 
   const onDragOver = (e) => {

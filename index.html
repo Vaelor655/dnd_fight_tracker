@@ -414,6 +414,43 @@
                 <span class="map-toolbar__sep-v"></span>
 
                 <div class="map-toolbar__group">
+                  <button type="button" class="map-toolbar__btn" data-tool="spell-cone" title="Cône">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4l-8 16h16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="spell-sphere" title="Sphère">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="spell-line" title="Ligne">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20L20 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="spell-cube" title="Cube">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>
+                  </button>
+                </div>
+
+                <span class="map-toolbar__sep-v"></span>
+
+                <div class="map-toolbar__group">
+                  <button id="fogToggle" class="map-toolbar__btn map-toolbar__btn--toggle" type="button" title="Brouillard de guerre ON/OFF" aria-pressed="false">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15c2-3 5-5 9-5s7 2 9 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 9c2 2 5 3 9 3s7-1 9-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="fog-rect" title="Révéler zone (rectangle)">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </button>
+                  <button type="button" class="map-toolbar__btn" data-tool="fog-circle" title="Révéler zone (cercle)">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </button>
+                  <button id="undoFogBtn" class="map-toolbar__btn" type="button" title="Annuler dernière zone révélée">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <button id="clearFogBtn" class="map-toolbar__btn map-toolbar__btn--danger" type="button" title="Effacer toutes les zones révélées">
+                    <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+
+                <span class="map-toolbar__sep-v"></span>
+
+                <div class="map-toolbar__group">
                   <button id="measureBtn" class="map-toolbar__btn" type="button" title="Mesurer (clic-drag)">
                     <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h20M6 8v8M12 8v8M18 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                   </button>

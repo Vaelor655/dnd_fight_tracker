@@ -940,6 +940,12 @@ function monsterSizeToCells(sizeRaw){
         const hpClass = isDead ? "dead" : (hpRatio <= 0.25 ? "low" : "ok");
         const color = c.tokenColor || `hsl(${(c.id * 47) % 360} 70% 45%)`;
         const hidden = c.hiddenFromPlayers ? '<span class="map-tokenlist__hidden" title="Caché des joueurs">👁‍🗨</span>' : '';
+        const condList = (c.conditions || "").split(",").map(s => s.trim()).filter(Boolean);
+        const concIcon = c.isConcentrating ? '<span class="map-tokenlist__cond" title="Concentration" style="background:#3b82f6">C</span>' : '';
+        const condIcons = condList.slice(0, 4).map(cnd => {
+          const short = escapeHtml(cnd.charAt(0).toUpperCase());
+          return `<span class="map-tokenlist__cond" title="${escapeHtml(cnd)}">${short}</span>`;
+        }).join("");
 
         const cls = [
           "map-tokenlist__item",
@@ -951,7 +957,7 @@ function monsterSizeToCells(sizeRaw){
           <span class="map-tokenlist__turn">${isActive ? "▶" : (i + 1)}</span>
           <span class="map-tokenlist__dot" style="background:${color}"></span>
           <div class="map-tokenlist__info">
-            <div class="map-tokenlist__name">${escapeHtml(c.name)}</div>
+            <div class="map-tokenlist__name">${escapeHtml(c.name)}${concIcon}${condIcons}</div>
             <div class="map-tokenlist__meta">
               <span class="map-tokenlist__hp map-tokenlist__hp--${hpClass}">${c.hpCurrent}/${c.hpMax} PV</span>
               <span class="map-tokenlist__init">Init ${c.initiative}</span>
@@ -1075,6 +1081,13 @@ function monsterSizeToCells(sizeRaw){
         currentIndex = 0;
         roundNumber++;
         showToast(`Round ${roundNumber}`, 'info');
+      }
+      // Reset movement tracking for the new active combatant
+      if(battlemap && combatants[currentIndex]){
+        const c = combatants[currentIndex];
+        if(typeof c.mapTokenId === "number"){
+          battlemap.startTurnForToken(c.mapTokenId);
+        }
       }
       saveState();
       render();
@@ -1394,6 +1407,9 @@ function monsterSizeToCells(sizeRaw){
       toolbarToggle: document.getElementById("toolbarToggle"),
       mapToolbar: document.getElementById("mapToolbar"),
       drawOptionsBar: document.getElementById("drawOptionsBar"),
+      fogToggle: document.getElementById("fogToggle"),
+      undoFogBtn: document.getElementById("undoFogBtn"),
+      clearFogBtn: document.getElementById("clearFogBtn"),
 
       onDirty: () => {
         // debounce légère via timer (évite spam localStorage pendant drag)

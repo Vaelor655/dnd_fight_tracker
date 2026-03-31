@@ -1414,6 +1414,24 @@ button.is-active {
   opacity: 0.7;
 }
 
+/* Condition badges in token list */
+.map-tokenlist__cond {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  color: #fff;
+  font-size: 0.55rem;
+  font-weight: 700;
+  margin-left: 3px;
+  vertical-align: middle;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
 /* Hidden eye icon */
 .map-tokenlist__hidden {
   font-size: 0.65rem;
