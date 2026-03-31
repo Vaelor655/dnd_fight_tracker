@@ -8,6 +8,10 @@ export function createInitialState(){
     background: null, // { dataUrl, x, y, w, h, opacity, _naturalW, _naturalH } (world px)
     shapes: [],       // drawing layer (world px)
     tokens: [],
+    fog: {
+      enabled: false,
+      revealedAreas: [], // { type: "rect"|"circle", ... } — areas revealed by MJ
+    },
     // Options de rendu côté player (contrôlées par le MJ)
     playerView: {
       hideTokenNames: false,
@@ -53,6 +57,10 @@ export function migrateState(raw){
     background: raw.background || null,
     shapes: Array.isArray(raw.shapes) ? raw.shapes : [],
     tokens: Array.isArray(raw.tokens) ? raw.tokens : [],
+    fog: {
+      enabled: !!(raw.fog?.enabled),
+      revealedAreas: Array.isArray(raw.fog?.revealedAreas) ? raw.fog.revealedAreas : [],
+    },
     playerView: {
       hideTokenNames: !!(raw.playerView?.hideTokenNames ?? raw.playerView?.hideNames ?? false),
     },
@@ -105,4 +113,19 @@ export function undoShape(state){
 
 export function clearShapes(state){
   state.shapes = [];
+}
+
+export function addFogArea(state, area){
+  if(!state.fog) state.fog = { enabled: false, revealedAreas: [] };
+  state.fog.revealedAreas.push(area);
+}
+
+export function undoFogArea(state){
+  if(!state.fog?.revealedAreas?.length) return;
+  state.fog.revealedAreas.pop();
+}
+
+export function clearFog(state){
+  if(!state.fog) return;
+  state.fog.revealedAreas = [];
 }

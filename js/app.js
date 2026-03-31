@@ -2,6 +2,10 @@ import { createBattlemapController } from "./battlemap/controller.js";
 import { screenToWorld, worldToCell } from "./battlemap/render.js";
 import { initMapRealtimeMJ } from "./realtime/mapSync.js";
 
+function escapeHtml(s){
+  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
 // ========= TOAST NOTIFICATIONS =========
     function showToast(message, type = 'info') {
       const container = document.getElementById('toastContainer');
@@ -586,6 +590,7 @@ function monsterSizeToCells(sizeRaw){
         trackerBody.appendChild(tr);
         updateTimerDisplay();
         syncTurnBarToMap();
+        renderTokenList();
         return;
       }
 
@@ -909,7 +914,77 @@ function monsterSizeToCells(sizeRaw){
       updateTimerDisplay();
       focusCurrentTurnOnMap();
       syncTurnBarToMap();
+      renderTokenList();
     }
+
+    // ========= TOKEN LIST (right panel) =========
+    const tokenListBody = document.getElementById("tokenListBody");
+    const tokenListRound = document.getElementById("tokenListRound");
+
+    function renderTokenList(){
+      if(!tokenListBody) return;
+
+      if(tokenListRound){
+        tokenListRound.textContent = combatants.length ? `Round ${roundNumber}` : "";
+      }
+
+      if(!combatants.length){
+        tokenListBody.innerHTML = '<div class="map-tokenlist__empty">Aucune créature</div>';
+        return;
+      }
+
+      tokenListBody.innerHTML = combatants.map((c, i) => {
+        const isActive = (i === currentIndex);
+        const isDead = (c.hpCurrent <= 0 && c.hpMax > 0);
+        const hpRatio = c.hpMax > 0 ? c.hpCurrent / c.hpMax : 1;
+        const hpClass = isDead ? "dead" : (hpRatio <= 0.25 ? "low" : "ok");
+        const color = c.tokenColor || `hsl(${(c.id * 47) % 360} 70% 45%)`;
+        const hidden = c.hiddenFromPlayers ? '<span class="map-tokenlist__hidden" title="Caché des joueurs">👁‍🗨</span>' : '';
+        const condList = (c.conditions || "").split(",").map(s => s.trim()).filter(Boolean);
+        const concIcon = c.isConcentrating ? '<span class="map-tokenlist__cond" title="Concentration" style="background:#3b82f6">C</span>' : '';
+        const condIcons = condList.slice(0, 4).map(cnd => {
+          const short = escapeHtml(cnd.charAt(0).toUpperCase());
+          return `<span class="map-tokenlist__cond" title="${escapeHtml(cnd)}">${short}</span>`;
+        }).join("");
+
+        const cls = [
+          "map-tokenlist__item",
+          isActive ? "is-active" : "",
+          isDead ? "is-dead" : "",
+        ].filter(Boolean).join(" ");
+
+        return `<div class="${cls}" data-combatant-id="${c.id}">
+          <span class="map-tokenlist__turn">${isActive ? "▶" : (i + 1)}</span>
+          <span class="map-tokenlist__dot" style="background:${color}"></span>
+          <div class="map-tokenlist__info">
+            <div class="map-tokenlist__name">${escapeHtml(c.name)}${concIcon}${condIcons}</div>
+            <div class="map-tokenlist__meta">
+              <span class="map-tokenlist__hp map-tokenlist__hp--${hpClass}">${c.hpCurrent}/${c.hpMax} PV</span>
+              <span class="map-tokenlist__init">Init ${c.initiative}</span>
+            </div>
+          </div>
+          ${hidden}
+        </div>`;
+      }).join("");
+
+      // Auto-scroll active item into view
+      const activeEl = tokenListBody.querySelector(".is-active");
+      activeEl?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }
+
+    // Click on token list item → focus on map
+    tokenListBody?.addEventListener("click", (e) => {
+      const item = e.target.closest("[data-combatant-id]");
+      if(!item) return;
+      const id = Number(item.dataset.combatantId);
+      const c = combatants.find(x => x.id === id);
+      if(!c || !battlemap) return;
+      battlemap.upsertTokenForCombatant(c);
+      if(typeof c.mapTokenId === "number"){
+        battlemap.selectToken(c.mapTokenId);
+        battlemap.focusToken(c.mapTokenId);
+      }
+    });
 
     function addCombatant() {
       const name = nameInput.value.trim();
@@ -1006,6 +1081,13 @@ function monsterSizeToCells(sizeRaw){
         currentIndex = 0;
         roundNumber++;
         showToast(`Round ${roundNumber}`, 'info');
+      }
+      // Reset movement tracking for the new active combatant
+      if(battlemap && combatants[currentIndex]){
+        const c = combatants[currentIndex];
+        if(typeof c.mapTokenId === "number"){
+          battlemap.startTurnForToken(c.mapTokenId);
+        }
       }
       saveState();
       render();
@@ -1324,6 +1406,10 @@ function monsterSizeToCells(sizeRaw){
       toggleGridBtn: document.getElementById("toggleGridBtn"),
       toolbarToggle: document.getElementById("toolbarToggle"),
       mapToolbar: document.getElementById("mapToolbar"),
+      drawOptionsBar: document.getElementById("drawOptionsBar"),
+      fogToggle: document.getElementById("fogToggle"),
+      undoFogBtn: document.getElementById("undoFogBtn"),
+      clearFogBtn: document.getElementById("clearFogBtn"),
 
       onDirty: () => {
         // debounce légère via timer (évite spam localStorage pendant drag)

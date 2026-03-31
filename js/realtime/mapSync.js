@@ -295,6 +295,11 @@ function stopPresence(){
     else disconnect();
   });
 
+  // Auto-connect if Supabase is configured
+  if(isConfigured()){
+    connect();
+  }
+
   copyBtn?.addEventListener("click", async () => {
     try{
       await navigator.clipboard.writeText(playerLinkInput?.value || "");

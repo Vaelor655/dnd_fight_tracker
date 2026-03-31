@@ -145,6 +145,48 @@ export function draw(canvas, ctx, state, overlay){
     const cxTok = t.x * grid.cellPx;
     const cyTok = t.y * grid.cellPx;
 
+    // ── Movement trail (dotted path from turn start) ──
+    if(Array.isArray(t.movementPath) && t.movementPath.length >= 2 && !isPlayerView){
+      ctx.save();
+      ctx.strokeStyle = (t.color || "#c05621");
+      ctx.globalAlpha = 0.45;
+      ctx.lineWidth = 3 / camera.zoom;
+      ctx.setLineDash([6 / camera.zoom, 4 / camera.zoom]);
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      const p0 = t.movementPath[0];
+      ctx.moveTo(p0.x * grid.cellPx, p0.y * grid.cellPx);
+      for(let pi = 1; pi < t.movementPath.length; pi++){
+        const pp = t.movementPath[pi];
+        ctx.lineTo(pp.x * grid.cellPx, pp.y * grid.cellPx);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Movement distance label near token
+      let totalDist = 0;
+      for(let pi = 1; pi < t.movementPath.length; pi++){
+        const dx = t.movementPath[pi].x - t.movementPath[pi-1].x;
+        const dy = t.movementPath[pi].y - t.movementPath[pi-1].y;
+        totalDist += Math.max(Math.abs(dx), Math.abs(dy)); // chebyshev cells
+      }
+      if(totalDist > 0){
+        const distM = totalDist * (state.grid.metersPerCell || 1);
+        const label = distM >= 1 ? `${distM.toFixed(1)}m` : `${(distM * 100).toFixed(0)}cm`;
+        ctx.globalAlpha = 0.85;
+        ctx.font = `bold ${Math.max(10, grid.cellPx * 0.16)}px system-ui`;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        const labelX = cxTok + r + 4 / camera.zoom;
+        const labelY = cyTok - r;
+        ctx.fillStyle = "rgba(0,0,0,0.55)";
+        ctx.fillText(label, labelX + 1, labelY + 1);
+        ctx.fillStyle = t.color || "#f59e0b";
+        ctx.fillText(label, labelX, labelY);
+      }
+      ctx.restore();
+    }
+
     // Shadow
     ctx.fillStyle = "rgba(0,0,0,0.22)";
     ctx.beginPath();
@@ -164,14 +206,78 @@ export function draw(canvas, ctx, state, overlay){
     ctx.arc(cxTok, cyTok, r, 0, Math.PI*2);
     ctx.stroke();
 
-    // HP at center (MJ uniquement)
-    const hpText = (t.hp != null && t.hp !== "") ? String(t.hp) : "";
+    // ── Rotation indicator (facing arrow) ──
+    const rot = typeof t.rotation === "number" ? t.rotation : 0;
+    if(rot !== 0 || isSelected){
+      ctx.save();
+      ctx.translate(cxTok, cyTok);
+      ctx.rotate(rot * Math.PI / 180);
+      // Arrow pointing "up" (forward direction)
+      const arrowLen = r * 0.65;
+      const arrowW = r * 0.22;
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
+      ctx.strokeStyle = "rgba(0,0,0,0.4)";
+      ctx.lineWidth = 1.5 / camera.zoom;
+      ctx.beginPath();
+      ctx.moveTo(0, -r + 4 / camera.zoom);
+      ctx.lineTo(-arrowW, -r + 4 / camera.zoom + arrowLen);
+      ctx.lineTo(arrowW, -r + 4 / camera.zoom + arrowLen);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // ── HP bar (under token) ──
+    const hpMax = typeof t.hpMax === "number" ? t.hpMax : 0;
+    const hpCur = (t.hp != null && t.hp !== "") ? Number(t.hp) : -1;
     const tempHpValue = typeof t.hpTemp === "number" ? t.hpTemp : Number(t.hpTemp || 0);
+    if(hpMax > 0 && hpCur >= 0){
+      const barW = diameter * 0.8;
+      const barH = Math.max(4, grid.cellPx * 0.08);
+      const barX = cxTok - barW / 2;
+      const barY = cyTok + r + 3 / camera.zoom;
+      const ratio = Math.max(0, Math.min(1, hpCur / hpMax));
+
+      // background
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      roundRect(ctx, barX, barY, barW, barH, barH / 2);
+      ctx.fill();
+
+      // HP fill
+      if(ratio > 0){
+        const hpColor = ratio > 0.5 ? "#22c55e" : ratio > 0.25 ? "#f59e0b" : "#ef4444";
+        ctx.fillStyle = hpColor;
+        roundRect(ctx, barX, barY, barW * ratio, barH, barH / 2);
+        ctx.fill();
+      }
+
+      // Temp HP overlay (gold, stacked on top)
+      if(tempHpValue > 0){
+        const tempRatio = Math.min(1, tempHpValue / hpMax);
+        ctx.fillStyle = "rgba(250,204,21,0.6)";
+        const tempW = barW * tempRatio;
+        const tempX = barX + barW * ratio;
+        if(tempX + tempW <= barX + barW + 1){
+          roundRect(ctx, tempX, barY, Math.min(tempW, barX + barW - tempX), barH, barH / 2);
+          ctx.fill();
+        }
+      }
+
+      // border
+      ctx.strokeStyle = "rgba(255,255,255,0.3)";
+      ctx.lineWidth = 1 / camera.zoom;
+      roundRect(ctx, barX, barY, barW, barH, barH / 2);
+      ctx.stroke();
+    }
+
+    // ── HP text at center (MJ only) ──
+    const hpText = (t.hp != null && t.hp !== "") ? String(t.hp) : "";
     const tempHpText = tempHpValue > 0 ? `+${tempHpValue}` : "";
     if(showHpOnTokens && hpText){
       const hpFontSize = Math.max(12, grid.cellPx * 0.30);
       const tempFontSize = Math.max(10, grid.cellPx * 0.22);
-      ctx.font = `${hpFontSize}px system-ui`;
+      ctx.font = `bold ${hpFontSize}px system-ui`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "rgba(0,0,0,0.38)";
@@ -189,67 +295,120 @@ export function draw(canvas, ctx, state, overlay){
       }
     }
 
-    // Full name under token (single line)
-    // Player view: the MJ can either hide all names, or hide names individually per token.
+    // ── Condition icons (small dots around token perimeter) ──
+    const conditions = typeof t.conditions === "string" ? t.conditions.split(",").map(s => s.trim()).filter(Boolean) : [];
+    const isConc = !!t.isConcentrating;
+    if(isConc) conditions.unshift("⟡ Concentration");
+    if(conditions.length > 0){
+      const iconR = Math.max(5, grid.cellPx * 0.1);
+      const ringR = r + iconR + 2 / camera.zoom;
+      const startAngle = -Math.PI / 2;
+      const step = (Math.PI * 2) / Math.max(conditions.length, 1);
+
+      for(let ci = 0; ci < conditions.length; ci++){
+        const angle = startAngle + step * ci;
+        const ix = cxTok + Math.cos(angle) * ringR;
+        const iy = cyTok + Math.sin(angle) * ringR;
+        const condColor = getConditionColor(conditions[ci]);
+
+        // dot background
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
+        ctx.beginPath();
+        ctx.arc(ix, iy, iconR + 1 / camera.zoom, 0, Math.PI * 2);
+        ctx.fill();
+
+        // colored dot
+        ctx.fillStyle = condColor;
+        ctx.beginPath();
+        ctx.arc(ix, iy, iconR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // icon letter
+        const letter = getConditionLetter(conditions[ci]);
+        ctx.font = `bold ${Math.max(8, iconR * 1.2)}px system-ui`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillStyle = "#fff";
+        ctx.fillText(letter, ix, iy);
+      }
+    }
+
+    // ── Name label under token ──
+    const nameYOffset = (hpMax > 0 && hpCur >= 0)
+      ? r + 3 / camera.zoom + Math.max(4, grid.cellPx * 0.08) + 6 / camera.zoom
+      : r + 8 / camera.zoom;
     const name = (t.name || "Token").trim();
     const censorName = isPlayerView && (hideNamesForPlayer || !!t.hideNameForPlayers);
 
     if(name && !censorName){
-      ctx.font = `${Math.max(11, grid.cellPx * 0.18)}px system-ui`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-
-      const maxW = Math.max(90, diameter * 1.35);
-      let label = name;
-      while(label.length > 2 && ctx.measureText(label).width > maxW){
-        label = label.slice(0, -2).trimEnd() + "…";
-      }
-
-      const yText = cyTok + r + (8 / camera.zoom);
-
-      // small backing for readability
-      const padX = 8 / camera.zoom;
-      const padY = 4 / camera.zoom;
-      const textW = ctx.measureText(label).width;
-      ctx.fillStyle = "rgba(255,255,255,0.72)";
-      ctx.strokeStyle = "rgba(0,0,0,0.12)";
-      ctx.lineWidth = 1 / camera.zoom;
-
-      roundRect(ctx, cxTok - (textW/2) - padX, yText - padY, textW + padX*2, (16 / camera.zoom) + padY*2, 999);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = "rgba(0,0,0,0.78)";
-      ctx.fillText(label, cxTok, yText);
+      drawTokenLabel(ctx, camera, grid, cxTok, cyTok + nameYOffset, name, diameter);
     }else if(censorName){
-      // Censored label: 6 chars, animated "roulette" (canvas needs redraw)
       const seed = (typeof t.censorLabel === "string" && t.censorLabel.trim()) ? t.censorLabel.trim() : "";
       const label = rollingCensorLabel(seed, t.id, Date.now());
-
-      ctx.font = `${Math.max(11, grid.cellPx * 0.18)}px system-ui`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-
-      const yText = cyTok + r + (8 / camera.zoom);
-
-      const padX = 8 / camera.zoom;
-      const padY = 4 / camera.zoom;
-      const textW = ctx.measureText(label).width;
-      ctx.fillStyle = "rgba(255,255,255,0.72)";
-      ctx.strokeStyle = "rgba(0,0,0,0.12)";
-      ctx.lineWidth = 1 / camera.zoom;
-
-      roundRect(ctx, cxTok - (textW/2) - padX, yText - padY, textW + padX*2, (16 / camera.zoom) + padY*2, 999);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = "rgba(0,0,0,0.78)";
-      ctx.fillText(label, cxTok, yText);
+      drawTokenLabel(ctx, camera, grid, cxTok, cyTok + nameYOffset, label, diameter);
     }
   }
 
+  // ── Fog of War (player view only — MJ sees a semi-transparent overlay) ──
+  if(state.fog?.enabled){
+    const fogAlpha = isPlayerView ? 1.0 : 0.35;
+    ctx.save();
+    ctx.globalAlpha = fogAlpha;
+
+    // Draw full black fog covering the visible area (extended)
+    const fogPad = 2000;
+    ctx.fillStyle = "#111111";
+    ctx.beginPath();
+    ctx.rect(left - fogPad, top - fogPad, (right - left) + fogPad * 2, (bottom - top) + fogPad * 2);
+
+    // Cut out revealed areas (counter-clockwise = hole in the path)
+    const revealed = state.fog.revealedAreas || [];
+    for(const area of revealed){
+      if(area.type === "rect"){
+        const ax = Math.min(area.x, area.x + area.w);
+        const ay = Math.min(area.y, area.y + area.h);
+        const aw = Math.abs(area.w);
+        const ah = Math.abs(area.h);
+        // counter-clockwise rect to punch hole
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax, ay + ah);
+        ctx.lineTo(ax + aw, ay + ah);
+        ctx.lineTo(ax + aw, ay);
+        ctx.closePath();
+      }else if(area.type === "circle"){
+        // counter-clockwise circle
+        ctx.moveTo(area.cx + area.r, area.cy);
+        ctx.arc(area.cx, area.cy, area.r, 0, Math.PI * 2, true);
+      }
+    }
+    ctx.fill("evenodd");
+    ctx.restore();
+  }
+
+  // Fog preview shape (MJ drawing fog reveal)
+  if(overlay?.fogPreview){
+    const fp = overlay.fogPreview;
+    ctx.save();
+    ctx.strokeStyle = "rgba(245,158,11,0.8)";
+    ctx.lineWidth = 2 / camera.zoom;
+    ctx.setLineDash([8 / camera.zoom, 6 / camera.zoom]);
+    ctx.fillStyle = "rgba(245,158,11,0.12)";
+    if(fp.type === "rect"){
+      const x = Math.min(fp.x, fp.x + fp.w);
+      const y = Math.min(fp.y, fp.y + fp.h);
+      ctx.fillRect(x, y, Math.abs(fp.w), Math.abs(fp.h));
+      ctx.strokeRect(x, y, Math.abs(fp.w), Math.abs(fp.h));
+    }else if(fp.type === "circle"){
+      ctx.beginPath();
+      ctx.arc(fp.cx, fp.cy, Math.max(0, fp.r), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   // Measurement overlay
-  
+
   // Ping (ephemeral marker, can be off-screen)
   if(overlay?.ping){
     const { world, ts, label, color, kind } = overlay.ping;
@@ -435,6 +594,82 @@ if(overlay?.measure){
   ctx.setTransform(1,0,0,1,0,0);
 }
 
+// ── Condition helpers ──
+const CONDITION_COLORS = {
+  "aveuglé": "#6366f1", "blinded": "#6366f1",
+  "charmé": "#ec4899", "charmed": "#ec4899",
+  "assourdi": "#8b5cf6", "deafened": "#8b5cf6",
+  "effrayé": "#a855f7", "frightened": "#a855f7",
+  "agrippé": "#f97316", "grappled": "#f97316",
+  "neutralisé": "#6b7280", "incapacitated": "#6b7280",
+  "invisible": "#94a3b8", "invisible": "#94a3b8",
+  "paralysé": "#dc2626", "paralyzed": "#dc2626",
+  "pétrifié": "#78716c", "petrified": "#78716c",
+  "empoisonné": "#22c55e", "poisoned": "#22c55e",
+  "à terre": "#92400e", "prone": "#92400e",
+  "entravé": "#ea580c", "restrained": "#ea580c",
+  "étourdi": "#eab308", "stunned": "#eab308",
+  "inconscient": "#1e293b", "unconscious": "#1e293b",
+  "exténué": "#854d0e", "exhaustion": "#854d0e",
+  "concentration": "#3b82f6",
+};
+
+function getConditionColor(cond){
+  const lower = String(cond || "").toLowerCase();
+  for(const [key, color] of Object.entries(CONDITION_COLORS)){
+    if(lower.includes(key)) return color;
+  }
+  return "#6b7280";
+}
+
+function getConditionLetter(cond){
+  const lower = String(cond || "").toLowerCase();
+  if(lower.includes("concentration")) return "C";
+  if(lower.includes("aveuglé") || lower.includes("blinded")) return "B";
+  if(lower.includes("charmé") || lower.includes("charmed")) return "Ch";
+  if(lower.includes("assourdi") || lower.includes("deafened")) return "D";
+  if(lower.includes("effrayé") || lower.includes("frightened")) return "F";
+  if(lower.includes("agrippé") || lower.includes("grappled")) return "G";
+  if(lower.includes("neutralisé") || lower.includes("incapacitated")) return "N";
+  if(lower.includes("invisible")) return "I";
+  if(lower.includes("paralysé") || lower.includes("paralyzed")) return "Pa";
+  if(lower.includes("pétrifié") || lower.includes("petrified")) return "Pe";
+  if(lower.includes("empoisonné") || lower.includes("poisoned")) return "Po";
+  if(lower.includes("à terre") || lower.includes("prone")) return "Pr";
+  if(lower.includes("entravé") || lower.includes("restrained")) return "R";
+  if(lower.includes("étourdi") || lower.includes("stunned")) return "S";
+  if(lower.includes("inconscient") || lower.includes("unconscious")) return "U";
+  if(lower.includes("exténué") || lower.includes("exhaustion")) return "E";
+  const first = String(cond || "?").trim();
+  return first.charAt(0).toUpperCase();
+}
+
+function drawTokenLabel(ctx, camera, grid, cx, yTop, text, diameter){
+  ctx.font = `${Math.max(11, grid.cellPx * 0.18)}px system-ui`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+
+  const maxW = Math.max(90, diameter * 1.35);
+  let label = text;
+  while(label.length > 2 && ctx.measureText(label).width > maxW){
+    label = label.slice(0, -2).trimEnd() + "…";
+  }
+
+  const padX = 8 / camera.zoom;
+  const padY = 4 / camera.zoom;
+  const textW = ctx.measureText(label).width;
+  ctx.fillStyle = "rgba(255,255,255,0.72)";
+  ctx.strokeStyle = "rgba(0,0,0,0.12)";
+  ctx.lineWidth = 1 / camera.zoom;
+
+  roundRect(ctx, cx - (textW/2) - padX, yTop - padY, textW + padX*2, (16 / camera.zoom) + padY*2, 999);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(0,0,0,0.78)";
+  ctx.fillText(label, cx, yTop);
+}
+
 function drawShape(ctx, camera, s, preview=false){
   const stroke = s.stroke || "#22c55e";
   const width = Math.max(1, Number(s.strokeWidth || 3));
@@ -484,6 +719,52 @@ function drawShape(ctx, camera, s, preview=false){
       ctx.beginPath();
       ctx.moveTo(pts[0].x, pts[0].y);
       for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.stroke();
+    }
+  }else if(s.type === "cone"){
+    // Cone: origin, length, angle, 53° spread (D&D 5e standard)
+    const spread = Math.PI / 3; // ~60° total
+    const halfSpread = spread / 2;
+    const len = s.length || 0;
+    const ang = s.angle || 0;
+
+    ctx.beginPath();
+    ctx.moveTo(s.cx, s.cy);
+    ctx.lineTo(s.cx + Math.cos(ang - halfSpread) * len, s.cy + Math.sin(ang - halfSpread) * len);
+    ctx.arc(s.cx, s.cy, len, ang - halfSpread, ang + halfSpread);
+    ctx.closePath();
+
+    if(fill){
+      ctx.save();
+      ctx.globalAlpha = preview ? 0.15 : fillAlpha;
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.restore();
+    }
+    ctx.stroke();
+  }else if(s.type === "line-template"){
+    // Line template: x1,y1 → x2,y2 with width
+    const dx = (s.x2 || 0) - (s.x1 || 0);
+    const dy = (s.y2 || 0) - (s.y1 || 0);
+    const len = Math.sqrt(dx*dx + dy*dy);
+    if(len > 0){
+      const nx = -dy / len * (s.width || 10) / 2;
+      const ny = dx / len * (s.width || 10) / 2;
+
+      ctx.beginPath();
+      ctx.moveTo(s.x1 + nx, s.y1 + ny);
+      ctx.lineTo(s.x2 + nx, s.y2 + ny);
+      ctx.lineTo(s.x2 - nx, s.y2 - ny);
+      ctx.lineTo(s.x1 - nx, s.y1 - ny);
+      ctx.closePath();
+
+      if(fill){
+        ctx.save();
+        ctx.globalAlpha = preview ? 0.15 : fillAlpha;
+        ctx.fillStyle = fill;
+        ctx.fill();
+        ctx.restore();
+      }
       ctx.stroke();
     }
   }

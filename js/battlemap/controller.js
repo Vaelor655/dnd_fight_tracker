@@ -1,4 +1,4 @@
-import { createInitialState, migrateState, addToken, undoShape, clearShapes } from "./model.js";
+import { createInitialState, migrateState, addToken, undoShape, clearShapes, addFogArea, undoFogArea, clearFog } from "./model.js";
 import { draw, screenToWorld } from "./render.js";
 import { createInputController } from "./input.js";
 import { clamp } from "./utils.js";
@@ -27,6 +27,8 @@ export function createBattlemapController(dom){
     fillMode: "none",
     snapMode: "on",
     previewShape: null,
+    fogPreview: null,
+    spellSize: 9, // default spell size in meters
     onTokenSelected: null,
     onTokenMoved: null,
   };
@@ -136,6 +138,7 @@ export function createBattlemapController(dom){
       const m = computeMeasureOverlay();
       if(m) overlay.measure = m;
       if(state.ui.previewShape) overlay.previewShape = state.ui.previewShape;
+      if(state.ui.fogPreview) overlay.fogPreview = state.ui.fogPreview;
 
       // Ping animation needs continuous redraw for pulse/fade (canvas isn't DOM-animated)
       const ping = overlay?.ping;
@@ -211,6 +214,12 @@ function markDirty(full=true){
     buttons.forEach((b) => {
       b.classList.toggle("is-active", (b.getAttribute("data-tool") || "") === (state.ui.tool || "tokens"));
     });
+  }
+
+  // Show/hide draw options sub-bar
+  if(dom.drawOptionsBar){
+    const drawTools = ["rect", "circle", "pen", "spell-cone", "spell-line", "spell-cube", "spell-sphere"];
+    dom.drawOptionsBar.classList.toggle("is-visible", drawTools.includes(state.ui.tool));
   }
 }
 
@@ -393,21 +402,37 @@ dom.bgFile?.addEventListener("change", async () => {
   // Toolbar collapse/expand
   if(dom.toolbarToggle && dom.mapToolbar){
     const TOOLBAR_PREF_KEY = "battlemap_toolbar_collapsed";
-    try{
-      if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1"){
-        dom.mapToolbar.classList.add("is-collapsed");
-        dom.toolbarToggle.setAttribute("aria-expanded", "false");
-      }
-    }catch{}
-    dom.toolbarToggle.addEventListener("click", () => {
-      const collapsed = dom.mapToolbar.classList.toggle("is-collapsed");
+    const toolbarExpand = dom.mapToolbar.querySelector(".map-toolbar__expand");
+
+    function setToolbarCollapsed(collapsed){
+      dom.mapToolbar.classList.toggle("is-collapsed", collapsed);
       dom.toolbarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
       try{ localStorage.setItem(TOOLBAR_PREF_KEY, collapsed ? "1" : "0"); }catch{}
-    });
+    }
+
+    try{
+      if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1") setToolbarCollapsed(true);
+    }catch{}
+
+    dom.toolbarToggle.addEventListener("click", () => setToolbarCollapsed(true));
+    toolbarExpand?.addEventListener("click", () => setToolbarCollapsed(false));
   }
 
   dom.undoDrawBtn?.addEventListener("click", () => { undoShape(state); dirty = true; markDirty(false); });
   dom.clearDrawBtn?.addEventListener("click", () => { clearShapes(state); dirty = true; markDirty(false); });
+
+  // Fog of War controls
+  dom.fogToggle?.addEventListener("click", () => {
+    if(!state.fog) state.fog = { enabled: false, revealedAreas: [] };
+    state.fog.enabled = !state.fog.enabled;
+    dom.fogToggle.classList.toggle("is-active", state.fog.enabled);
+    dom.fogToggle.setAttribute("aria-pressed", state.fog.enabled ? "true" : "false");
+    dirty = true;
+    dom.onDirty?.();
+    markDirty(false);
+  });
+  dom.undoFogBtn?.addEventListener("click", () => { undoFogArea(state); dirty = true; dom.onDirty?.(); markDirty(false); });
+  dom.clearFogBtn?.addEventListener("click", () => { clearFog(state); dirty = true; dom.onDirty?.(); markDirty(false); });
 
   dom.cellPx?.addEventListener("input", () => {
     const v = Number(dom.cellPx.value || 60);
@@ -519,8 +544,12 @@ dom.bgFile?.addEventListener("change", async () => {
         hideNameForPlayers: !!combatant.hideNameForPlayers,
         censorLabel: (typeof combatant.censorLabel === "string" && combatant.censorLabel.trim()) ? combatant.censorLabel.trim().toUpperCase() : null,
         hp: combatant.hpCurrent ?? "",
+        hpMax: combatant.hpMax ?? 0,
         hpTemp: combatant.hpTemp ?? 0,
         ac: (combatant.acBase ?? 10) + (combatant.acTemp ?? 0),
+        conditions: combatant.conditions || "",
+        isConcentrating: !!combatant.isConcentrating,
+        rotation: 0,
         x: Math.round(centerCell.x * 2) / 2,
         y: Math.round(centerCell.y * 2) / 2,
       });
@@ -533,8 +562,11 @@ dom.bgFile?.addEventListener("change", async () => {
     t.name = combatant.name || t.name;
     if (typeof combatant.tokenSize === "number") t.size = combatant.tokenSize;
     t.hp = combatant.hpCurrent ?? t.hp;
+    t.hpMax = combatant.hpMax ?? (t.hpMax || 0);
     t.hpTemp = typeof combatant.hpTemp === "number" ? combatant.hpTemp : (t.hpTemp ?? 0);
     t.ac = (combatant.acBase ?? 10) + (combatant.acTemp ?? 0);
+    t.conditions = combatant.conditions || "";
+    t.isConcentrating = !!combatant.isConcentrating;
     t.hiddenForPlayers = !!combatant.hiddenFromPlayers;
     t.hideNameForPlayers = !!combatant.hideNameForPlayers;
     if(combatant.hideNameForPlayers){
@@ -582,6 +614,25 @@ dom.bgFile?.addEventListener("change", async () => {
     dirty = true;
   }
 
+  // ── Movement tracking per turn ──
+  function startTurnForToken(tokenId){
+    const t = state.tokens.find(x => x.id === tokenId);
+    if(!t) return;
+    t.turnStartX = t.x;
+    t.turnStartY = t.y;
+    t.movementPath = [{ x: t.x, y: t.y }];
+    dirty = true;
+  }
+
+  function resetAllTurnMovement(){
+    for(const t of state.tokens){
+      t.turnStartX = t.x;
+      t.turnStartY = t.y;
+      t.movementPath = [{ x: t.x, y: t.y }];
+    }
+    dirty = true;
+  }
+
   // allow external zoom change if needed
   function setZoom(z){
     applyZoom(z);
@@ -601,6 +652,8 @@ dom.bgFile?.addEventListener("change", async () => {
     invalidate,
     setZoom,
     setBackgroundFromUrl: loadBackgroundFromUrl,
+    startTurnForToken,
+    resetAllTurnMovement,
     _getState: () => state,
   };
 }
