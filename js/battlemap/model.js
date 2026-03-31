@@ -3,7 +3,7 @@ import { snapHalf } from "./utils.js";
 export function createInitialState(){
   return {
     version: 3,
-    grid: { show: true, cellPx: 40, metersPerCell: 1, distanceRule: "chebyshev" },
+    grid: { show: true, cellPx: 40, metersPerCell: 1, distanceRule: "chebyshev", layout: "square" },
     camera: { x: 0, y: 0, zoom: 1 },
     background: null, // { dataUrl, x, y, w, h, opacity, _naturalW, _naturalH } (world px)
     shapes: [],       // drawing layer (world px)
@@ -33,6 +33,7 @@ export function migrateState(raw){
 
   const cellPx = raw.grid?.cellPx ?? 60;
   const distanceRule = raw.grid?.distanceRule ?? "chebyshev";
+  const layout = raw.grid?.layout === "hex" ? "hex" : "square";
 
   let metersPerCell = 1;
   if(v === 2){
@@ -51,7 +52,8 @@ export function migrateState(raw){
       show: raw.grid?.show ?? true,
       cellPx: Number(cellPx) || 60,
       metersPerCell,
-      distanceRule
+      distanceRule,
+      layout
     },
     camera: raw.camera || { x: 0, y: 0, zoom: 1 },
     background: raw.background || null,

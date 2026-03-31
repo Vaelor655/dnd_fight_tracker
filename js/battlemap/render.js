@@ -40,14 +40,36 @@ export function screenToWorld(canvas, camera, screen){
 }
 
 export function worldToCell(state, world){
-  return { x: world.x / state.grid.cellPx, y: world.y / state.grid.cellPx };
+  const cell = state.grid.cellPx;
+  if(state.grid?.layout === "hex"){
+    const qf = ((Math.sqrt(3) / 3) * world.x - (1 / 3) * world.y) / cell;
+    const rf = ((2 / 3) * world.y) / cell;
+    return hexRound(qf, rf);
+  }
+  return { x: world.x / cell, y: world.y / cell };
+}
+
+export function cellToWorld(state, cell){
+  const c = state.grid.cellPx;
+  if(state.grid?.layout === "hex"){
+    return {
+      x: c * Math.sqrt(3) * (cell.x + cell.y / 2),
+      y: c * 1.5 * cell.y
+    };
+  }
+  return { x: cell.x * c, y: cell.y * c };
 }
 
 export function pickTokenAt(state, cell){
   for(let i = state.tokens.length - 1; i >= 0; i--){
     const t = state.tokens[i];
     const half = (t.size || 1) / 2;
-    if(Math.abs(cell.x - t.x) <= half && Math.abs(cell.y - t.y) <= half) return t.id;
+    if(state.grid?.layout === "hex"){
+      const d = hexDistance(cell, { x: t.x, y: t.y });
+      if(d <= half) return t.id;
+    }else if(Math.abs(cell.x - t.x) <= half && Math.abs(cell.y - t.y) <= half){
+      return t.id;
+    }
   }
   return null;
 }
@@ -91,40 +113,44 @@ export function draw(canvas, ctx, state, overlay){
   // Grid
   if(grid.show){
     const cell = grid.cellPx;
-    const startX = Math.floor(left / cell) * cell;
-    const endX = Math.ceil(right / cell) * cell;
-    const startY = Math.floor(top / cell) * cell;
-    const endY = Math.ceil(bottom / cell) * cell;
+    if(grid.layout === "hex"){
+      drawHexGrid(ctx, camera, cell, left, right, top, bottom);
+    }else{
+      const startX = Math.floor(left / cell) * cell;
+      const endX = Math.ceil(right / cell) * cell;
+      const startY = Math.floor(top / cell) * cell;
+      const endY = Math.ceil(bottom / cell) * cell;
 
-    // Minor lines
-    ctx.lineWidth = 1 / camera.zoom;
-    ctx.strokeStyle = "rgba(0,0,0,0.12)";
-    ctx.beginPath();
-    for(let x = startX; x <= endX; x += cell){ ctx.moveTo(x, startY); ctx.lineTo(x, endY); }
-    for(let y = startY; y <= endY; y += cell){ ctx.moveTo(startX, y); ctx.lineTo(endX, y); }
-    ctx.stroke();
+      // Minor lines
+      ctx.lineWidth = 1 / camera.zoom;
+      ctx.strokeStyle = "rgba(0,0,0,0.12)";
+      ctx.beginPath();
+      for(let x = startX; x <= endX; x += cell){ ctx.moveTo(x, startY); ctx.lineTo(x, endY); }
+      for(let y = startY; y <= endY; y += cell){ ctx.moveTo(startX, y); ctx.lineTo(endX, y); }
+      ctx.stroke();
 
-    // Major lines (every 5 cells)
-    const major = cell * 5;
-    const startMX = Math.floor(startX / major) * major;
-    const endMX = Math.ceil(endX / major) * major;
-    const startMY = Math.floor(startY / major) * major;
-    const endMY = Math.ceil(endY / major) * major;
+      // Major lines (every 5 cells)
+      const major = cell * 5;
+      const startMX = Math.floor(startX / major) * major;
+      const endMX = Math.ceil(endX / major) * major;
+      const startMY = Math.floor(startY / major) * major;
+      const endMY = Math.ceil(endY / major) * major;
 
-    ctx.lineWidth = 1.5 / camera.zoom;
-    ctx.strokeStyle = "rgba(0,0,0,0.20)";
-    ctx.beginPath();
-    for(let x = startMX; x <= endMX; x += major){ ctx.moveTo(x, startY); ctx.lineTo(x, endY); }
-    for(let y = startMY; y <= endMY; y += major){ ctx.moveTo(startX, y); ctx.lineTo(endX, y); }
-    ctx.stroke();
+      ctx.lineWidth = 1.5 / camera.zoom;
+      ctx.strokeStyle = "rgba(0,0,0,0.20)";
+      ctx.beginPath();
+      for(let x = startMX; x <= endMX; x += major){ ctx.moveTo(x, startY); ctx.lineTo(x, endY); }
+      for(let y = startMY; y <= endMY; y += major){ ctx.moveTo(startX, y); ctx.lineTo(endX, y); }
+      ctx.stroke();
 
-    // Axis
-    ctx.lineWidth = 2 / camera.zoom;
-    ctx.strokeStyle = "rgba(245,158,11,0.32)";
-    ctx.beginPath();
-    ctx.moveTo(0, startY); ctx.lineTo(0, endY);
-    ctx.moveTo(startX, 0); ctx.lineTo(endX, 0);
-    ctx.stroke();
+      // Axis
+      ctx.lineWidth = 2 / camera.zoom;
+      ctx.strokeStyle = "rgba(245,158,11,0.32)";
+      ctx.beginPath();
+      ctx.moveTo(0, startY); ctx.lineTo(0, endY);
+      ctx.moveTo(startX, 0); ctx.lineTo(endX, 0);
+      ctx.stroke();
+    }
   }
 
 // Shapes
@@ -142,8 +168,9 @@ export function draw(canvas, ctx, state, overlay){
     const diameter = size * grid.cellPx;
     const r = diameter / 2;
 
-    const cxTok = t.x * grid.cellPx;
-    const cyTok = t.y * grid.cellPx;
+    const center = cellToWorld(state, { x: t.x, y: t.y });
+    const cxTok = center.x;
+    const cyTok = center.y;
 
     // ── Movement trail (dotted path from turn start) ──
     if(Array.isArray(t.movementPath) && t.movementPath.length >= 2 && !isPlayerView){
@@ -155,10 +182,12 @@ export function draw(canvas, ctx, state, overlay){
       ctx.lineCap = "round";
       ctx.beginPath();
       const p0 = t.movementPath[0];
-      ctx.moveTo(p0.x * grid.cellPx, p0.y * grid.cellPx);
+      const w0 = cellToWorld(state, p0);
+      ctx.moveTo(w0.x, w0.y);
       for(let pi = 1; pi < t.movementPath.length; pi++){
         const pp = t.movementPath[pi];
-        ctx.lineTo(pp.x * grid.cellPx, pp.y * grid.cellPx);
+        const wp = cellToWorld(state, pp);
+        ctx.lineTo(wp.x, wp.y);
       }
       ctx.stroke();
       ctx.setLineDash([]);
@@ -168,7 +197,8 @@ export function draw(canvas, ctx, state, overlay){
       for(let pi = 1; pi < t.movementPath.length; pi++){
         const dx = t.movementPath[pi].x - t.movementPath[pi-1].x;
         const dy = t.movementPath[pi].y - t.movementPath[pi-1].y;
-        totalDist += Math.max(Math.abs(dx), Math.abs(dy)); // chebyshev cells
+        if(grid.layout === "hex") totalDist += hexDistance(t.movementPath[pi], t.movementPath[pi-1]);
+        else totalDist += Math.max(Math.abs(dx), Math.abs(dy)); // chebyshev cells
       }
       if(totalDist > 0){
         const distM = totalDist * (state.grid.metersPerCell || 1);
@@ -646,6 +676,67 @@ function getConditionLetter(cond){
   if(lower.includes("exténué") || lower.includes("exhaustion")) return "E";
   const first = String(cond || "?").trim();
   return first.charAt(0).toUpperCase();
+}
+
+function hexRound(qf, rf){
+  let q = Math.round(qf);
+  let r = Math.round(rf);
+  let s = Math.round(-qf - rf);
+  const qDiff = Math.abs(q - qf);
+  const rDiff = Math.abs(r - rf);
+  const sDiff = Math.abs(s + qf + rf);
+  if(qDiff > rDiff && qDiff > sDiff) q = -r - s;
+  else if(rDiff > sDiff) r = -q - s;
+  return { x: q, y: r };
+}
+
+function hexDistance(a, b){
+  const dq = (a.x - b.x);
+  const dr = (a.y - b.y);
+  const ds = -dq - dr;
+  return (Math.abs(dq) + Math.abs(dr) + Math.abs(ds)) / 2;
+}
+
+function drawHexGrid(ctx, camera, radius, left, right, top, bottom){
+  const pad = Math.max(4, Math.ceil(3 / Math.max(0.25, camera.zoom)));
+  const corners = [
+    { x: left, y: top },
+    { x: right, y: top },
+    { x: right, y: bottom },
+    { x: left, y: bottom },
+  ];
+  let rMinF = Infinity, rMaxF = -Infinity;
+  for(const p of corners){
+    const rf = ((2 / 3) * p.y) / radius;
+    rMinF = Math.min(rMinF, rf);
+    rMaxF = Math.max(rMaxF, rf);
+  }
+  const rMin = Math.floor(rMinF) - pad;
+  const rMax = Math.ceil(rMaxF) + pad;
+  const invW = 1 / (Math.sqrt(3) * radius);
+
+  ctx.lineWidth = 1 / camera.zoom;
+  ctx.strokeStyle = "rgba(0,0,0,0.16)";
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  for(let r = rMin; r <= rMax; r++){
+    // Per-row q bounds to avoid drawing an oversized q/r rectangle (perf + artifacts).
+    const qMin = Math.floor((left * invW) - (r / 2)) - pad;
+    const qMax = Math.ceil((right * invW) - (r / 2)) + pad;
+    ctx.beginPath();
+    for(let q = qMin; q <= qMax; q++){
+      const cx = radius * Math.sqrt(3) * (q + r / 2);
+      const cy = radius * 1.5 * r;
+      const a0 = -Math.PI / 6; // -30°
+      ctx.moveTo(cx + radius * Math.cos(a0), cy + radius * Math.sin(a0));
+      for(let i = 1; i <= 6; i++){
+        const a = (Math.PI / 180) * (60 * i - 30);
+        ctx.lineTo(cx + radius * Math.cos(a), cy + radius * Math.sin(a));
+      }
+      ctx.closePath();
+    }
+    ctx.stroke();
+  }
 }
 
 function drawTokenLabel(ctx, camera, grid, cx, yTop, text, diameter){

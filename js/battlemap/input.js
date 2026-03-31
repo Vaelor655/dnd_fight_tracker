@@ -10,6 +10,9 @@ function snapWorld(state, world){
 
 function snapCellForToken(state, cell){
   if(state.ui.snapMode !== "on") return cell;
+  if(state.grid?.layout === "hex"){
+    return { x: Math.round(cell.x), y: Math.round(cell.y) };
+  }
   return {
     x: Math.round(cell.x * 2) / 2,
     y: Math.round(cell.y * 2) / 2,

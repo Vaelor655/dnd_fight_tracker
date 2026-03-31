@@ -1,5 +1,5 @@
 import { createInitialState, migrateState, addToken, undoShape, clearShapes, addFogArea, undoFogArea, clearFog } from "./model.js";
-import { draw, screenToWorld } from "./render.js";
+import { draw, screenToWorld, cellToWorld } from "./render.js";
 import { createInputController } from "./input.js";
 import { clamp } from "./utils.js";
 
@@ -101,7 +101,15 @@ export function createBattlemapController(dom){
     let distCells = 0;
     let label = "";
 
-    if(state.grid.distanceRule === "chebyshev"){
+    if(state.grid.layout === "hex"){
+      const aq = a.x, ar = a.y;
+      const bq = b.x, br = b.y;
+      const dq = aq - bq;
+      const dr = ar - br;
+      const ds = -dq - dr;
+      distCells = (Math.abs(dq) + Math.abs(dr) + Math.abs(ds)) / 2;
+      label = fmtMeters(distCells * mpc);
+    }else if(state.grid.distanceRule === "chebyshev"){
       distCells = Math.max(dx, dy);
       label = fmtMeters(distCells * mpc);
     }else if(state.grid.distanceRule === "euclid"){
@@ -116,8 +124,8 @@ export function createBattlemapController(dom){
       label = fmtMeters(distCells * mpc) + " (alt)";
     }
 
-    const aWorld = { x: a.x * state.grid.cellPx, y: a.y * state.grid.cellPx };
-    const bWorld = { x: b.x * state.grid.cellPx, y: b.y * state.grid.cellPx };
+    const aWorld = cellToWorld(state, a);
+    const bWorld = cellToWorld(state, b);
     return { aWorld, bWorld, label };
   }
 
@@ -205,6 +213,9 @@ function markDirty(full=true){
   // Value readouts (sliders)
   dom.drawWidthValue && (dom.drawWidthValue.textContent = String(state.ui.drawWidth || 3));
   dom.cellPxValue && (dom.cellPxValue.textContent = String(state.grid.cellPx || 40));
+  if(dom.gridLayout && document.activeElement !== dom.gridLayout){
+    dom.gridLayout.value = state.grid.layout === "hex" ? "hex" : "square";
+  }
   syncZoomUi();
 
   // Sync tool buttons (icon toolbar)
@@ -441,6 +452,11 @@ dom.bgFile?.addEventListener("change", async () => {
     dom.metersPerCell.value = String(state.grid.metersPerCell);
     dirty = true;
   });
+  dom.gridLayout?.addEventListener("change", () => {
+    state.grid.layout = dom.gridLayout.value === "hex" ? "hex" : "square";
+    dirty = true;
+    markDirty(false);
+  });
   dom.distanceRule?.addEventListener("change", () => { state.grid.distanceRule = "chebyshev"; if(dom.distanceRule) dom.distanceRule.value = "chebyshev"; dirty = true; markDirty(false); });
 
   dom.measureBtn?.addEventListener("click", () => {
@@ -501,6 +517,7 @@ dom.bgFile?.addEventListener("change", async () => {
     // sync UI inputs
     if(dom.cellPx) dom.cellPx.value = String(state.grid.cellPx);
     if(dom.metersPerCell) dom.metersPerCell.value = String(state.grid.metersPerCell);
+    if(dom.gridLayout) dom.gridLayout.value = state.grid.layout === "hex" ? "hex" : "square";
     if(dom.distanceRule) dom.distanceRule.value = "chebyshev";
     dirty = true;
     attachInput();
@@ -576,8 +593,9 @@ dom.bgFile?.addEventListener("change", async () => {
   function focusToken(tokenId){
     const t = state.tokens.find(x => x.id === tokenId);
     if(!t) return;
-    state.camera.x = t.x * state.grid.cellPx;
-    state.camera.y = t.y * state.grid.cellPx;
+    const c = cellToWorld(state, { x: t.x, y: t.y });
+    state.camera.x = c.x;
+    state.camera.y = c.y;
     dirty = true;
   }
 
