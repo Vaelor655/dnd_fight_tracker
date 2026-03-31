@@ -184,14 +184,13 @@ function markDirty(full=true){
     dom.measureBtn.setAttribute("aria-pressed", state.ui.measureMode ? "true" : "false");
   }
 
-  // Grid toggle: checkbox (preferred) or legacy button
+  // Grid toggle
   if(dom.toggleGridBtn){
     if(dom.toggleGridBtn.type === "checkbox"){
       dom.toggleGridBtn.checked = !!state.grid.show;
     }else{
       dom.toggleGridBtn.classList.toggle("is-active", !!state.grid.show);
       dom.toggleGridBtn.setAttribute("aria-pressed", state.grid.show ? "true" : "false");
-      dom.toggleGridBtn.textContent = `Grille : ${state.grid.show ? "ON" : "OFF"}`;
     }
   }
 

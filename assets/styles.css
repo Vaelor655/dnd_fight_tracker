@@ -1057,12 +1057,9 @@ tr.active td:first-child {
 /* MJ: 2-column layout: canvas | token list */
 .map-layout.map-layout--stack {
   grid-template-columns: minmax(0, 1fr) 220px;
+  grid-template-rows: auto;
   gap: 0;
   align-items: stretch;
-}
-.map-layout.map-layout--stack .map-canvas,
-.map-layout.map-layout--stack .map-tokenlist {
-  width: 100%;
 }
 
 @media (max-width: 900px) {
@@ -1070,7 +1067,12 @@ tr.active td:first-child {
     grid-template-columns: 1fr;
   }
   .map-layout.map-layout--stack .map-tokenlist {
-    max-height: 220px;
+    max-height: 250px;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    border-left: 1px solid var(--border);
+  }
+  .map-layout.map-layout--stack .map-canvas {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 }
 
@@ -1112,14 +1114,19 @@ tr.active td:first-child {
   opacity: .95;
 }
 
-.map-canvas { padding: 10px; }
+.map-canvas {
+  padding: 0;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  border-right: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
 #map {
   touch-action: none;
-  border: 1px solid var(--border);
   width: 100%;
   height: 680px;
   display: block;
-  border-radius: var(--radius-lg);
   background: var(--bg);
 }
 @media (max-width: 980px) { #map { touch-action: none; height: 560px; } }
@@ -1279,10 +1286,9 @@ button.is-active {
   padding: 0;
   display: flex;
   flex-direction: column;
-  max-height: 680px;
   overflow: hidden;
-  border-radius: 0;
-  border: none;
+  border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  border: 1px solid var(--border);
   border-left: 1px solid var(--border);
   box-shadow: none;
 }
@@ -1434,23 +1440,21 @@ button.is-active {
 /* ===== Ribbon Map Toolbar (permanent, below canvas) ===== */
 .map-canvas-wrap {
   position: relative;
-  width: 100%;
-}
-.map-canvas-wrap > #map {
-  display: block;
-  width: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 /* Ribbon container */
 .map-ribbon {
   display: flex;
   align-items: center;
-  background: var(--bg-panel);
+  background: var(--bg-table);
   border-top: 1px solid var(--border);
   padding: 4px 8px;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: thin;
+  flex-shrink: 0;
 }
 
 .map-ribbon__main {
@@ -1753,21 +1757,6 @@ button.is-active {
   }
 }
 
-.content > .panel.map-controls {
-  border-radius: 0;
-  border-right: 1px solid var(--border);
-  border-left: none;
-  border-top: none;
-  border-bottom: none;
-  min-height: calc(100vh - 60px);
-  padding: 16px;
-}
-
-.content > .panel.map-canvas {
-  border-radius: 0;
-  border: none;
-  padding: 10px;
-}
 
 /* ===== Toast Notifications ===== */
 .toast-container {
