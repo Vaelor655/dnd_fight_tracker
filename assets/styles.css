@@ -1137,8 +1137,7 @@ tr.active td:first-child {
 
 /* Player canvas fills available height */
 .player-canvas #map {
-  height: 100%;
-  min-height: 400px;
+  height: 85vh;
 }
 .player-canvas .map-canvas-wrap {
   flex: 1;
