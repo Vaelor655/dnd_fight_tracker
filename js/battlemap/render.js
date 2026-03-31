@@ -705,6 +705,15 @@ function drawHexGrid(ctx, camera, radius, left, right, top, bottom){
     { x: right, y: bottom },
     { x: left, y: bottom },
   ];
+  let rMinF = Infinity, rMaxF = -Infinity;
+  for(const p of corners){
+    const rf = ((2 / 3) * p.y) / radius;
+    rMinF = Math.min(rMinF, rf);
+    rMaxF = Math.max(rMaxF, rf);
+  }
+  const rMin = Math.floor(rMinF) - pad;
+  const rMax = Math.ceil(rMaxF) + pad;
+  const invW = 1 / (Math.sqrt(3) * radius);
   let qMinF = Infinity, qMaxF = -Infinity, rMinF = Infinity, rMaxF = -Infinity;
   for(const p of corners){
     const qf = ((Math.sqrt(3) / 3) * p.x - (1 / 3) * p.y) / radius;
@@ -724,6 +733,9 @@ function drawHexGrid(ctx, camera, radius, left, right, top, bottom){
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
   for(let r = rMin; r <= rMax; r++){
+    // Per-row q bounds to avoid drawing an oversized q/r rectangle (perf + artifacts).
+    const qMin = Math.floor((left * invW) - (r / 2)) - pad;
+    const qMax = Math.ceil((right * invW) - (r / 2)) + pad;
     ctx.beginPath();
     for(let q = qMin; q <= qMax; q++){
       const cx = radius * Math.sqrt(3) * (q + r / 2);
