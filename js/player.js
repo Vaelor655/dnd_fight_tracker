@@ -19,8 +19,6 @@ const zoomValue = document.getElementById("playerZoomValue");
 const pingNameInput = document.getElementById("pingName");
 const pingColorInput = document.getElementById("pingColor");
 const turnBarEl = document.getElementById("turnBar");
-const toolbarToggle = document.getElementById("toolbarToggle");
-const mapToolbar = document.getElementById("mapToolbar");
 
 // ===== Theme =====
 const THEME_STORAGE_KEY = "initiativeTrackerTheme";
@@ -153,24 +151,6 @@ gridToggle?.addEventListener("click", () => {
   dirty = true;
 });
 
-// Toolbar collapse/expand (player)
-if(toolbarToggle && mapToolbar){
-  const TOOLBAR_PREF_KEY = "battlemap_toolbar_collapsed_player";
-  const toolbarExpand = document.getElementById("toolbarExpand");
-
-  function setToolbarCollapsed(collapsed){
-    mapToolbar.classList.toggle("is-collapsed", collapsed);
-    toolbarToggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
-    try{ localStorage.setItem(TOOLBAR_PREF_KEY, collapsed ? "1" : "0"); }catch{}
-  }
-
-  try{
-    if(localStorage.getItem(TOOLBAR_PREF_KEY) === "1") setToolbarCollapsed(true);
-  }catch{}
-
-  toolbarToggle.addEventListener("click", () => setToolbarCollapsed(true));
-  toolbarExpand?.addEventListener("click", () => setToolbarCollapsed(false));
-}
 
 zoomRange?.addEventListener("input", () => {
   const v = Number(zoomRange.value || 1);

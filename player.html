@@ -14,7 +14,7 @@
         <div class="logo">⚔️</div>
         <div>
           <div class="title">Battlemap — Joueur</div>
-          <div class="subtitle">Vue temps réel (Supabase). Par défaut tu suis la caméra du MJ.</div>
+          <div class="subtitle">Vue temps réel. Par défaut tu suis la caméra du MJ.</div>
         </div>
       </div>
       <div class="pill-row">
@@ -23,108 +23,70 @@
     </header>
 
     <div class="content">
-      <div class="panel map-controls">
-        <details class="section-details" open>
-          <summary class="map-controls-title">Connexion</summary>
-
-          <div class="form-row">
-            <label>Room</label>
-            <div class="inline-row">
-              <input id="rtRoom" type="text" />
-              <button id="rtConnectBtn" class="secondary small" type="button">Reconnect</button>
-            </div>
-          </div>
-
-          <div class="form-row inline-check-row" style="margin-top: 8px;">
-            <input id="followCamera" type="checkbox" checked />
-            <label for="followCamera" style="margin:0">Suivre la caméra du MJ</label>
-          </div>
-
-          <div class="map-hint">
-            Si tu décoches, tu peux zoom/pan localement (ça ne bouge pas les tokens).
-          </div>
-        </details>
-
-        <details class="section-details" open>
-          <summary class="map-controls-title">Joueurs en ligne</summary>
-          <div id="onlinePlayers" class="online-players-list online-players-list--sidebar">
-            <span class="muted">—</span>
-          </div>
-        </details>
-
-        <hr class="sep"/>
-
-        <details class="section-details" open>
-          <summary class="map-controls-title">Outils</summary>
-          <div class="map-hint" style="margin-top:0">
-            Les outils sont dans la barre flottante sur la carte.
-          </div>
-          <div class="toolbar-row">
-            <label class="field-inline field-inline--range" title="Zoom de la carte">
-              <span>Zoom <b id="playerZoomValue">100%</b></span>
-              <input id="playerZoomRange" type="range" min="0.2" max="5" step="0.01" value="1" />
-            </label>
-          </div>
-        </details>
-
-        <details class="section-details" open>
-          <summary class="map-controls-title">Ping</summary>
-
-          <div class="form-group">
-            <div class="form-row">
-              <label>
-                <span>Nom (pour les pings)</span>
-                <input id="pingName" type="text" placeholder="ex: Théo" />
-              </label>
-            </div>
-            <div class="form-row" style="margin-top: 6px;">
-              <label>
-                <span>Couleur (pour les pings)</span>
-                <input id="pingColor" type="color" value="#f59e0b" />
-              </label>
-            </div>
-          </div>
-
-          <div class="map-hint">
-            <b>Mesure</b> : clique-drag pour mesurer. Re-clique sur l'icône pour quitter.<br/>
-            <b>Ping</b> : clique sur la carte pour ping. Si c'est hors champ, une flèche apparaît sur le bord.
-          </div>
-        </details>
-      </div>
-
-      <div class="panel map-canvas">
+      <div class="panel map-canvas player-canvas">
         <div id="turnBar" class="turnbar" aria-label="Ordre des tours"></div>
         <div class="map-canvas-wrap">
           <canvas id="map"></canvas>
+        </div>
 
-          <!-- Floating toolbar (player) -->
-          <div id="mapToolbar" class="map-toolbar" role="toolbar" aria-label="Outils joueur">
-            <div class="map-toolbar__main">
-              <button type="button" class="map-toolbar__toggle" id="toolbarToggle" title="Réduire" aria-expanded="true">
-                <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 9l-7 7-7-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <!-- Ribbon toolbar (permanent, below canvas) -->
+        <div id="mapToolbar" class="map-ribbon" role="toolbar" aria-label="Outils joueur">
+          <div class="map-ribbon__main">
+            <div class="map-ribbon__group">
+              <button id="toolMeasure" class="map-ribbon__btn" type="button" title="Mesurer (clic-drag)">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M2 12h20M6 8v8M12 8v8M18 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <span class="map-ribbon__label">Mesure</span>
               </button>
-              <span class="map-toolbar__sep-v"></span>
-              <div class="map-toolbar__group">
-                <button id="toolMeasure" class="map-toolbar__btn" type="button" title="Mesurer (clic-drag)">
-                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12h20M6 8v8M12 8v8M18 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                </button>
-                <button id="toolPing" class="map-toolbar__btn" type="button" title="Ping">
-                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                </button>
-                <button id="playerGridToggle" class="map-toolbar__btn map-toolbar__btn--toggle is-active" type="button" title="Grille" aria-pressed="true">
-                  <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                </button>
-              </div>
+              <button id="toolPing" class="map-ribbon__btn" type="button" title="Ping (maintenir G + clic)">
+                <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                <span class="map-ribbon__label">Ping</span>
+              </button>
+              <button id="playerGridToggle" class="map-ribbon__btn map-ribbon__btn--toggle is-active" type="button" title="Grille" aria-pressed="true">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                <span class="map-ribbon__label">Grille</span>
+              </button>
             </div>
 
-            <!-- Expand pill (visible when collapsed) -->
-            <button type="button" class="map-toolbar__expand" id="toolbarExpand" title="Afficher les outils">
-              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
+            <span class="map-ribbon__sep"></span>
+
+            <div class="map-ribbon__group">
+              <label class="map-ribbon__slider" title="Zoom">
+                <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 8v6M8 11h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <input id="playerZoomRange" type="range" min="0.2" max="5" step="0.01" value="1" />
+                <span id="playerZoomValue" class="map-ribbon__val">100%</span>
+              </label>
+            </div>
+
+            <span class="map-ribbon__sep"></span>
+
+            <label class="map-ribbon__check" title="Suivre la caméra du MJ">
+              <input id="followCamera" type="checkbox" checked />
+              <span class="map-ribbon__label">Suivre MJ</span>
+            </label>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Settings below (collapsible) -->
+    <details class="map-settings-panel" style="margin: 8px 16px 0;">
+      <summary class="map-settings-summary">Paramètres</summary>
+      <div class="map-settings-body">
+        <div class="map-settings-row">
+          <label class="field-inline"><span>Room</span><input id="rtRoom" type="text" style="width:120px" /></label>
+          <button id="rtConnectBtn" class="secondary small" type="button">Reconnect</button>
+        </div>
+        <div class="map-settings-row">
+          <label class="field-inline"><span>Nom (ping)</span><input id="pingName" type="text" placeholder="ex: Théo" style="width:120px" /></label>
+          <label class="field-inline"><span>Couleur</span><input id="pingColor" type="color" value="#f59e0b" /></label>
+        </div>
+        <div class="map-settings-row">
+          <div id="onlinePlayers" class="online-players-list">
+            <span class="muted">—</span>
+          </div>
+        </div>
+      </div>
+    </details>
   </div>
 
   <script type="module" src="js/player.js"></script>
