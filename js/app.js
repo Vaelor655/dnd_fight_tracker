@@ -940,6 +940,7 @@ function monsterSizeToCells(sizeRaw){
 
         // Actions
         const actionsTd = document.createElement("td");
+        actionsTd.classList.add("actions-cell");
         const nextTurnFurtif = (index === currentIndex)
           ? `<button class="small tracker-next-btn" data-action="nextTurn" data-id="${c.id}" title="Fin du tour">▶</button>`
           : "";

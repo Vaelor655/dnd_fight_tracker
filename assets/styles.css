@@ -730,7 +730,7 @@ td {
   padding: 10px 12px;
   text-align: left;
   font-size: 0.85rem;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 th {
@@ -750,6 +750,7 @@ th {
 /* ===== Turn table extras: token color + hide ===== */
 th.col-n { width: 44px; }
 th.col-hide { width: 118px; }
+th:last-child { min-width: 240px; }
 
 .token-color-row {
   margin-top: 6px;
@@ -1334,6 +1335,13 @@ button.is-active {
   background: var(--accent-dim);
   border-color: var(--accent);
   color: var(--text-heading);
+}
+
+.actions-cell {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .map-tokenlist__title {
