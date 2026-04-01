@@ -71,6 +71,7 @@ function escapeHtml(s){
     // Battlemap
     let battlemap = null;
     let realtime = null;
+    let onlinePlayersCache = [];
     let lastFocusedCombatantId = null;
     let currentIndex = 0;
     let roundNumber = 1;
@@ -265,6 +266,20 @@ function monsterSizeToCells(sizeRaw){
       }
       // keep tokenColor for backward compatibility (existing saved states)
       if(typeof c.tokenColor !== "string" || !c.tokenColor.trim()) c.tokenColor = defaultTokenColorFromId(c.id);
+      if(typeof c.controlledByPlayerId !== "string") c.controlledByPlayerId = "";
+      if(typeof c.controlledByPlayerName !== "string") c.controlledByPlayerName = "";
+    }
+
+    function buildPlayerOwnerSelectHtml(currentId){
+      const selected = String(currentId || "");
+      const options = ['<option value="">MJ uniquement</option>'];
+      for(const p of onlinePlayersCache){
+        const pid = String(p?.id || "");
+        if(!pid) continue;
+        const name = String(p?.name || "Player");
+        options.push(`<option value="${escapeHtml(pid)}"${selected === pid ? " selected" : ""}>${escapeHtml(name)}</option>`);
+      }
+      return options.join("");
     }
 
     function getMapState(){
@@ -422,6 +437,8 @@ function monsterSizeToCells(sizeRaw){
         hiddenFromPlayers: !!(c.hiddenFromPlayers ?? c.hiddenForPlayers ?? c.hidden ?? false),
         hideNameForPlayers: !!(c.hideNameForPlayers ?? false),
         censorLabel: (typeof c.censorLabel === "string") ? c.censorLabel.trim() : null,
+        controlledByPlayerId: (typeof c.controlledByPlayerId === "string") ? c.controlledByPlayerId.trim() : "",
+        controlledByPlayerName: (typeof c.controlledByPlayerName === "string") ? c.controlledByPlayerName.trim() : "",
       };
       updateUnconsciousCondition(obj);
       return obj;
@@ -586,7 +603,7 @@ function monsterSizeToCells(sizeRaw){
       if (combatants.length === 0) {
         const tr = document.createElement("tr");
         tr.innerHTML =
-          '<td colspan="8" class="empty">Aucune créature pour l\'instant.</td>';
+          '<td colspan="9" class="empty">Aucune créature pour l\'instant.</td>';
         trackerBody.appendChild(tr);
         updateTimerDisplay();
         syncTurnBarToMap();
@@ -900,6 +917,31 @@ function monsterSizeToCells(sizeRaw){
 
         tr.appendChild(condTd);
 
+        const ownerTd = document.createElement("td");
+        const ownerSelect = document.createElement("select");
+        ownerSelect.classList.add("condition-select");
+        ownerSelect.innerHTML = buildPlayerOwnerSelectHtml(c.controlledByPlayerId);
+        ownerSelect.title = "Autoriser un joueur à contrôler ce token";
+        ownerSelect.addEventListener("change", () => {
+          const playerId = String(ownerSelect.value || "");
+          c.controlledByPlayerId = playerId;
+          if(playerId){
+            const player = onlinePlayersCache.find((p) => String(p?.id || "") === playerId);
+            c.controlledByPlayerName = String(player?.name || "");
+          }else{
+            c.controlledByPlayerName = "";
+          }
+          saveState();
+          if (battlemap && typeof c.mapTokenId === "number") {
+            battlemap.upsertTokenForCombatant(c);
+            battlemap.invalidate();
+            window.__mapDirtyTs = Date.now();
+            realtime?.markDirty?.();
+          }
+        });
+        ownerTd.appendChild(ownerSelect);
+        tr.appendChild(ownerTd);
+
         // Actions
         const actionsTd = document.createElement("td");
         actionsTd.innerHTML = `
@@ -1040,6 +1082,8 @@ function monsterSizeToCells(sizeRaw){
           tokenColor: null,
           tokenSize: tokenSizeCells,
           hiddenFromPlayers: false,
+          controlledByPlayerId: "",
+          controlledByPlayerName: "",
         };
 
         updateUnconsciousCondition(newCombatant);
@@ -1565,6 +1609,54 @@ function monsterSizeToCells(sizeRaw){
         if(!isFinite(x) || !isFinite(y)) return;
         lastPing = { cell: { x, y }, ts: Number(payload?.ts) || Date.now(), from: payload?.from || "PING", color: payload?.color || null, kind: payload?.kind || "player" };
         battlemap.invalidate();
+      },
+      onPresencePlayers: (players) => {
+        onlinePlayersCache = Array.isArray(players) ? players : [];
+        render();
+      },
+      onTokenUpdate: (payload) => {
+        const tokenId = Number(payload?.tokenId);
+        const playerId = String(payload?.playerId || "");
+        if(!Number.isFinite(tokenId) || !playerId) return;
+        const st = battlemap?._getState?.();
+        const token = st?.tokens?.find?.((t) => t.id === tokenId);
+        if(!token) return;
+        if(String(token.controlledByPlayerId || "") !== playerId) return;
+
+        const combatant = combatants.find((x) => x.mapTokenId === tokenId) || null;
+
+        if(payload?.position && typeof payload.position === "object"){
+          const x = Number(payload.position.x);
+          const y = Number(payload.position.y);
+          if(Number.isFinite(x) && Number.isFinite(y)){
+            token.x = x;
+            token.y = y;
+          }
+        }
+        if(payload?.stats && typeof payload.stats === "object"){
+          let hpTouched = false;
+          if(Number.isFinite(Number(payload.stats.hp))){
+            token.hp = Number(payload.stats.hp);
+            if(combatant) combatant.hpCurrent = Number(payload.stats.hp);
+            hpTouched = true;
+          }
+          if(typeof payload.stats.conditions === "string"){
+            token.conditions = payload.stats.conditions;
+            if(combatant) combatant.conditions = payload.stats.conditions;
+          }
+          if(typeof payload.stats.isConcentrating === "boolean"){
+            token.isConcentrating = payload.stats.isConcentrating;
+            if(combatant) combatant.isConcentrating = payload.stats.isConcentrating;
+          }
+          if(combatant && hpTouched){
+            updateUnconsciousCondition(combatant);
+          }
+        }
+        battlemap.invalidate();
+        window.__mapDirtyTs = Date.now();
+        realtime?.markDirty?.();
+        saveState();
+        render();
       },
       onlineEl: document.getElementById("onlinePlayers"),
     });

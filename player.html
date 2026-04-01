@@ -28,6 +28,22 @@
         <div class="map-canvas-wrap">
           <canvas id="map"></canvas>
         </div>
+        <div id="playerTokenPanel" class="map-settings-body" style="border-top:1px solid var(--border);">
+          <div class="map-settings-row">
+            <strong id="playerTokenName">Aucun token sélectionné</strong>
+          </div>
+          <div class="map-settings-row">
+            <button id="playerHpMinusBtn" class="secondary small" type="button">-1 PV</button>
+            <button id="playerHpPlusBtn" class="secondary small" type="button">+1 PV</button>
+            <span id="playerHpValue" class="muted">PV: —</span>
+          </div>
+          <div class="map-settings-row">
+            <label class="field-inline" style="flex:1">
+              <span>États</span>
+              <input id="playerConditionsInput" type="text" placeholder="Empoisonné, à terre..." style="width:100%" />
+            </label>
+          </div>
+        </div>
 
         <!-- Ribbon toolbar (permanent, below canvas) -->
         <div id="mapToolbar" class="map-ribbon" role="toolbar" aria-label="Outils joueur">
