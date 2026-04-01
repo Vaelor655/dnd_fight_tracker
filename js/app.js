@@ -931,13 +931,16 @@ function monsterSizeToCells(sizeRaw){
           }else{
             c.controlledByPlayerName = "";
           }
-          saveState();
-          if (battlemap && typeof c.mapTokenId === "number") {
+          // Toujours créer/mettre à jour le token sur la carte et synchro realtime
+          // (même si le token n'existait pas encore)
+          if (battlemap) {
             battlemap.upsertTokenForCombatant(c);
             battlemap.invalidate();
             window.__mapDirtyTs = Date.now();
             realtime?.markDirty?.();
           }
+          saveState();
+          render();
         });
         ownerTd.appendChild(ownerSelect);
         tr.appendChild(ownerTd);
