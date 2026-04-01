@@ -28,6 +28,30 @@
         <div class="map-canvas-wrap">
           <canvas id="map"></canvas>
         </div>
+        <div id="playerTokenPanel" class="map-settings-body" style="border-top:1px solid var(--border);">
+          <div class="map-settings-row">
+            <strong id="playerTokenName">Aucun token sélectionné</strong>
+          </div>
+          <div class="map-settings-row">
+            <label class="field-inline"><span>Nom</span><input id="playerNameInput" type="text" style="width:140px" /></label>
+            <span id="playerHpValue" class="muted">PV: —</span>
+          </div>
+          <div class="map-settings-row">
+            <label class="field-inline"><span>PV</span><input id="playerHpInput" type="number" style="width:78px" /></label>
+            <label class="field-inline"><span>Max</span><input id="playerHpMaxInput" type="number" style="width:78px" /></label>
+            <label class="field-inline"><span>Temp</span><input id="playerHpTempInput" type="number" style="width:78px" /></label>
+            <label class="field-inline"><span>CA</span><input id="playerAcInput" type="number" style="width:78px" /></label>
+          </div>
+          <div class="map-settings-row">
+            <label class="field-inline"><input id="playerConcentrationInput" type="checkbox" /> <span>Concentration</span></label>
+          </div>
+          <div class="map-settings-row">
+            <label class="field-inline" style="flex:1">
+              <span>États</span>
+              <input id="playerConditionsInput" type="text" placeholder="Empoisonné, à terre..." style="width:100%" />
+            </label>
+          </div>
+        </div>
 
         <!-- Ribbon toolbar (permanent, below canvas) -->
         <div id="mapToolbar" class="map-ribbon" role="toolbar" aria-label="Outils joueur">

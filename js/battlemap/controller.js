@@ -553,6 +553,8 @@ dom.bgFile?.addEventListener("change", async () => {
         ac: (combatant.acBase ?? 10) + (combatant.acTemp ?? 0),
         conditions: combatant.conditions || "",
         isConcentrating: !!combatant.isConcentrating,
+        controlledByPlayerId: (typeof combatant.controlledByPlayerId === "string") ? combatant.controlledByPlayerId : "",
+        controlledByPlayerName: (typeof combatant.controlledByPlayerName === "string") ? combatant.controlledByPlayerName : "",
         rotation: 0,
         x: Math.round(centerCell.x * 2) / 2,
         y: Math.round(centerCell.y * 2) / 2,
@@ -571,6 +573,8 @@ dom.bgFile?.addEventListener("change", async () => {
     t.ac = (combatant.acBase ?? 10) + (combatant.acTemp ?? 0);
     t.conditions = combatant.conditions || "";
     t.isConcentrating = !!combatant.isConcentrating;
+    t.controlledByPlayerId = (typeof combatant.controlledByPlayerId === "string") ? combatant.controlledByPlayerId : (t.controlledByPlayerId || "");
+    t.controlledByPlayerName = (typeof combatant.controlledByPlayerName === "string") ? combatant.controlledByPlayerName : (t.controlledByPlayerName || "");
     t.hiddenForPlayers = !!combatant.hiddenFromPlayers;
     t.hideNameForPlayers = !!combatant.hideNameForPlayers;
     if(combatant.hideNameForPlayers){
