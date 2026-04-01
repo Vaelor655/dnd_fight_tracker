@@ -597,6 +597,8 @@ function monsterSizeToCells(sizeRaw){
       roundDisplay.textContent = roundNumber.toString();
       countDisplay.textContent = combatants.length.toString();
       nextBtn.disabled = combatants.length === 0;
+      const tokenListNextBtn = document.getElementById("tokenListNextBtn");
+      if(tokenListNextBtn) tokenListNextBtn.disabled = combatants.length === 0;
 
       trackerBody.innerHTML = "";
 
@@ -947,30 +949,10 @@ function monsterSizeToCells(sizeRaw){
 
         // Actions
         const actionsTd = document.createElement("td");
-        const isActive = (index === currentIndex);
-
-        const nextTurnBtn = document.createElement("button");
-        nextTurnBtn.className = isActive ? "small primary" : "small secondary";
-        nextTurnBtn.dataset.action = isActive ? "nextTurn" : "activate";
-        nextTurnBtn.dataset.id = c.id;
-        nextTurnBtn.textContent = isActive ? "▶ Fin du tour" : "Activer";
-        nextTurnBtn.title = isActive ? "Passer au combattant suivant" : "Passer directement à ce tour";
-
-        const mapBtn = document.createElement("button");
-        mapBtn.className = "small secondary";
-        mapBtn.dataset.action = "map";
-        mapBtn.dataset.id = c.id;
-        mapBtn.textContent = "Map";
-
-        const delBtn = document.createElement("button");
-        delBtn.className = "small danger";
-        delBtn.dataset.action = "delete";
-        delBtn.dataset.id = c.id;
-        delBtn.textContent = "Suppr";
-
-        actionsTd.appendChild(nextTurnBtn);
-        actionsTd.appendChild(mapBtn);
-        actionsTd.appendChild(delBtn);
+        actionsTd.innerHTML = `
+          <button class="small secondary" data-action="map" data-id="${c.id}">Map</button>
+          <button class="small danger" data-action="delete" data-id="${c.id}">Suppr</button>
+        `;
         tr.appendChild(actionsTd);
 
         trackerBody.appendChild(tr);
@@ -1143,13 +1125,22 @@ function monsterSizeToCells(sizeRaw){
 
     function nextTurn() {
       if (combatants.length === 0) return;
+
+      // Effacer la trace du token actif avant de passer au suivant
+      if(battlemap && combatants[currentIndex]){
+        const prev = combatants[currentIndex];
+        if(typeof prev.mapTokenId === "number"){
+          battlemap.startTurnForToken(prev.mapTokenId);
+        }
+      }
+
       currentIndex++;
       if (currentIndex >= combatants.length) {
         currentIndex = 0;
         roundNumber++;
         showToast(`Round ${roundNumber}`, 'info');
       }
-      // Reset movement tracking for the new active combatant
+      // Initialiser le chemin du nouveau token actif
       if(battlemap && combatants[currentIndex]){
         const c = combatants[currentIndex];
         if(typeof c.mapTokenId === "number"){
@@ -1312,6 +1303,7 @@ function monsterSizeToCells(sizeRaw){
     });
 
     nextBtn.addEventListener("click", nextTurn);
+    document.getElementById("tokenListNextBtn")?.addEventListener("click", nextTurn);
     resetBtn.addEventListener("click", resetTracker);
     exportCombatBtn.addEventListener("click", exportCombatState);
     importCombatBtn.addEventListener("click", () => importCombatFile.click());
@@ -1347,19 +1339,6 @@ function monsterSizeToCells(sizeRaw){
         if (!v || isNaN(v)) return;
         updateHp(id, v);
         input.value = "";
-      } else if (action === "nextTurn") {
-        nextTurn();
-      } else if (action === "activate") {
-        // Passer directement au tour de ce combattant
-        const idx = combatants.findIndex(x => x.id === id);
-        if (idx !== -1) {
-          currentIndex = idx;
-          if (battlemap && combatants[idx]) {
-            battlemap.startTurnForToken(combatants[idx].mapTokenId);
-          }
-          saveState();
-          render();
-        }
       } else if (action === "map") {
         focusCombatantOnMap(id);
       } else if (action === "delete") {
