@@ -21,8 +21,12 @@ const pingColorInput = document.getElementById("pingColor");
 const turnBarEl = document.getElementById("turnBar");
 const playerTokenNameEl = document.getElementById("playerTokenName");
 const playerHpValueEl = document.getElementById("playerHpValue");
+const playerAcValueEl = document.getElementById("playerAcValue");
 const playerHpMinusBtn = document.getElementById("playerHpMinusBtn");
 const playerHpPlusBtn = document.getElementById("playerHpPlusBtn");
+const playerAcTempInput = document.getElementById("playerAcTempInput");
+const playerHpTempInput = document.getElementById("playerHpTempInput");
+const playerInitiativeInput = document.getElementById("playerInitiativeInput");
 const playerConditionsInput = document.getElementById("playerConditionsInput");
 
 // ===== Theme =====
@@ -265,19 +269,38 @@ function syncOwnedTokenPanel(){
   if(!tok){
     if(playerTokenNameEl) playerTokenNameEl.textContent = "Aucun token sélectionné";
     if(playerHpValueEl) playerHpValueEl.textContent = "PV: —";
+    if(playerAcValueEl) playerAcValueEl.textContent = "CA: —";
+    if(playerAcTempInput) playerAcTempInput.value = "0";
+    if(playerHpTempInput) playerHpTempInput.value = "0";
+    if(playerInitiativeInput) playerInitiativeInput.value = "0";
     if(playerConditionsInput) playerConditionsInput.value = "";
     if(playerHpMinusBtn) playerHpMinusBtn.disabled = true;
     if(playerHpPlusBtn) playerHpPlusBtn.disabled = true;
+    if(playerAcTempInput) playerAcTempInput.disabled = true;
+    if(playerHpTempInput) playerHpTempInput.disabled = true;
+    if(playerInitiativeInput) playerInitiativeInput.disabled = true;
     if(playerConditionsInput) playerConditionsInput.disabled = true;
     return;
   }
   if(playerTokenNameEl) playerTokenNameEl.textContent = `${tok.name || "Token"} (vous contrôlez)`;
-  if(playerHpValueEl) playerHpValueEl.textContent = `PV: ${Number(tok.hp ?? 0)}${Number(tok.hpMax ?? 0) > 0 ? ` / ${Number(tok.hpMax)}` : ""}`;
+  const hpTemp = Number(tok.hpTemp ?? 0);
+  if(playerHpValueEl) playerHpValueEl.textContent = `PV: ${Number(tok.hp ?? 0)}${Number(tok.hpMax ?? 0) > 0 ? ` / ${Number(tok.hpMax)}` : ""}${hpTemp > 0 ? ` (+${hpTemp})` : ""}`;
+  const acBase = Number.isFinite(Number(tok.acBase)) ? Number(tok.acBase) : 10;
+  const acTemp = Number(tok.acTemp ?? 0);
+  if(playerAcValueEl) playerAcValueEl.textContent = `CA: ${acBase + acTemp} (${acBase}${acTemp ? ` + ${acTemp}` : ""})`;
+  if(playerAcTempInput && document.activeElement !== playerAcTempInput) playerAcTempInput.value = String(acTemp);
+  if(playerHpTempInput && document.activeElement !== playerHpTempInput) playerHpTempInput.value = String(hpTemp);
+  if(playerInitiativeInput && document.activeElement !== playerInitiativeInput){
+    playerInitiativeInput.value = String(Number(tok.initiative ?? 0));
+  }
   if(playerConditionsInput && document.activeElement !== playerConditionsInput){
     playerConditionsInput.value = String(tok.conditions || "");
   }
   if(playerHpMinusBtn) playerHpMinusBtn.disabled = false;
   if(playerHpPlusBtn) playerHpPlusBtn.disabled = false;
+  if(playerAcTempInput) playerAcTempInput.disabled = false;
+  if(playerHpTempInput) playerHpTempInput.disabled = false;
+  if(playerInitiativeInput) playerInitiativeInput.disabled = false;
   if(playerConditionsInput) playerConditionsInput.disabled = false;
 }
 
@@ -754,4 +777,33 @@ playerConditionsInput?.addEventListener("change", () => {
   tok.conditions = String(playerConditionsInput.value || "");
   dirty = true;
   sendOwnedTokenStats({ conditions: tok.conditions });
+});
+
+playerAcTempInput?.addEventListener("change", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  const v = Number(playerAcTempInput.value || 0);
+  tok.acTemp = Number.isFinite(v) ? v : 0;
+  const base = Number.isFinite(Number(tok.acBase)) ? Number(tok.acBase) : 10;
+  tok.ac = base + tok.acTemp;
+  dirty = true;
+  sendOwnedTokenStats({ acTemp: tok.acTemp });
+});
+
+playerHpTempInput?.addEventListener("change", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  const v = Number(playerHpTempInput.value || 0);
+  tok.hpTemp = Number.isFinite(v) ? v : 0;
+  dirty = true;
+  sendOwnedTokenStats({ hpTemp: tok.hpTemp });
+});
+
+playerInitiativeInput?.addEventListener("change", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  const v = Number(playerInitiativeInput.value || 0);
+  tok.initiative = Number.isFinite(v) ? v : 0;
+  dirty = true;
+  sendOwnedTokenStats({ initiative: tok.initiative });
 });
