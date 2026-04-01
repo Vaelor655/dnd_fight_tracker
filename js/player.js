@@ -20,14 +20,41 @@ const pingNameInput = document.getElementById("pingName");
 const pingColorInput = document.getElementById("pingColor");
 const turnBarEl = document.getElementById("turnBar");
 const playerTokenNameEl = document.getElementById("playerTokenName");
+const playerTokenDotEl = document.getElementById("playerTokenDot");
+const playerTokenStatusEl = document.getElementById("playerTokenStatus");
 const playerHpValueEl = document.getElementById("playerHpValue");
+const playerHpBarCurrentEl = document.getElementById("playerHpBarCurrent");
+const playerHpBarTempEl = document.getElementById("playerHpBarTemp");
 const playerAcValueEl = document.getElementById("playerAcValue");
 const playerHpMinusBtn = document.getElementById("playerHpMinusBtn");
 const playerHpPlusBtn = document.getElementById("playerHpPlusBtn");
+const playerHpDeltaInput = document.getElementById("playerHpDeltaInput");
+const playerHpDeltaApplyBtn = document.getElementById("playerHpDeltaApplyBtn");
 const playerAcTempInput = document.getElementById("playerAcTempInput");
 const playerHpTempInput = document.getElementById("playerHpTempInput");
 const playerInitiativeInput = document.getElementById("playerInitiativeInput");
 const playerConditionsInput = document.getElementById("playerConditionsInput");
+const playerConditionChipsEl = document.getElementById("playerConditionChips");
+const toolMoveTokenBtn = document.getElementById("toolMoveToken");
+
+const CONDITION_OPTIONS = [
+  { label: "Aveuglé", full: "Aveuglé (Blinded)", danger: false },
+  { label: "Charmé", full: "Charmé (Charmed)", danger: false },
+  { label: "Assourdi", full: "Assourdi (Deafened)", danger: false },
+  { label: "Effrayé", full: "Effrayé (Frightened)", danger: false },
+  { label: "Agrippé", full: "Agrippé (Grappled)", danger: false },
+  { label: "Neutralisé", full: "Neutralisé (Incapacitated)", danger: true },
+  { label: "Invisible", full: "Invisible (Invisible)", danger: false },
+  { label: "Paralysé", full: "Paralysé (Paralyzed)", danger: true },
+  { label: "Pétrifié", full: "Pétrifié (Petrified)", danger: true },
+  { label: "Empoisonné", full: "Empoisonné (Poisoned)", danger: false },
+  { label: "À terre", full: "À terre (Prone)", danger: false },
+  { label: "Entravé", full: "Entravé (Restrained)", danger: false },
+  { label: "Étourdi", full: "Étourdi (Stunned)", danger: true },
+  { label: "Inconscient", full: "Inconscient (Unconscious)", danger: true },
+  { label: "Exténué", full: "Exténué (Exhaustion)", danger: false },
+  { label: "Conc.", full: "Concentration", danger: false },
+];
 
 // ===== Theme =====
 const THEME_STORAGE_KEY = "initiativeTrackerTheme";
@@ -264,44 +291,137 @@ function getOwnedTokenById(id){
   return (state?.tokens || []).find((t) => t.id === id && String(t.controlledByPlayerId || "") === String(playerId || "")) || null;
 }
 
+function buildConditionChips(tok){
+  if(!playerConditionChipsEl) return;
+  const conditions = String(tok?.conditions || "");
+  const activeParts = conditions.split(",").map(s => s.trim()).filter(Boolean).map(s => s.toLowerCase());
+
+  playerConditionChipsEl.innerHTML = "";
+  const disabled = !tok;
+
+  for(const cond of CONDITION_OPTIONS){
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "player-condition-chip";
+    chip.textContent = cond.label;
+    chip.title = cond.full;
+    chip.disabled = disabled;
+    const isActive = activeParts.includes(cond.full.toLowerCase());
+    if(isActive) chip.classList.add("is-active");
+    if(isActive && cond.danger) chip.classList.add("chip--danger");
+
+    chip.addEventListener("click", () => {
+      if(!tok) return;
+      let parts = String(tok.conditions || "").split(",").map(s => s.trim()).filter(Boolean);
+      const idx = parts.findIndex(p => p.toLowerCase() === cond.full.toLowerCase());
+      if(idx === -1){
+        parts.push(cond.full);
+      } else {
+        parts.splice(idx, 1);
+      }
+      tok.conditions = parts.join(", ");
+      if(playerConditionsInput && document.activeElement !== playerConditionsInput){
+        playerConditionsInput.value = tok.conditions;
+      }
+      sendOwnedTokenStats({ conditions: tok.conditions });
+      dirty = true;
+      buildConditionChips(tok);
+    });
+    playerConditionChipsEl.appendChild(chip);
+  }
+}
+
 function syncOwnedTokenPanel(){
   const tok = getOwnedTokenById(selectedOwnedTokenId);
-  if(!tok){
-    if(playerTokenNameEl) playerTokenNameEl.textContent = "Aucun token sélectionné";
-    if(playerHpValueEl) playerHpValueEl.textContent = "PV: —";
-    if(playerAcValueEl) playerAcValueEl.textContent = "CA: —";
-    if(playerAcTempInput) playerAcTempInput.value = "0";
-    if(playerHpTempInput) playerHpTempInput.value = "0";
-    if(playerInitiativeInput) playerInitiativeInput.value = "0";
-    if(playerConditionsInput) playerConditionsInput.value = "";
+  const hasToken = !!tok;
+
+  // Header
+  if(playerTokenDotEl){
+    playerTokenDotEl.style.background = hasToken ? (tok.color || "var(--accent)") : "var(--border)";
+  }
+  if(playerTokenNameEl){
+    playerTokenNameEl.textContent = hasToken ? (tok.name || "Token") : "Aucun token assigné";
+  }
+  if(playerTokenStatusEl){
+    playerTokenStatusEl.textContent = hasToken ? "Vous contrôlez" : "";
+    playerTokenStatusEl.style.display = hasToken ? "" : "none";
+  }
+
+  if(!hasToken){
+    // HP bar
+    if(playerHpBarCurrentEl) playerHpBarCurrentEl.style.width = "0%";
+    if(playerHpBarTempEl) playerHpBarTempEl.style.width = "0%";
+    if(playerHpValueEl) playerHpValueEl.textContent = "—";
+    if(playerAcValueEl) playerAcValueEl.textContent = "—";
+    if(playerAcTempInput) { playerAcTempInput.value = "0"; playerAcTempInput.disabled = true; }
+    if(playerHpTempInput) { playerHpTempInput.value = "0"; playerHpTempInput.disabled = true; }
+    if(playerInitiativeInput) { playerInitiativeInput.value = "0"; playerInitiativeInput.disabled = true; }
+    if(playerConditionsInput) { playerConditionsInput.value = ""; playerConditionsInput.disabled = true; }
     if(playerHpMinusBtn) playerHpMinusBtn.disabled = true;
     if(playerHpPlusBtn) playerHpPlusBtn.disabled = true;
-    if(playerAcTempInput) playerAcTempInput.disabled = true;
-    if(playerHpTempInput) playerHpTempInput.disabled = true;
-    if(playerInitiativeInput) playerInitiativeInput.disabled = true;
-    if(playerConditionsInput) playerConditionsInput.disabled = true;
+    if(playerHpDeltaInput) { playerHpDeltaInput.disabled = true; playerHpDeltaInput.value = ""; }
+    if(playerHpDeltaApplyBtn) playerHpDeltaApplyBtn.disabled = true;
+    buildConditionChips(null);
     return;
   }
-  if(playerTokenNameEl) playerTokenNameEl.textContent = `${tok.name || "Token"} (vous contrôlez)`;
+
+  // --- Enable controls ---
+  if(playerHpMinusBtn) playerHpMinusBtn.disabled = false;
+  if(playerHpPlusBtn) playerHpPlusBtn.disabled = false;
+  if(playerHpDeltaInput) playerHpDeltaInput.disabled = false;
+  if(playerHpDeltaApplyBtn) playerHpDeltaApplyBtn.disabled = false;
+  if(playerAcTempInput) playerAcTempInput.disabled = false;
+  if(playerHpTempInput) playerHpTempInput.disabled = false;
+  if(playerInitiativeInput) playerInitiativeInput.disabled = false;
+  if(playerConditionsInput) playerConditionsInput.disabled = false;
+
+  // HP display & bar
+  const hp = Number(tok.hp ?? 0);
+  const hpMax = Number(tok.hpMax ?? 0);
   const hpTemp = Number(tok.hpTemp ?? 0);
-  if(playerHpValueEl) playerHpValueEl.textContent = `PV: ${Number(tok.hp ?? 0)}${Number(tok.hpMax ?? 0) > 0 ? ` / ${Number(tok.hpMax)}` : ""}${hpTemp > 0 ? ` (+${hpTemp})` : ""}`;
+  const maxTotal = Math.max(hpMax + hpTemp, 1);
+  const clampedHp = Math.max(Math.min(hp, maxTotal), 0);
+  const clampedTemp = Math.max(Math.min(hpTemp, maxTotal - clampedHp), 0);
+  const hpPct = (clampedHp / maxTotal) * 100;
+  const tempPct = (clampedTemp / maxTotal) * 100;
+
+  if(playerHpValueEl){
+    playerHpValueEl.textContent = hpMax > 0
+      ? `${hp} / ${hpMax}${hpTemp > 0 ? ` (+${hpTemp})` : ""}`
+      : `${hp}${hpTemp > 0 ? ` (+${hpTemp})` : ""}`;
+    const ratio = hpMax > 0 ? hp / hpMax : 1;
+    playerHpValueEl.style.color = hp <= 0 ? "var(--hp-dead)" : ratio <= 0.5 ? "var(--hp-low)" : "var(--hp-ok)";
+  }
+  if(playerHpBarCurrentEl){
+    playerHpBarCurrentEl.style.width = hpPct + "%";
+    playerHpBarCurrentEl.classList.toggle("is-dead", hp <= 0);
+    playerHpBarCurrentEl.classList.toggle("is-low", hp > 0 && hpMax > 0 && hp <= hpMax / 2);
+  }
+  if(playerHpBarTempEl) playerHpBarTempEl.style.width = tempPct + "%";
+
+  // CA
   const acBase = Number.isFinite(Number(tok.acBase)) ? Number(tok.acBase) : 10;
   const acTemp = Number(tok.acTemp ?? 0);
-  if(playerAcValueEl) playerAcValueEl.textContent = `CA: ${acBase + acTemp} (${acBase}${acTemp ? ` + ${acTemp}` : ""})`;
-  if(playerAcTempInput && document.activeElement !== playerAcTempInput) playerAcTempInput.value = String(acTemp);
-  if(playerHpTempInput && document.activeElement !== playerHpTempInput) playerHpTempInput.value = String(hpTemp);
+  if(playerAcValueEl){
+    playerAcValueEl.textContent = acTemp !== 0
+      ? `${acBase + acTemp} (${acBase}${acTemp > 0 ? "+" : ""}${acTemp})`
+      : String(acBase + acTemp);
+  }
+  if(playerAcTempInput && document.activeElement !== playerAcTempInput){
+    playerAcTempInput.value = String(acTemp);
+  }
+  if(playerHpTempInput && document.activeElement !== playerHpTempInput){
+    playerHpTempInput.value = String(hpTemp);
+  }
   if(playerInitiativeInput && document.activeElement !== playerInitiativeInput){
     playerInitiativeInput.value = String(Number(tok.initiative ?? 0));
   }
   if(playerConditionsInput && document.activeElement !== playerConditionsInput){
     playerConditionsInput.value = String(tok.conditions || "");
   }
-  if(playerHpMinusBtn) playerHpMinusBtn.disabled = false;
-  if(playerHpPlusBtn) playerHpPlusBtn.disabled = false;
-  if(playerAcTempInput) playerAcTempInput.disabled = false;
-  if(playerHpTempInput) playerHpTempInput.disabled = false;
-  if(playerInitiativeInput) playerInitiativeInput.disabled = false;
-  if(playerConditionsInput) playerConditionsInput.disabled = false;
+
+  // Condition chips
+  buildConditionChips(tok);
 }
 
 function setStateFromData(raw, { followCamera }){
@@ -321,7 +441,14 @@ function setStateFromData(raw, { followCamera }){
 
   migrated.ui = { view: "player" };
   state = migrated;
-  if(!getOwnedTokenById(selectedOwnedTokenId)) selectedOwnedTokenId = null;
+  if(!getOwnedTokenById(selectedOwnedTokenId)){
+    selectedOwnedTokenId = null;
+    // Auto-sélectionner le premier token contrôlé par ce joueur
+    const ownedTok = (state.tokens || []).find(t =>
+      String(t.controlledByPlayerId || "") === String(playerId || "")
+    );
+    if(ownedTok) selectedOwnedTokenId = ownedTok.id;
+  }
   renderTurnBar(state.turnBar);
   dirty = true;
 }
@@ -369,7 +496,7 @@ requestAnimationFrame(loop);
 
 
 // ===== Tools (client-side only): measure + ping =====
-let toolMode = "none"; // none | measure | ping
+let toolMode = "none"; // none | measure | ping | move-token
 let gHeld = false; // hold-to-ping (press and hold 'g' + left click)
 let measureDragging = false;
 let measureStartCell = null;
@@ -390,6 +517,10 @@ function setTool(mode){
 }
 
 function updateToolButtons(){
+  if(toolMoveTokenBtn){
+    toolMoveTokenBtn.classList.toggle("is-active", toolMode === "move-token");
+    toolMoveTokenBtn.setAttribute("aria-pressed", toolMode === "move-token" ? "true" : "false");
+  }
   if(measureBtn){
     measureBtn.classList.toggle("is-active", toolMode === "measure");
     measureBtn.setAttribute("aria-pressed", toolMode === "measure" ? "true" : "false");
@@ -398,9 +529,21 @@ function updateToolButtons(){
     pingBtn.classList.toggle("is-active", toolMode === "ping");
     pingBtn.setAttribute("aria-pressed", toolMode === "ping" ? "true" : "false");
   }
+  if(toolMoveTokenBtn) toolMoveTokenBtn.classList.toggle("primary", toolMode === "move-token");
   if(measureBtn) measureBtn.classList.toggle("primary", toolMode === "measure");
   if(pingBtn) pingBtn.classList.toggle("primary", toolMode === "ping");
 }
+
+toolMoveTokenBtn?.addEventListener("click", () => {
+  setTool(toolMode === "move-token" ? "none" : "move-token");
+  // Auto-select the first owned token when activating move mode
+  if(toolMode === "move-token" && !getOwnedTokenById(selectedOwnedTokenId)){
+    const tok = (state?.tokens || []).find(t =>
+      String(t.controlledByPlayerId || "") === String(playerId || "")
+    );
+    if(tok){ selectedOwnedTokenId = tok.id; dirty = true; }
+  }
+});
 
 // Hold-to-ping hotkey: keep 'g' pressed, then left click on the map
 document.addEventListener("keydown", (e) => {
@@ -630,6 +773,39 @@ function breakFollowCameraIfNeeded(){
 }
 
 canvas.addEventListener("pointerdown", (e) => {
+  if(toolMode === "move-token"){
+    if(e.pointerType === "mouse" && e.button !== 0) return;
+    e.preventDefault();
+    try{ canvas.setPointerCapture(e.pointerId); }catch{}
+
+    const { sx, sy } = canvasEventToScreen(e);
+    const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
+    const cell = worldToCell(state, world);
+
+    // First try to pick an owned token under the cursor
+    const hitId = pickTokenAt(state, cell);
+    const hitTok = (hitId != null) ? getOwnedTokenById(hitId) : null;
+    if(hitTok){
+      draggingOwnedTokenId = hitTok.id;
+      selectedOwnedTokenId = hitTok.id;
+    } else if(getOwnedTokenById(selectedOwnedTokenId)){
+      // Teleport selected owned token to clicked position
+      const snapped = state.grid?.layout === "hex"
+        ? { x: Math.round(cell.x), y: Math.round(cell.y) }
+        : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
+      const tok = getOwnedTokenById(selectedOwnedTokenId);
+      if(tok){
+        tok.x = snapped.x;
+        tok.y = snapped.y;
+        rt.sendTokenUpdate?.({ tokenId: tok.id, playerId, position: { x: tok.x, y: tok.y } });
+        dirty = true;
+      }
+    }
+    panPointerId = e.pointerId;
+    dirty = true;
+    return;
+  }
+
   if(toolMode !== "none") return;
   if(!state?.camera) return;
 
@@ -679,6 +855,9 @@ canvas.addEventListener("pointermove", (e) => {
     }
     return;
   }
+
+  // In move-token mode, no panning
+  if(toolMode === "move-token") return;
   if(!isPanning || panPointerId === null) return;
   if(e.pointerId !== panPointerId) return;
   if(!lastPanClient) return;
@@ -755,20 +934,49 @@ function sendOwnedTokenStats(patch){
   rt.sendTokenUpdate?.({ tokenId: tok.id, playerId, stats: patch });
 }
 
+function applyHpDeltaToToken(tok, delta){
+  if(!tok || !Number.isFinite(delta) || delta === 0) return;
+  const hpTemp = Number(tok.hpTemp ?? 0);
+  if(delta < 0){
+    let dmg = -delta;
+    if(hpTemp > 0){
+      const fromTemp = Math.min(dmg, hpTemp);
+      tok.hpTemp = hpTemp - fromTemp;
+      dmg -= fromTemp;
+    }
+    tok.hp = Number(tok.hp ?? 0) - dmg;
+  } else {
+    const hpMax = Number(tok.hpMax ?? 0);
+    tok.hp = Number(tok.hp ?? 0) + delta;
+    if(hpMax > 0 && tok.hp > hpMax) tok.hp = hpMax;
+  }
+  dirty = true;
+  sendOwnedTokenStats({ hp: Number(tok.hp || 0), hpTemp: Number(tok.hpTemp ?? 0) });
+}
+
 playerHpMinusBtn?.addEventListener("click", () => {
   const tok = getOwnedTokenById(selectedOwnedTokenId);
   if(!tok) return;
-  tok.hp = Number(tok.hp || 0) - 1;
-  dirty = true;
-  sendOwnedTokenStats({ hp: Number(tok.hp || 0) });
+  applyHpDeltaToToken(tok, -1);
 });
 
 playerHpPlusBtn?.addEventListener("click", () => {
   const tok = getOwnedTokenById(selectedOwnedTokenId);
   if(!tok) return;
-  tok.hp = Number(tok.hp || 0) + 1;
-  dirty = true;
-  sendOwnedTokenStats({ hp: Number(tok.hp || 0) });
+  applyHpDeltaToToken(tok, 1);
+});
+
+function applyHpDeltaBtn(){
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok || !playerHpDeltaInput) return;
+  const v = Number(playerHpDeltaInput.value);
+  if(!Number.isFinite(v) || v === 0) return;
+  applyHpDeltaToToken(tok, v);
+  playerHpDeltaInput.value = "";
+}
+playerHpDeltaApplyBtn?.addEventListener("click", applyHpDeltaBtn);
+playerHpDeltaInput?.addEventListener("keydown", (e) => {
+  if(e.key === "Enter") applyHpDeltaBtn();
 });
 
 playerConditionsInput?.addEventListener("change", () => {
@@ -776,6 +984,7 @@ playerConditionsInput?.addEventListener("change", () => {
   if(!tok) return;
   tok.conditions = String(playerConditionsInput.value || "");
   dirty = true;
+  buildConditionChips(tok);
   sendOwnedTokenStats({ conditions: tok.conditions });
 });
 

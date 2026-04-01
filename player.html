@@ -28,35 +28,63 @@
         <div class="map-canvas-wrap">
           <canvas id="map"></canvas>
         </div>
-        <div id="playerTokenPanel" class="map-settings-body" style="border-top:1px solid var(--border);">
-          <div class="map-settings-row">
-            <strong id="playerTokenName">Aucun token sélectionné</strong>
+        <div id="playerTokenPanel" class="player-token-panel">
+          <!-- En-tête token -->
+          <div class="player-token-header">
+            <div id="playerTokenDot" class="player-token-dot"></div>
+            <div id="playerTokenName" class="player-token-name">Aucun token assigné</div>
+            <div id="playerTokenStatus" class="player-token-status"></div>
           </div>
-          <div class="map-settings-row">
-            <button id="playerHpMinusBtn" class="secondary small" type="button">-1 PV</button>
-            <button id="playerHpPlusBtn" class="secondary small" type="button">+1 PV</button>
-            <span id="playerHpValue" class="muted">PV: —</span>
+
+          <!-- Section PV -->
+          <div class="player-hp-section">
+            <div class="player-hp-header">
+              <span class="player-stat-label">Points de Vie</span>
+              <span id="playerHpValue" class="player-hp-text">—</span>
+            </div>
+            <!-- Barre de PV -->
+            <div class="player-hp-bar-wrap">
+              <div id="playerHpBarCurrent" class="player-hp-bar-current" style="width:0%"></div>
+              <div id="playerHpBarTemp" class="player-hp-bar-temp" style="width:0%"></div>
+            </div>
+            <!-- Contrôles PV -->
+            <div class="player-hp-controls">
+              <button id="playerHpMinusBtn" class="player-hp-btn player-hp-btn--minus" type="button" title="−1 PV">−</button>
+              <div class="player-hp-delta-wrap">
+                <input id="playerHpDeltaInput" type="number" class="player-hp-delta-input" placeholder="Δ" title="Δ PV (négatif = dégâts, positif = soins)" />
+                <button id="playerHpDeltaApplyBtn" class="player-hp-apply-btn" type="button">OK</button>
+              </div>
+              <button id="playerHpPlusBtn" class="player-hp-btn player-hp-btn--plus" type="button" title="+1 PV">+</button>
+            </div>
           </div>
-          <div class="map-settings-row" style="gap:12px;flex-wrap:wrap;">
-            <span id="playerAcValue" class="muted">CA: —</span>
-            <label class="field-inline">
-              <span>Bonus CA</span>
-              <input id="playerAcTempInput" type="number" value="0" style="width:84px" />
-            </label>
-            <label class="field-inline">
-              <span>PV bonus</span>
-              <input id="playerHpTempInput" type="number" value="0" style="width:84px" />
-            </label>
-            <label class="field-inline">
-              <span>Initiative</span>
-              <input id="playerInitiativeInput" type="number" value="0" style="width:84px" />
-            </label>
+
+          <!-- Grille de stats -->
+          <div class="player-stats-grid">
+            <div class="player-stat-card">
+              <div class="player-stat-label">CA</div>
+              <div id="playerAcValue" class="player-stat-value">—</div>
+            </div>
+            <div class="player-stat-card">
+              <div class="player-stat-label">Bonus CA</div>
+              <input id="playerAcTempInput" type="number" class="player-stat-input" value="0" placeholder="0" title="Bonus CA temporaire" />
+            </div>
+            <div class="player-stat-card">
+              <div class="player-stat-label">Initiative</div>
+              <input id="playerInitiativeInput" type="number" class="player-stat-input" value="0" title="Initiative" />
+            </div>
+            <div class="player-stat-card">
+              <div class="player-stat-label">PV Bonus</div>
+              <input id="playerHpTempInput" type="number" class="player-stat-input" value="0" placeholder="0" title="PV temporaires" />
+            </div>
           </div>
-          <div class="map-settings-row">
-            <label class="field-inline" style="flex:1">
-              <span>États</span>
-              <input id="playerConditionsInput" type="text" placeholder="Empoisonné, à terre..." style="width:100%" />
-            </label>
+
+          <!-- États / conditions -->
+          <div class="player-conditions-section">
+            <div class="player-stat-label" style="margin-bottom:6px">États</div>
+            <div id="playerConditionChips" class="player-conditions-chips">
+              <!-- chips générés par player.js -->
+            </div>
+            <input id="playerConditionsInput" type="text" class="player-conditions-text" placeholder="État personnalisé..." />
           </div>
         </div>
 
@@ -64,6 +92,10 @@
         <div id="mapToolbar" class="map-ribbon" role="toolbar" aria-label="Outils joueur">
           <div class="map-ribbon__main">
             <div class="map-ribbon__group">
+              <button id="toolMoveToken" class="map-ribbon__btn" type="button" title="Déplacer mon token (sélectionner puis glisser)">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M12 3l3 3H9l3-3zm0 18l-3-3h6l-3 3zm-9-9l3-3v6l-3-3zm18 0l-3 3V9l3 3z" fill="currentColor"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
+                <span class="map-ribbon__label">Déplacer</span>
+              </button>
               <button id="toolMeasure" class="map-ribbon__btn" type="button" title="Mesurer (clic-drag)">
                 <svg class="ico" viewBox="0 0 24 24"><path d="M2 12h20M6 8v8M12 8v8M18 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                 <span class="map-ribbon__label">Mesure</span>
