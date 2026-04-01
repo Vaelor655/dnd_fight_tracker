@@ -750,7 +750,7 @@ th {
 /* ===== Turn table extras: token color + hide ===== */
 th.col-n { width: 44px; }
 th.col-hide { width: 118px; }
-th:last-child { min-width: 240px; }
+th:last-child { width: 180px; }
 
 .token-color-row {
   margin-top: 6px;
