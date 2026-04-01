@@ -1,5 +1,5 @@
 import { createInitialState, migrateState } from "./battlemap/model.js";
-import { draw, screenToWorld, worldToCell, cellToWorld } from "./battlemap/render.js";
+import { draw, screenToWorld, worldToCell, cellToWorld, pickTokenAt } from "./battlemap/render.js";
 import { initMapRealtimePlayer } from "./realtime/mapSync.js";
 
 const canvas = document.getElementById("map");
@@ -19,6 +19,11 @@ const zoomValue = document.getElementById("playerZoomValue");
 const pingNameInput = document.getElementById("pingName");
 const pingColorInput = document.getElementById("pingColor");
 const turnBarEl = document.getElementById("turnBar");
+const playerTokenNameEl = document.getElementById("playerTokenName");
+const playerHpValueEl = document.getElementById("playerHpValue");
+const playerHpMinusBtn = document.getElementById("playerHpMinusBtn");
+const playerHpPlusBtn = document.getElementById("playerHpPlusBtn");
+const playerConditionsInput = document.getElementById("playerConditionsInput");
 
 // ===== Theme =====
 const THEME_STORAGE_KEY = "initiativeTrackerTheme";
@@ -163,6 +168,8 @@ zoomRange?.addEventListener("input", () => {
 let state = createInitialState();
 state.ui = { view: "player" }; // options locales (non sync)
 let dirty = true;
+let selectedOwnedTokenId = null;
+let playerId = "";
 
 const PING_NAME_KEY = "battlemap_ping_name_v1";
 const defaultPingName = (() => {
@@ -243,8 +250,35 @@ function renderNow(){
     ping: computePingOverlay(),
   };
   draw(canvas, ctx, state, overlay);
+  syncOwnedTokenPanel();
   syncZoomUi();
   dirty = false;
+}
+
+function getOwnedTokenById(id){
+  if(!id) return null;
+  return (state?.tokens || []).find((t) => t.id === id && String(t.controlledByPlayerId || "") === String(playerId || "")) || null;
+}
+
+function syncOwnedTokenPanel(){
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok){
+    if(playerTokenNameEl) playerTokenNameEl.textContent = "Aucun token sélectionné";
+    if(playerHpValueEl) playerHpValueEl.textContent = "PV: —";
+    if(playerConditionsInput) playerConditionsInput.value = "";
+    if(playerHpMinusBtn) playerHpMinusBtn.disabled = true;
+    if(playerHpPlusBtn) playerHpPlusBtn.disabled = true;
+    if(playerConditionsInput) playerConditionsInput.disabled = true;
+    return;
+  }
+  if(playerTokenNameEl) playerTokenNameEl.textContent = `${tok.name || "Token"} (vous contrôlez)`;
+  if(playerHpValueEl) playerHpValueEl.textContent = `PV: ${Number(tok.hp ?? 0)}${Number(tok.hpMax ?? 0) > 0 ? ` / ${Number(tok.hpMax)}` : ""}`;
+  if(playerConditionsInput && document.activeElement !== playerConditionsInput){
+    playerConditionsInput.value = String(tok.conditions || "");
+  }
+  if(playerHpMinusBtn) playerHpMinusBtn.disabled = false;
+  if(playerHpPlusBtn) playerHpPlusBtn.disabled = false;
+  if(playerConditionsInput) playerConditionsInput.disabled = false;
 }
 
 function setStateFromData(raw, { followCamera }){
@@ -264,6 +298,7 @@ function setStateFromData(raw, { followCamera }){
 
   migrated.ui = { view: "player" };
   state = migrated;
+  if(!getOwnedTokenById(selectedOwnedTokenId)) selectedOwnedTokenId = null;
   renderTurnBar(state.turnBar);
   dirty = true;
 }
@@ -554,6 +589,7 @@ canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 let isPanning = false;
 let panPointerId = null;
 let lastPanClient = null;
+let draggingOwnedTokenId = null;
 
 function clientDeltaToCanvasDelta(dxClient, dyClient){
   const rect = canvas.getBoundingClientRect();
@@ -577,6 +613,22 @@ canvas.addEventListener("pointerdown", (e) => {
   // mouse: left or right button. touch/pen: always.
   if(e.pointerType === "mouse" && !(e.button === 0 || e.button === 2)) return;
 
+  const { sx, sy } = canvasEventToScreen(e);
+  const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
+  const cell = worldToCell(state, world);
+  const hitId = pickTokenAt(state, cell);
+  const hitTok = (hitId != null) ? getOwnedTokenById(hitId) : null;
+  if(hitTok && e.button === 0){
+    e.preventDefault();
+    try{ canvas.setPointerCapture(e.pointerId); }catch{}
+    draggingOwnedTokenId = hitTok.id;
+    selectedOwnedTokenId = hitTok.id;
+    panPointerId = e.pointerId;
+    isPanning = false;
+    dirty = true;
+    return;
+  }
+
   breakFollowCameraIfNeeded();
 
   e.preventDefault();
@@ -587,6 +639,23 @@ canvas.addEventListener("pointerdown", (e) => {
 });
 
 canvas.addEventListener("pointermove", (e) => {
+  if(draggingOwnedTokenId != null){
+    if(panPointerId !== null && e.pointerId !== panPointerId) return;
+    e.preventDefault();
+    const { sx, sy } = canvasEventToScreen(e);
+    const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
+    const cell = worldToCell(state, world);
+    const snapped = state.grid?.layout === "hex"
+      ? { x: Math.round(cell.x), y: Math.round(cell.y) }
+      : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
+    const tok = getOwnedTokenById(draggingOwnedTokenId);
+    if(tok){
+      tok.x = snapped.x;
+      tok.y = snapped.y;
+      dirty = true;
+    }
+    return;
+  }
   if(!isPanning || panPointerId === null) return;
   if(e.pointerId !== panPointerId) return;
   if(!lastPanClient) return;
@@ -604,6 +673,13 @@ canvas.addEventListener("pointermove", (e) => {
 
 function endPan(e){
   if(panPointerId !== null && e.pointerId !== panPointerId) return;
+  if(draggingOwnedTokenId != null){
+    const tok = getOwnedTokenById(draggingOwnedTokenId);
+    if(tok){
+      rt.sendTokenUpdate?.({ tokenId: tok.id, playerId, position: { x: tok.x, y: tok.y } });
+    }
+    draggingOwnedTokenId = null;
+  }
   isPanning = false;
   panPointerId = null;
   lastPanClient = null;
@@ -635,7 +711,7 @@ const rt = initMapRealtimePlayer({
   statusEl,
   followCameraToggle,
   onlineEl: document.getElementById("onlinePlayers"),
-  getIdentity: () => ({ name: getPingName(), color: getPingColor() }),
+  getIdentity: () => ({ playerId, name: getPingName(), color: getPingColor() }),
   onPing: (payload) => {
     const x = Number(payload?.x);
     const y = Number(payload?.y);
@@ -644,7 +720,38 @@ const rt = initMapRealtimePlayer({
     dirty = true;
   },
 });
+playerId = rt.getPlayerId?.() || "";
 
 // Update presence when pseudo / couleur change
 pingNameInput?.addEventListener("change", () => rt.trackIdentity?.());
 pingColorInput?.addEventListener("input", () => rt.trackIdentity?.());
+
+function sendOwnedTokenStats(patch){
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  rt.sendTokenUpdate?.({ tokenId: tok.id, playerId, stats: patch });
+}
+
+playerHpMinusBtn?.addEventListener("click", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  tok.hp = Number(tok.hp || 0) - 1;
+  dirty = true;
+  sendOwnedTokenStats({ hp: Number(tok.hp || 0) });
+});
+
+playerHpPlusBtn?.addEventListener("click", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  tok.hp = Number(tok.hp || 0) + 1;
+  dirty = true;
+  sendOwnedTokenStats({ hp: Number(tok.hp || 0) });
+});
+
+playerConditionsInput?.addEventListener("change", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  tok.conditions = String(playerConditionsInput.value || "");
+  dirty = true;
+  sendOwnedTokenStats({ conditions: tok.conditions });
+});

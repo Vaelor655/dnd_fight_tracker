@@ -35,6 +35,7 @@ function presencePlayersFromState(presenceState){
     for(const p of arr){
       if(String(p?.role || "").toLowerCase() !== "player") continue;
       out.push({
+        id: String(p?.playerId || key || ""),
         name: String(p?.name || p?.username || "Player"),
         color: String(p?.color || "#999999"),
       });
@@ -44,7 +45,7 @@ function presencePlayersFromState(presenceState){
   const seen = new Set();
   const uniq = [];
   for(const p of out){
-    const k = `${p.name}|${p.color}`;
+    const k = `${p.id}|${p.name}|${p.color}`;
     if(seen.has(k)) continue;
     seen.add(k);
     uniq.push(p);
@@ -84,6 +85,8 @@ export function initMapRealtimeMJ({
   bgUrlBtn,
   onlineEl,
   onPing,
+  onPresencePlayers,
+  onTokenUpdate,
 }){
   const supabase = getSupabase();
 
@@ -100,6 +103,7 @@ function updateOnlineList(){
   try{
     const players = presencePlayersFromState(presenceChannel.presenceState());
     renderOnlinePlayers(onlineEl, players);
+    onPresencePlayers && onPresencePlayers(players);
   }catch{}
 }
 
@@ -112,6 +116,7 @@ async function startPresence(){
   presenceChannel = supabase
     .channel(`battlemap:${roomId}`, { config: { presence: { key: presenceKey } } })
     .on("broadcast", { event: "ping" }, (msg) => { try{ onPing && onPing(msg?.payload); }catch{} })
+    .on("broadcast", { event: "token_update" }, (msg) => { try{ onTokenUpdate && onTokenUpdate(msg?.payload); }catch{} })
     .on("presence", { event: "sync" }, () => updateOnlineList())
     .on("presence", { event: "join" }, () => updateOnlineList())
     .on("presence", { event: "leave" }, () => updateOnlineList())
@@ -132,6 +137,7 @@ function stopPresence(){
     presenceChannel = null;
   }
   renderOnlinePlayers(onlineEl, []);
+  onPresencePlayers && onPresencePlayers([]);
 }
 
 
@@ -351,6 +357,15 @@ function stopPresence(){
         return { error: String(e?.message || e) };
       }
     },
+    sendTokenUpdate: async (payload) => {
+      if(!presenceChannel) return { error: "not_connected" };
+      try{
+        await presenceChannel.send({ type: "broadcast", event: "token_update", payload });
+        return { ok: true };
+      }catch(e){
+        return { error: String(e?.message || e) };
+      }
+    },
   };
 }
 
@@ -408,7 +423,7 @@ function safeIdentity(){
   }catch{}
   if(!name) name = `Player-${presenceKey.slice(-4).toUpperCase()}`;
   if(!color) color = "#999999";
-  return { role: "player", name, color, ts: Date.now() };
+  return { role: "player", playerId: presenceKey, name, color, ts: Date.now() };
 }
 
 function updateOnlineList(){
@@ -532,11 +547,21 @@ async function trackIdentity(){
   return {
     connect,
     getRoom: () => roomId,
+    getPlayerId: () => presenceKey,
     trackIdentity,
     sendPing: async (payload) => {
       if(!channel) return { error: "not_connected" };
       try{
         await channel.send({ type: "broadcast", event: "ping", payload });
+        return { ok: true };
+      }catch(e){
+        return { error: String(e?.message || e) };
+      }
+    },
+    sendTokenUpdate: async (payload) => {
+      if(!channel) return { error: "not_connected" };
+      try{
+        await channel.send({ type: "broadcast", event: "token_update", payload });
         return { ok: true };
       }catch(e){
         return { error: String(e?.message || e) };
