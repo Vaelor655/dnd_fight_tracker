@@ -270,13 +270,9 @@ function monsterSizeToCells(sizeRaw){
       if(typeof c.controlledByPlayerName !== "string") c.controlledByPlayerName = "";
     }
 
-    function buildPlayerOwnerSelectHtml(currentId, currentName){
+    function buildPlayerOwnerSelectHtml(currentId){
       const selected = String(currentId || "");
       const options = ['<option value="">MJ uniquement</option>'];
-      if(selected && !onlinePlayersCache.some((p) => String(p?.id || "") === selected)){
-        const label = currentName ? `${currentName} (hors ligne)` : `${selected.slice(0, 8)}… (hors ligne)`;
-        options.push(`<option value="${escapeHtml(selected)}" selected>${escapeHtml(label)}</option>`);
-      }
       for(const p of onlinePlayersCache){
         const pid = String(p?.id || "");
         if(!pid) continue;
@@ -924,7 +920,7 @@ function monsterSizeToCells(sizeRaw){
         const ownerTd = document.createElement("td");
         const ownerSelect = document.createElement("select");
         ownerSelect.classList.add("condition-select");
-        ownerSelect.innerHTML = buildPlayerOwnerSelectHtml(c.controlledByPlayerId, c.controlledByPlayerName);
+        ownerSelect.innerHTML = buildPlayerOwnerSelectHtml(c.controlledByPlayerId);
         ownerSelect.title = "Autoriser un joueur à contrôler ce token";
         ownerSelect.addEventListener("change", () => {
           const playerId = String(ownerSelect.value || "");
@@ -1639,29 +1635,10 @@ function monsterSizeToCells(sizeRaw){
         }
         if(payload?.stats && typeof payload.stats === "object"){
           let hpTouched = false;
-          if(typeof payload.stats.name === "string" && payload.stats.name.trim()){
-            token.name = payload.stats.name.trim();
-            if(combatant) combatant.name = payload.stats.name.trim();
-          }
           if(Number.isFinite(Number(payload.stats.hp))){
             token.hp = Number(payload.stats.hp);
             if(combatant) combatant.hpCurrent = Number(payload.stats.hp);
             hpTouched = true;
-          }
-          if(Number.isFinite(Number(payload.stats.hpMax))){
-            token.hpMax = Number(payload.stats.hpMax);
-            if(combatant) combatant.hpMax = Number(payload.stats.hpMax);
-          }
-          if(Number.isFinite(Number(payload.stats.hpTemp))){
-            token.hpTemp = Number(payload.stats.hpTemp);
-            if(combatant) combatant.hpTemp = Number(payload.stats.hpTemp);
-          }
-          if(Number.isFinite(Number(payload.stats.ac))){
-            token.ac = Number(payload.stats.ac);
-            if(combatant){
-              combatant.acBase = Number(payload.stats.ac);
-              combatant.acTemp = 0;
-            }
           }
           if(typeof payload.stats.conditions === "string"){
             token.conditions = payload.stats.conditions;

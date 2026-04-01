@@ -21,12 +21,8 @@ const pingColorInput = document.getElementById("pingColor");
 const turnBarEl = document.getElementById("turnBar");
 const playerTokenNameEl = document.getElementById("playerTokenName");
 const playerHpValueEl = document.getElementById("playerHpValue");
-const playerNameInput = document.getElementById("playerNameInput");
-const playerHpInput = document.getElementById("playerHpInput");
-const playerHpMaxInput = document.getElementById("playerHpMaxInput");
-const playerHpTempInput = document.getElementById("playerHpTempInput");
-const playerAcInput = document.getElementById("playerAcInput");
-const playerConcentrationInput = document.getElementById("playerConcentrationInput");
+const playerHpMinusBtn = document.getElementById("playerHpMinusBtn");
+const playerHpPlusBtn = document.getElementById("playerHpPlusBtn");
 const playerConditionsInput = document.getElementById("playerConditionsInput");
 
 // ===== Theme =====
@@ -266,34 +262,23 @@ function getOwnedTokenById(id){
 
 function syncOwnedTokenPanel(){
   const tok = getOwnedTokenById(selectedOwnedTokenId);
-  const disableAll = !tok;
-  const editableFields = [playerNameInput, playerHpInput, playerHpMaxInput, playerHpTempInput, playerAcInput, playerConditionsInput, playerConcentrationInput];
-  for(const el of editableFields){
-    if(el) el.disabled = disableAll;
-  }
   if(!tok){
     if(playerTokenNameEl) playerTokenNameEl.textContent = "Aucun token sélectionné";
     if(playerHpValueEl) playerHpValueEl.textContent = "PV: —";
-    if(playerNameInput) playerNameInput.value = "";
-    if(playerHpInput) playerHpInput.value = "";
-    if(playerHpMaxInput) playerHpMaxInput.value = "";
-    if(playerHpTempInput) playerHpTempInput.value = "";
-    if(playerAcInput) playerAcInput.value = "";
     if(playerConditionsInput) playerConditionsInput.value = "";
-    if(playerConcentrationInput) playerConcentrationInput.checked = false;
+    if(playerHpMinusBtn) playerHpMinusBtn.disabled = true;
+    if(playerHpPlusBtn) playerHpPlusBtn.disabled = true;
+    if(playerConditionsInput) playerConditionsInput.disabled = true;
     return;
   }
   if(playerTokenNameEl) playerTokenNameEl.textContent = `${tok.name || "Token"} (vous contrôlez)`;
-  if(playerHpValueEl) playerHpValueEl.textContent = `PV: ${Number(tok.hp ?? 0)}${Number(tok.hpMax ?? 0) > 0 ? ` / ${Number(tok.hpMax)}` : ""}${Number(tok.hpTemp ?? 0) > 0 ? ` (+${Number(tok.hpTemp)})` : ""}`;
-  if(playerNameInput && document.activeElement !== playerNameInput) playerNameInput.value = String(tok.name || "");
-  if(playerHpInput && document.activeElement !== playerHpInput) playerHpInput.value = String(Number(tok.hp ?? 0));
-  if(playerHpMaxInput && document.activeElement !== playerHpMaxInput) playerHpMaxInput.value = String(Number(tok.hpMax ?? 0));
-  if(playerHpTempInput && document.activeElement !== playerHpTempInput) playerHpTempInput.value = String(Number(tok.hpTemp ?? 0));
-  if(playerAcInput && document.activeElement !== playerAcInput) playerAcInput.value = String(Number(tok.ac ?? 0));
-  if(playerConcentrationInput && document.activeElement !== playerConcentrationInput) playerConcentrationInput.checked = !!tok.isConcentrating;
+  if(playerHpValueEl) playerHpValueEl.textContent = `PV: ${Number(tok.hp ?? 0)}${Number(tok.hpMax ?? 0) > 0 ? ` / ${Number(tok.hpMax)}` : ""}`;
   if(playerConditionsInput && document.activeElement !== playerConditionsInput){
     playerConditionsInput.value = String(tok.conditions || "");
   }
+  if(playerHpMinusBtn) playerHpMinusBtn.disabled = false;
+  if(playerHpPlusBtn) playerHpPlusBtn.disabled = false;
+  if(playerConditionsInput) playerConditionsInput.disabled = false;
 }
 
 function setStateFromData(raw, { followCamera }){
@@ -747,47 +732,26 @@ function sendOwnedTokenStats(patch){
   rt.sendTokenUpdate?.({ tokenId: tok.id, playerId, stats: patch });
 }
 
-function bindTokenInput(input, apply){
-  input?.addEventListener("change", () => {
-    const tok = getOwnedTokenById(selectedOwnedTokenId);
-    if(!tok) return;
-    const patch = apply(tok);
-    dirty = true;
-    if(patch && typeof patch === "object") sendOwnedTokenStats(patch);
-  });
-}
-
-bindTokenInput(playerNameInput, (tok) => {
-  tok.name = String(playerNameInput.value || "").trim() || tok.name || "Token";
-  return { name: tok.name };
+playerHpMinusBtn?.addEventListener("click", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  tok.hp = Number(tok.hp || 0) - 1;
+  dirty = true;
+  sendOwnedTokenStats({ hp: Number(tok.hp || 0) });
 });
 
-bindTokenInput(playerHpInput, (tok) => {
-  tok.hp = Number(playerHpInput.value || 0);
-  return { hp: Number(tok.hp || 0) };
+playerHpPlusBtn?.addEventListener("click", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
+  tok.hp = Number(tok.hp || 0) + 1;
+  dirty = true;
+  sendOwnedTokenStats({ hp: Number(tok.hp || 0) });
 });
 
-bindTokenInput(playerHpMaxInput, (tok) => {
-  tok.hpMax = Number(playerHpMaxInput.value || 0);
-  return { hpMax: Number(tok.hpMax || 0) };
-});
-
-bindTokenInput(playerHpTempInput, (tok) => {
-  tok.hpTemp = Number(playerHpTempInput.value || 0);
-  return { hpTemp: Number(tok.hpTemp || 0) };
-});
-
-bindTokenInput(playerAcInput, (tok) => {
-  tok.ac = Number(playerAcInput.value || 0);
-  return { ac: Number(tok.ac || 0) };
-});
-
-bindTokenInput(playerConditionsInput, (tok) => {
+playerConditionsInput?.addEventListener("change", () => {
+  const tok = getOwnedTokenById(selectedOwnedTokenId);
+  if(!tok) return;
   tok.conditions = String(playerConditionsInput.value || "");
-  return { conditions: tok.conditions };
-});
-
-bindTokenInput(playerConcentrationInput, (tok) => {
-  tok.isConcentrating = !!playerConcentrationInput.checked;
-  return { isConcentrating: tok.isConcentrating };
+  dirty = true;
+  sendOwnedTokenStats({ conditions: tok.conditions });
 });
