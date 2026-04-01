@@ -705,14 +705,6 @@ function drawHexGrid(ctx, camera, radius, left, right, top, bottom){
     { x: right, y: bottom },
     { x: left, y: bottom },
   ];
-  let rMinF = Infinity, rMaxF = -Infinity;
-  for(const p of corners){
-    const rf = ((2 / 3) * p.y) / radius;
-    rMinF = Math.min(rMinF, rf);
-    rMaxF = Math.max(rMaxF, rf);
-  }
-  const rMin = Math.floor(rMinF) - pad;
-  const rMax = Math.ceil(rMaxF) + pad;
   const invW = 1 / (Math.sqrt(3) * radius);
   let qMinF = Infinity, qMaxF = -Infinity, rMinF = Infinity, rMaxF = -Infinity;
   for(const p of corners){
@@ -723,8 +715,6 @@ function drawHexGrid(ctx, camera, radius, left, right, top, bottom){
     rMinF = Math.min(rMinF, rf);
     rMaxF = Math.max(rMaxF, rf);
   }
-  const qMin = Math.floor(qMinF) - pad;
-  const qMax = Math.ceil(qMaxF) + pad;
   const rMin = Math.floor(rMinF) - pad;
   const rMax = Math.ceil(rMaxF) + pad;
 
@@ -750,31 +740,6 @@ function drawHexGrid(ctx, camera, radius, left, right, top, bottom){
     }
     ctx.stroke();
   }
-  const w = Math.sqrt(3) * radius;
-  const h = 2 * radius;
-  const vStep = 1.5 * radius;
-  const qMin = Math.floor((left / w) - 6);
-  const qMax = Math.ceil((right / w) + 6);
-  const rMin = Math.floor((top / vStep) - 6);
-  const rMax = Math.ceil((bottom / vStep) + 6);
-
-  ctx.lineWidth = 1 / camera.zoom;
-  ctx.strokeStyle = "rgba(0,0,0,0.16)";
-  ctx.beginPath();
-  for(let q = qMin; q <= qMax; q++){
-    for(let r = rMin; r <= rMax; r++){
-      const cx = radius * Math.sqrt(3) * (q + r / 2);
-      const cy = radius * 1.5 * r;
-      if(cx < left - w || cx > right + w || cy < top - h || cy > bottom + h) continue;
-      for(let i = 0; i < 6; i++){
-        const a0 = (Math.PI / 180) * (60 * i - 30);
-        const a1 = (Math.PI / 180) * (60 * (i + 1) - 30);
-        ctx.moveTo(cx + radius * Math.cos(a0), cy + radius * Math.sin(a0));
-        ctx.lineTo(cx + radius * Math.cos(a1), cy + radius * Math.sin(a1));
-      }
-    }
-  }
-  ctx.stroke();
 }
 
 function drawTokenLabel(ctx, camera, grid, cx, yTop, text, diameter){
