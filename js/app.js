@@ -947,10 +947,30 @@ function monsterSizeToCells(sizeRaw){
 
         // Actions
         const actionsTd = document.createElement("td");
-        actionsTd.innerHTML = `
-          <button class="small secondary" data-action="map" data-id="${c.id}">Map</button>
-          <button class="small danger" data-action="delete" data-id="${c.id}">Suppr</button>
-        `;
+        const isActive = (index === currentIndex);
+
+        const nextTurnBtn = document.createElement("button");
+        nextTurnBtn.className = isActive ? "small primary" : "small secondary";
+        nextTurnBtn.dataset.action = isActive ? "nextTurn" : "activate";
+        nextTurnBtn.dataset.id = c.id;
+        nextTurnBtn.textContent = isActive ? "▶ Fin du tour" : "Activer";
+        nextTurnBtn.title = isActive ? "Passer au combattant suivant" : "Passer directement à ce tour";
+
+        const mapBtn = document.createElement("button");
+        mapBtn.className = "small secondary";
+        mapBtn.dataset.action = "map";
+        mapBtn.dataset.id = c.id;
+        mapBtn.textContent = "Map";
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "small danger";
+        delBtn.dataset.action = "delete";
+        delBtn.dataset.id = c.id;
+        delBtn.textContent = "Suppr";
+
+        actionsTd.appendChild(nextTurnBtn);
+        actionsTd.appendChild(mapBtn);
+        actionsTd.appendChild(delBtn);
         tr.appendChild(actionsTd);
 
         trackerBody.appendChild(tr);
@@ -1327,6 +1347,19 @@ function monsterSizeToCells(sizeRaw){
         if (!v || isNaN(v)) return;
         updateHp(id, v);
         input.value = "";
+      } else if (action === "nextTurn") {
+        nextTurn();
+      } else if (action === "activate") {
+        // Passer directement au tour de ce combattant
+        const idx = combatants.findIndex(x => x.id === id);
+        if (idx !== -1) {
+          currentIndex = idx;
+          if (battlemap && combatants[idx]) {
+            battlemap.startTurnForToken(combatants[idx].mapTokenId);
+          }
+          saveState();
+          render();
+        }
       } else if (action === "map") {
         focusCombatantOnMap(id);
       } else if (action === "delete") {

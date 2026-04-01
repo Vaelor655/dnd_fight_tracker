@@ -173,7 +173,7 @@ export function draw(canvas, ctx, state, overlay){
     const cyTok = center.y;
 
     // ── Movement trail (dotted path from turn start) ──
-    if(Array.isArray(t.movementPath) && t.movementPath.length >= 2 && !isPlayerView){
+    if(Array.isArray(t.movementPath) && t.movementPath.length >= 2){
       ctx.save();
       ctx.strokeStyle = (t.color || "#c05621");
       ctx.globalAlpha = 0.45;

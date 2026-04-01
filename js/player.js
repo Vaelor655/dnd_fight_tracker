@@ -35,7 +35,6 @@ const playerHpTempInput = document.getElementById("playerHpTempInput");
 const playerInitiativeInput = document.getElementById("playerInitiativeInput");
 const playerConditionsInput = document.getElementById("playerConditionsInput");
 const playerConditionChipsEl = document.getElementById("playerConditionChips");
-const toolMoveTokenBtn = document.getElementById("toolMoveToken");
 
 const CONDITION_OPTIONS = [
   { label: "Aveuglé", full: "Aveuglé (Blinded)", danger: false },
@@ -496,7 +495,7 @@ requestAnimationFrame(loop);
 
 
 // ===== Tools (client-side only): measure + ping =====
-let toolMode = "none"; // none | measure | ping | move-token
+let toolMode = "none"; // none | measure | ping
 let gHeld = false; // hold-to-ping (press and hold 'g' + left click)
 let measureDragging = false;
 let measureStartCell = null;
@@ -517,10 +516,6 @@ function setTool(mode){
 }
 
 function updateToolButtons(){
-  if(toolMoveTokenBtn){
-    toolMoveTokenBtn.classList.toggle("is-active", toolMode === "move-token");
-    toolMoveTokenBtn.setAttribute("aria-pressed", toolMode === "move-token" ? "true" : "false");
-  }
   if(measureBtn){
     measureBtn.classList.toggle("is-active", toolMode === "measure");
     measureBtn.setAttribute("aria-pressed", toolMode === "measure" ? "true" : "false");
@@ -529,21 +524,9 @@ function updateToolButtons(){
     pingBtn.classList.toggle("is-active", toolMode === "ping");
     pingBtn.setAttribute("aria-pressed", toolMode === "ping" ? "true" : "false");
   }
-  if(toolMoveTokenBtn) toolMoveTokenBtn.classList.toggle("primary", toolMode === "move-token");
   if(measureBtn) measureBtn.classList.toggle("primary", toolMode === "measure");
   if(pingBtn) pingBtn.classList.toggle("primary", toolMode === "ping");
 }
-
-toolMoveTokenBtn?.addEventListener("click", () => {
-  setTool(toolMode === "move-token" ? "none" : "move-token");
-  // Auto-select the first owned token when activating move mode
-  if(toolMode === "move-token" && !getOwnedTokenById(selectedOwnedTokenId)){
-    const tok = (state?.tokens || []).find(t =>
-      String(t.controlledByPlayerId || "") === String(playerId || "")
-    );
-    if(tok){ selectedOwnedTokenId = tok.id; dirty = true; }
-  }
-});
 
 // Hold-to-ping hotkey: keep 'g' pressed, then left click on the map
 document.addEventListener("keydown", (e) => {
@@ -773,40 +756,6 @@ function breakFollowCameraIfNeeded(){
 }
 
 canvas.addEventListener("pointerdown", (e) => {
-  if(toolMode === "move-token"){
-    if(e.pointerType === "mouse" && e.button !== 0) return;
-    e.preventDefault();
-    try{ canvas.setPointerCapture(e.pointerId); }catch{}
-
-    const { sx, sy } = canvasEventToScreen(e);
-    const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
-    const cell = worldToCell(state, world);
-
-    // First try to pick an owned token under the cursor
-    const hitId = pickTokenAt(state, cell);
-    const hitAnyToken = hitId != null;
-    const hitTok = hitAnyToken ? getOwnedTokenById(hitId) : null;
-    if(hitTok){
-      draggingOwnedTokenId = hitTok.id;
-      selectedOwnedTokenId = hitTok.id;
-    } else if(!hitAnyToken && getOwnedTokenById(selectedOwnedTokenId)){
-      // Téléporter uniquement sur case vide (pas sur un autre token)
-      const snapped = state.grid?.layout === "hex"
-        ? { x: Math.round(cell.x), y: Math.round(cell.y) }
-        : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
-      const tok = getOwnedTokenById(selectedOwnedTokenId);
-      if(tok){
-        tok.x = snapped.x;
-        tok.y = snapped.y;
-        rt.sendTokenUpdate?.({ tokenId: tok.id, playerId, position: { x: tok.x, y: tok.y } });
-        dirty = true;
-      }
-    }
-    panPointerId = e.pointerId;
-    dirty = true;
-    return;
-  }
-
   if(toolMode !== "none") return;
   if(!state?.camera) return;
 
@@ -857,8 +806,6 @@ canvas.addEventListener("pointermove", (e) => {
     return;
   }
 
-  // In move-token mode, no panning
-  if(toolMode === "move-token") return;
   if(!isPanning || panPointerId === null) return;
   if(e.pointerId !== panPointerId) return;
   if(!lastPanClient) return;
