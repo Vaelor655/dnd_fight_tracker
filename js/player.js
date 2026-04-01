@@ -784,12 +784,13 @@ canvas.addEventListener("pointerdown", (e) => {
 
     // First try to pick an owned token under the cursor
     const hitId = pickTokenAt(state, cell);
-    const hitTok = (hitId != null) ? getOwnedTokenById(hitId) : null;
+    const hitAnyToken = hitId != null;
+    const hitTok = hitAnyToken ? getOwnedTokenById(hitId) : null;
     if(hitTok){
       draggingOwnedTokenId = hitTok.id;
       selectedOwnedTokenId = hitTok.id;
-    } else if(getOwnedTokenById(selectedOwnedTokenId)){
-      // Teleport selected owned token to clicked position
+    } else if(!hitAnyToken && getOwnedTokenById(selectedOwnedTokenId)){
+      // Téléporter uniquement sur case vide (pas sur un autre token)
       const snapped = state.grid?.layout === "hex"
         ? { x: Math.round(cell.x), y: Math.round(cell.y) }
         : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
