@@ -1640,6 +1640,20 @@ function monsterSizeToCells(sizeRaw){
             if(combatant) combatant.hpCurrent = Number(payload.stats.hp);
             hpTouched = true;
           }
+          if(Number.isFinite(Number(payload.stats.hpTemp))){
+            token.hpTemp = Number(payload.stats.hpTemp);
+            if(combatant) combatant.hpTemp = Number(payload.stats.hpTemp);
+          }
+          if(Number.isFinite(Number(payload.stats.initiative))){
+            token.initiative = Number(payload.stats.initiative);
+            if(combatant) combatant.initiative = Number(payload.stats.initiative);
+          }
+          if(Number.isFinite(Number(payload.stats.acTemp))){
+            token.acTemp = Number(payload.stats.acTemp);
+            const acBase = Number.isFinite(Number(token.acBase)) ? Number(token.acBase) : 10;
+            token.ac = acBase + token.acTemp;
+            if(combatant) combatant.acTemp = Number(payload.stats.acTemp);
+          }
           if(typeof payload.stats.conditions === "string"){
             token.conditions = payload.stats.conditions;
             if(combatant) combatant.conditions = payload.stats.conditions;

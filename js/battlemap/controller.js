@@ -550,6 +550,9 @@ dom.bgFile?.addEventListener("change", async () => {
         hp: combatant.hpCurrent ?? "",
         hpMax: combatant.hpMax ?? 0,
         hpTemp: combatant.hpTemp ?? 0,
+        initiative: combatant.initiative ?? 0,
+        acBase: combatant.acBase ?? 10,
+        acTemp: combatant.acTemp ?? 0,
         ac: (combatant.acBase ?? 10) + (combatant.acTemp ?? 0),
         conditions: combatant.conditions || "",
         isConcentrating: !!combatant.isConcentrating,
@@ -570,6 +573,9 @@ dom.bgFile?.addEventListener("change", async () => {
     t.hp = combatant.hpCurrent ?? t.hp;
     t.hpMax = combatant.hpMax ?? (t.hpMax || 0);
     t.hpTemp = typeof combatant.hpTemp === "number" ? combatant.hpTemp : (t.hpTemp ?? 0);
+    t.initiative = typeof combatant.initiative === "number" ? combatant.initiative : (t.initiative ?? 0);
+    t.acBase = typeof combatant.acBase === "number" ? combatant.acBase : (t.acBase ?? 10);
+    t.acTemp = typeof combatant.acTemp === "number" ? combatant.acTemp : (t.acTemp ?? 0);
     t.ac = (combatant.acBase ?? 10) + (combatant.acTemp ?? 0);
     t.conditions = combatant.conditions || "";
     t.isConcentrating = !!combatant.isConcentrating;
