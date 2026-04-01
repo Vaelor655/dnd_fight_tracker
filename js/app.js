@@ -597,8 +597,6 @@ function monsterSizeToCells(sizeRaw){
       roundDisplay.textContent = roundNumber.toString();
       countDisplay.textContent = combatants.length.toString();
       nextBtn.disabled = combatants.length === 0;
-      const tokenListNextBtn = document.getElementById("tokenListNextBtn");
-      if(tokenListNextBtn) tokenListNextBtn.disabled = combatants.length === 0;
 
       trackerBody.innerHTML = "";
 
@@ -949,7 +947,11 @@ function monsterSizeToCells(sizeRaw){
 
         // Actions
         const actionsTd = document.createElement("td");
+        const nextTurnFurtif = (index === currentIndex)
+          ? `<button class="small tracker-next-btn" data-action="nextTurn" data-id="${c.id}" title="Fin du tour">▶</button>`
+          : "";
         actionsTd.innerHTML = `
+          ${nextTurnFurtif}
           <button class="small secondary" data-action="map" data-id="${c.id}">Map</button>
           <button class="small danger" data-action="delete" data-id="${c.id}">Suppr</button>
         `;
@@ -1303,7 +1305,6 @@ function monsterSizeToCells(sizeRaw){
     });
 
     nextBtn.addEventListener("click", nextTurn);
-    document.getElementById("tokenListNextBtn")?.addEventListener("click", nextTurn);
     resetBtn.addEventListener("click", resetTracker);
     exportCombatBtn.addEventListener("click", exportCombatState);
     importCombatBtn.addEventListener("click", () => importCombatFile.click());
@@ -1339,6 +1340,8 @@ function monsterSizeToCells(sizeRaw){
         if (!v || isNaN(v)) return;
         updateHp(id, v);
         input.value = "";
+      } else if (action === "nextTurn") {
+        nextTurn();
       } else if (action === "map") {
         focusCombatantOnMap(id);
       } else if (action === "delete") {
