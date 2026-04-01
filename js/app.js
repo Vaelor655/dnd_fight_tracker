@@ -617,16 +617,9 @@ function monsterSizeToCells(sizeRaw){
           tr.classList.add("active");
         }
 
-        // # ordre + indicateur de tour
+        // # ordre
         const orderTd = document.createElement("td");
-        if (index === currentIndex) {
-          orderTd.innerHTML = `
-            <span class="turn-indicator">▶</span>
-            ${index + 1}
-          `;
-        } else {
-          orderTd.textContent = (index + 1).toString();
-        }
+        orderTd.textContent = (index + 1).toString();
         tr.appendChild(orderTd);
 
         // Visibilité (players) + Masquer nom (players)
