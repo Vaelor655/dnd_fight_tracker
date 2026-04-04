@@ -1008,6 +1008,7 @@ function drawSpellArcaneRect(ctx, camera, s, preview){
 
   const x = Math.min(s.x, s.x+s.w), y = Math.min(s.y, s.y+s.h);
   const w = Math.abs(s.w), h = Math.abs(s.h);
+  if(w < 1 || h < 1) return;
   const col = s.stroke || "#ef4444";
   const ef = fade;
   // Expand in during first 15%
@@ -1030,12 +1031,14 @@ function drawSpellArcaneRect(ctx, camera, s, preview){
 
   // Interior grid
   const gs = Math.min(w,h) / 5;
-  ctx.globalAlpha = (0.2 + Math.sin(n*2)*0.06) * ef;
-  ctx.strokeStyle = col; ctx.lineWidth = 0.7/camera.zoom;
-  ctx.setLineDash([3/camera.zoom, 3/camera.zoom]);
-  for(let gx = x+gs; gx < x+w; gx += gs){ ctx.beginPath(); ctx.moveTo(gx,y); ctx.lineTo(gx,y+h); ctx.stroke(); }
-  for(let gy = y+gs; gy < y+h; gy += gs){ ctx.beginPath(); ctx.moveTo(x,gy); ctx.lineTo(x+w,gy); ctx.stroke(); }
-  ctx.setLineDash([]);
+  if(gs > 0){
+    ctx.globalAlpha = (0.2 + Math.sin(n*2)*0.06) * ef;
+    ctx.strokeStyle = col; ctx.lineWidth = 0.7/camera.zoom;
+    ctx.setLineDash([3/camera.zoom, 3/camera.zoom]);
+    for(let gx = x+gs; gx < x+w; gx += gs){ ctx.beginPath(); ctx.moveTo(gx,y); ctx.lineTo(gx,y+h); ctx.stroke(); }
+    for(let gy = y+gs; gy < y+h; gy += gs){ ctx.beginPath(); ctx.moveTo(x,gy); ctx.lineTo(x+w,gy); ctx.stroke(); }
+    ctx.setLineDash([]);
+  }
 
   // Rotating diamond runes
   const cs = Math.min(w,h) * 0.11;
@@ -1057,8 +1060,10 @@ function drawSpellArcaneRect(ctx, camera, s, preview){
   ctx.globalAlpha = ef;
   ctx.strokeStyle = col; ctx.lineWidth = (2.2+Math.sin(n*3)*0.6)/camera.zoom;
   ctx.shadowBlur = 10/camera.zoom; ctx.shadowColor = col;
-  ctx.setLineDash([dl/camera.zoom, dl/camera.zoom]);
-  ctx.lineDashOffset = -(n*55 % (dl*2)) / camera.zoom;
+  if(dl > 0){
+    ctx.setLineDash([dl/camera.zoom, dl/camera.zoom]);
+    ctx.lineDashOffset = -(n*55 % (dl*2)) / camera.zoom;
+  }
   ctx.strokeRect(x, y, w, h);
   ctx.setLineDash([]);
   ctx.restore();
