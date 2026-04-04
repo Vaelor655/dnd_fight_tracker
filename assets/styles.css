@@ -837,7 +837,7 @@ tr.active td {
 }
 
 tr.active td:first-child {
-  padding-left: 16px;
+  padding-left: 10px;
 }
 
 .turn-indicator {
