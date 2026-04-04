@@ -871,7 +871,7 @@ function drawSpellFireCircle(ctx, camera, s, preview){
       const dist  = r * burst * (0.85 + Math.sin(n*3.5+i*0.9)*0.18);
       const px = cx + Math.cos(angle)*dist;
       const py = cy + Math.sin(angle)*dist;
-      const sz = (r*0.18 + Math.sin(n*4+i)*r*0.07) / camera.zoom;
+      const sz = r*0.18 + Math.sin(n*4+i)*r*0.07;
       ctx.globalAlpha = (0.7 + Math.sin(n*5+i)*0.25) * ef;
       ctx.fillStyle = _rw(rgb, 0.3 + Math.sin(n*3+i)*0.2, 1);
       ctx.beginPath(); ctx.arc(px, py, sz, 0, Math.PI*2); ctx.fill();
@@ -897,8 +897,8 @@ function drawSpellFireCone(ctx, camera, s, preview){
 
   const rgb = hexToRgb(s.stroke || "#f59e0b");
   const spread = Math.PI / 3, half = spread / 2;
-  // Cone "grows" from 0 to full in first 10%
-  const grow = p < 0.1 ? p / 0.1 : 1.0;
+  // Cone "grows" from 0 to full in first 10% (minimum 0.02 to keep clip non-degenerate)
+  const grow = p < 0.1 ? Math.max(0.02, p / 0.1) : 1.0;
   const len = Math.max(1, (s.length || 0)) * grow;
   const ang = s.angle || 0;
   const ef = fade;
@@ -966,8 +966,8 @@ function drawSpellFireLine(ctx, camera, s, preview){
   const nx = -dy/len, ny = dx/len;
   const hw = (s.width||30) / 2;
 
-  // Bolt "travels" along the line in first 25%
-  const travel = p < 0.25 ? p / 0.25 : 1.0;
+  // Bolt "travels" along the line in first 25% (minimum 0.02 to keep clip non-degenerate)
+  const travel = p < 0.25 ? Math.max(0.02, p / 0.25) : 1.0;
   const ex = s.x1 + dx * travel, ey = s.y1 + dy * travel;
 
   const c1 = { x: s.x1+nx*hw, y: s.y1+ny*hw };
@@ -1002,7 +1002,7 @@ function drawSpellFireLine(ctx, camera, s, preview){
     const bAlpha = travel > 0 ? Math.sin(pr/travel*Math.PI)*0.7*ef : 0;
     ctx.globalAlpha = bAlpha;
     ctx.fillStyle = _rw(rgb, 0.5, 1);
-    ctx.beginPath(); ctx.arc(bx, by, hw*0.32/camera.zoom, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(bx, by, hw*0.32, 0, Math.PI*2); ctx.fill();
   }
   ctx.restore();
 
@@ -1029,8 +1029,8 @@ function drawSpellArcaneRect(ctx, camera, s, preview){
   if(w < 1 || h < 1) return;
   const col = s.stroke || "#ef4444";
   const ef = fade;
-  // Expand in during first 15%
-  const expand = p < 0.15 ? p / 0.15 : 1.0;
+  // Expand in during first 15% (minimum 0.01 to avoid ctx.scale(0,0))
+  const expand = p < 0.15 ? Math.max(0.01, p / 0.15) : 1.0;
   const cx = x + w/2, cy = y + h/2;
   const ew = w * expand, eh = h * expand;
   const ex = cx - ew/2, ey = cy - eh/2;
