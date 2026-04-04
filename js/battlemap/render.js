@@ -768,7 +768,287 @@ function drawTokenLabel(ctx, camera, grid, cx, yTop, text, diameter){
   ctx.fillText(label, cx, yTop);
 }
 
+
+// ── Animated spell effects ──────────────────────────────────────────────────
+
+function _t(){ return performance.now() / 1000; }
+
+function drawSpellFireCircle(ctx, camera, s, preview){
+  const t = _t();
+  const cx = s.cx, cy = s.cy, r = Math.max(1, s.r);
+  const a = preview ? 0.6 : 1;
+
+  // Outer glow rings
+  for(let i = 3; i >= 1; i--){
+    const pr = r * (1 + i * 0.18 + Math.sin(t * 2.5 + i) * 0.06);
+    ctx.save();
+    ctx.globalAlpha = (0.12 - i * 0.03) * a;
+    ctx.strokeStyle = i === 1 ? "#ff5500" : "#ff9900";
+    ctx.lineWidth = (5 - i * 1.2) / camera.zoom;
+    ctx.beginPath(); ctx.arc(cx, cy, pr, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+  }
+
+  // Radial fire gradient fill
+  const p = 0.88 + Math.sin(t * 5.3) * 0.08 + Math.sin(t * 7.7) * 0.04;
+  const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * p);
+  gr.addColorStop(0,   `rgba(255,255,160,${0.95 * a})`);
+  gr.addColorStop(0.25,`rgba(255,140,0,${0.75 * a})`);
+  gr.addColorStop(0.6, `rgba(220,40,0,${0.5 * a})`);
+  gr.addColorStop(1,   `rgba(180,0,0,0)`);
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, r * p, 0, Math.PI * 2);
+  ctx.fillStyle = gr; ctx.fill();
+  ctx.restore();
+
+  // Fire petals / corona
+  const np = 10;
+  ctx.save();
+  for(let i = 0; i < np; i++){
+    const angle = (i / np) * Math.PI * 2 + t * 1.8 + i * 0.4;
+    const dist  = r * (0.85 + Math.sin(t * 3.5 + i * 0.9) * 0.18);
+    const px = cx + Math.cos(angle) * dist;
+    const py = cy + Math.sin(angle) * dist;
+    const sz = (r * 0.18 + Math.sin(t * 4 + i) * r * 0.07) / camera.zoom;
+    const hue = 20 + Math.sin(t * 4 + i) * 18;
+    ctx.globalAlpha = (0.7 + Math.sin(t * 5 + i) * 0.25) * a;
+    ctx.fillStyle = `hsl(${hue},100%,${52 + Math.sin(t * 3 + i) * 15}%)`;
+    ctx.beginPath(); ctx.arc(px, py, sz, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.restore();
+
+  // Crisp glowing ring
+  ctx.save();
+  ctx.globalAlpha = a;
+  ctx.lineWidth = (2.5 + Math.sin(t * 4) * 0.6) / camera.zoom;
+  ctx.strokeStyle = "#ff6600";
+  ctx.shadowBlur  = 14 / camera.zoom;
+  ctx.shadowColor = "#ffaa00";
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+  ctx.restore();
+}
+
+function drawSpellFireCone(ctx, camera, s, preview){
+  const t = _t();
+  const spread = Math.PI / 3, half = spread / 2;
+  const len = Math.max(1, s.length || 0), ang = s.angle || 0;
+  const a = preview ? 0.6 : 1;
+
+  const tipX = s.cx + Math.cos(ang) * len;
+  const tipY = s.cy + Math.sin(ang) * len;
+
+  // Gradient fill inside cone clip
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(s.cx, s.cy);
+  ctx.lineTo(s.cx + Math.cos(ang - half) * len, s.cy + Math.sin(ang - half) * len);
+  ctx.arc(s.cx, s.cy, len, ang - half, ang + half);
+  ctx.closePath();
+  ctx.clip();
+
+  // Radial from origin outward
+  const gr = ctx.createRadialGradient(s.cx, s.cy, 0, s.cx, s.cy, len);
+  const p = 0.82 + Math.sin(t * 5) * 0.1;
+  gr.addColorStop(0,       `rgba(255,255,120,${0.9 * a})`);
+  gr.addColorStop(0.35 * p,`rgba(255,110,0,${0.75 * a})`);
+  gr.addColorStop(0.7,     `rgba(210,30,0,${0.4 * a})`);
+  gr.addColorStop(1,       `rgba(160,0,0,0)`);
+  ctx.fillStyle = gr;
+  ctx.fillRect(s.cx - len, s.cy - len, len * 2, len * 2);
+
+  // Flame tendrils
+  const nt = 9;
+  for(let i = 0; i < nt; i++){
+    const ta = ang - half * 0.9 + (i / (nt - 1)) * half * 1.8;
+    const wb = Math.sin(t * 4.2 + i * 1.6) * 0.09;
+    const tl = len * (0.65 + Math.sin(t * 3.1 + i * 0.8) * 0.22);
+    const tx = s.cx + Math.cos(ta + wb) * tl;
+    const ty = s.cy + Math.sin(ta + wb) * tl;
+    const lw = (4 + Math.sin(t * 5 + i) * 2) / camera.zoom;
+    const al = (0.25 + Math.sin(t * 3.7 + i * 0.9) * 0.18) * a;
+    const tg = ctx.createLinearGradient(s.cx, s.cy, tx, ty);
+    tg.addColorStop(0,`rgba(255,220,60,${al * 1.4})`);
+    tg.addColorStop(1,`rgba(220,40,0,0)`);
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = tg;
+    ctx.lineWidth = lw;
+    ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(s.cx, s.cy); ctx.lineTo(tx, ty); ctx.stroke();
+  }
+  ctx.restore();
+
+  // Glowing outline
+  ctx.save();
+  ctx.globalAlpha = a;
+  ctx.lineWidth = 2 / camera.zoom;
+  ctx.strokeStyle = "#ff5500";
+  ctx.shadowBlur  = 12 / camera.zoom;
+  ctx.shadowColor = "#ffaa00";
+  ctx.beginPath();
+  ctx.moveTo(s.cx, s.cy);
+  ctx.lineTo(s.cx + Math.cos(ang - half) * len, s.cy + Math.sin(ang - half) * len);
+  ctx.arc(s.cx, s.cy, len, ang - half, ang + half);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawSpellFireLine(ctx, camera, s, preview){
+  const t = _t();
+  const dx = (s.x2||0) - (s.x1||0), dy = (s.y2||0) - (s.y1||0);
+  const len = Math.sqrt(dx*dx + dy*dy);
+  if(len < 1) return;
+  const a = preview ? 0.6 : 1;
+  const nx = -dy/len, ny = dx/len;
+  const hw = (s.width||30) / 2;
+
+  const c1 = { x: s.x1+nx*hw, y: s.y1+ny*hw };
+  const c2 = { x: s.x2+nx*hw, y: s.y2+ny*hw };
+  const c3 = { x: s.x2-nx*hw, y: s.y2-ny*hw };
+  const c4 = { x: s.x1-nx*hw, y: s.y1-ny*hw };
+
+  // Clip to line rectangle
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(c1.x,c1.y); ctx.lineTo(c2.x,c2.y);
+  ctx.lineTo(c3.x,c3.y); ctx.lineTo(c4.x,c4.y);
+  ctx.closePath(); ctx.clip();
+
+  // Cross-section gradient (bright core)
+  const midX = (s.x1+s.x2)/2, midY = (s.y1+s.y2)/2;
+  const pg = ctx.createLinearGradient(midX+nx*hw, midY+ny*hw, midX-nx*hw, midY-ny*hw);
+  const cp = 0.82 + Math.sin(t * 6.2) * 0.14;
+  pg.addColorStop(0,    `rgba(180,10,0,${0.05*a})`);
+  pg.addColorStop(0.28, `rgba(255,70,0,${0.55*a})`);
+  pg.addColorStop(0.5,  `rgba(255,230,80,${cp*a})`);
+  pg.addColorStop(0.72, `rgba(255,70,0,${0.55*a})`);
+  pg.addColorStop(1,    `rgba(180,10,0,${0.05*a})`);
+  ctx.fillStyle = pg;
+  ctx.fillRect(Math.min(s.x1,s.x2)-hw, Math.min(s.y1,s.y2)-hw,
+               Math.abs(dx)+hw*2, Math.abs(dy)+hw*2);
+
+  // Moving energy blobs
+  const ns = 7;
+  for(let i = 0; i < ns; i++){
+    const pr = ((t * 0.9 + i/ns) % 1);
+    const bx = s.x1 + dx*pr + nx * Math.sin(t*5+i*1.4) * hw*0.55;
+    const by = s.y1 + dy*pr + ny * Math.sin(t*5+i*1.4) * hw*0.55;
+    const ba = Math.sin(pr * Math.PI) * 0.7 * a;
+    ctx.globalAlpha = ba;
+    ctx.fillStyle = "#ffcc00";
+    const bs = hw * 0.32 / camera.zoom;
+    ctx.beginPath(); ctx.arc(bx, by, bs, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.restore();
+
+  // Glowing outline
+  ctx.save();
+  ctx.globalAlpha = a;
+  ctx.lineWidth = (1.5 + Math.sin(t*5)*0.5) / camera.zoom;
+  ctx.strokeStyle = "#ff3300";
+  ctx.shadowBlur  = 10 / camera.zoom;
+  ctx.shadowColor = "#ff7700";
+  ctx.beginPath();
+  ctx.moveTo(c1.x,c1.y); ctx.lineTo(c2.x,c2.y);
+  ctx.lineTo(c3.x,c3.y); ctx.lineTo(c4.x,c4.y);
+  ctx.closePath(); ctx.stroke();
+  ctx.restore();
+}
+
+function drawSpellArcaneRect(ctx, camera, s, preview){
+  const t = _t();
+  const x = Math.min(s.x, s.x+s.w), y = Math.min(s.y, s.y+s.h);
+  const w = Math.abs(s.w), h = Math.abs(s.h);
+  const col = s.stroke || "#ef4444";
+  const a = preview ? 0.6 : 1;
+  const pulse = 0.5 + Math.sin(t * 2.4) * 0.18;
+
+  // Pulsing fill
+  const fg = ctx.createLinearGradient(x, y, x+w, y+h);
+  fg.addColorStop(0,   col + "30");
+  fg.addColorStop(0.5, col + "10");
+  fg.addColorStop(1,   col + "30");
+  ctx.save();
+  ctx.globalAlpha = pulse * a;
+  ctx.fillStyle = fg;
+  ctx.fillRect(x, y, w, h);
+  ctx.restore();
+
+  // Interior grid
+  const gs = Math.min(w, h) / 5;
+  ctx.save();
+  ctx.globalAlpha = (0.18 + Math.sin(t * 2) * 0.06) * a;
+  ctx.strokeStyle = col;
+  ctx.lineWidth = 0.7 / camera.zoom;
+  ctx.setLineDash([3/camera.zoom, 3/camera.zoom]);
+  for(let gx = x + gs; gx < x+w; gx += gs){
+    ctx.beginPath(); ctx.moveTo(gx,y); ctx.lineTo(gx,y+h); ctx.stroke();
+  }
+  for(let gy = y + gs; gy < y+h; gy += gs){
+    ctx.beginPath(); ctx.moveTo(x,gy); ctx.lineTo(x+w,gy); ctx.stroke();
+  }
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // Rotating diamond runes at corners
+  const cs = Math.min(w, h) * 0.11;
+  const corners = [[x,y],[x+w,y],[x+w,y+h],[x,y+h]];
+  ctx.save();
+  ctx.strokeStyle = col;
+  ctx.lineWidth = 2 / camera.zoom;
+  ctx.shadowBlur  = 8 / camera.zoom;
+  ctx.shadowColor = col;
+  ctx.globalAlpha = a;
+  for(let ci = 0; ci < 4; ci++){
+    const [rx, ry] = corners[ci];
+    const dir = ci % 2 === 0 ? 1 : -1;
+    ctx.save();
+    ctx.translate(rx, ry);
+    ctx.rotate(t * dir * 1.2);
+    ctx.beginPath();
+    ctx.moveTo(0, -cs); ctx.lineTo(cs, 0);
+    ctx.lineTo(0,  cs); ctx.lineTo(-cs, 0);
+    ctx.closePath(); ctx.stroke();
+    // Inner smaller diamond
+    ctx.globalAlpha = 0.4 * a;
+    ctx.beginPath();
+    ctx.moveTo(0, -cs*0.5); ctx.lineTo(cs*0.5, 0);
+    ctx.lineTo(0,  cs*0.5); ctx.lineTo(-cs*0.5, 0);
+    ctx.closePath(); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // Marching-ants animated border
+  const dl = Math.min(w, h) / 6;
+  const offset = (t * 55) % (dl * 2);
+  ctx.save();
+  ctx.globalAlpha = a;
+  ctx.strokeStyle = col;
+  ctx.lineWidth = (2.2 + Math.sin(t*3)*0.6) / camera.zoom;
+  ctx.shadowBlur  = 10 / camera.zoom;
+  ctx.shadowColor = col;
+  ctx.setLineDash([dl/camera.zoom, dl/camera.zoom]);
+  ctx.lineDashOffset = -offset / camera.zoom;
+  ctx.strokeRect(x, y, w, h);
+  ctx.setLineDash([]);
+  ctx.restore();
+}
+
+// ── Main shape draw (static + animated) ────────────────────────────────────
+
 function drawShape(ctx, camera, s, preview=false){
+  // Dispatch to animated renderers for spell shapes
+  if(s.anim === "fire"){
+    if(s.type === "circle")        return drawSpellFireCircle(ctx, camera, s, preview);
+    if(s.type === "cone")          return drawSpellFireCone(ctx, camera, s, preview);
+    if(s.type === "line-template") return drawSpellFireLine(ctx, camera, s, preview);
+  }
+  if(s.anim === "arcane"){
+    if(s.type === "rect")          return drawSpellArcaneRect(ctx, camera, s, preview);
+  }
+
+  // ── Static fallback ─────────────────────────────────────────────────────
   const stroke = s.stroke || "#22c55e";
   const width = Math.max(1, Number(s.strokeWidth || 3));
   const fill = s.fill || null;
@@ -820,8 +1100,7 @@ function drawShape(ctx, camera, s, preview=false){
       ctx.stroke();
     }
   }else if(s.type === "cone"){
-    // Cone: origin, length, angle, 53° spread (D&D 5e standard)
-    const spread = Math.PI / 3; // ~60° total
+    const spread = Math.PI / 3;
     const halfSpread = spread / 2;
     const len = s.length || 0;
     const ang = s.angle || 0;
@@ -841,7 +1120,6 @@ function drawShape(ctx, camera, s, preview=false){
     }
     ctx.stroke();
   }else if(s.type === "line-template"){
-    // Line template: x1,y1 → x2,y2 with width
     const dx = (s.x2 || 0) - (s.x1 || 0);
     const dy = (s.y2 || 0) - (s.y1 || 0);
     const len = Math.sqrt(dx*dx + dy*dy);

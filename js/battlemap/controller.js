@@ -134,6 +134,10 @@ export function createBattlemapController(dom){
     let forceDraw = false;
 
     // We redraw while a ping animation is active, even if the map isn't "dirty".
+    // Also keep going while animated spell shapes are on the board.
+    const hasAnimShapes = state.shapes?.some(s => s.anim) || !!state.ui.previewShape?.anim;
+    if(hasAnimShapes) dirty = true;
+
     if(dirty || pingAnimating){
       overlay = {};
 

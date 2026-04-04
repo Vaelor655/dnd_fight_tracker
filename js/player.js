@@ -489,7 +489,9 @@ function loop(){
       animateCensoredTurnBar();
     }
   }
-  if(dirty || pingOverlay || measureDragging) renderNow();
+  // Keep animating while animated spell shapes or a spell preview is visible
+  if(state?.shapes?.some(s => s.anim) || playerPreviewShape?.anim) dirty = true;
+  if(dirty || pingOverlay || measureDragging || spellDragging) renderNow();
   requestAnimationFrame(loop);
 }
 requestAnimationFrame(loop);
@@ -525,16 +527,16 @@ function buildSpellPreviewShape(tool, start){
   const color = spellColorInput?.value || "#f59e0b";
   const cellPx = state?.grid?.cellPx || 60;
   if(tool === "spell-cone"){
-    return { type: "cone", cx: start.x, cy: start.y, length: 0, angle: 0,
+    return { type: "cone", anim: "fire", cx: start.x, cy: start.y, length: 0, angle: 0,
       stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
   } else if(tool === "spell-sphere"){
-    return { type: "circle", cx: start.x, cy: start.y, r: 0,
+    return { type: "circle", anim: "fire", cx: start.x, cy: start.y, r: 0,
       stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
   } else if(tool === "spell-line"){
-    return { type: "line-template", x1: start.x, y1: start.y, x2: start.x, y2: start.y,
+    return { type: "line-template", anim: "fire", x1: start.x, y1: start.y, x2: start.x, y2: start.y,
       width: 1.5 * cellPx, stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
   } else if(tool === "spell-cube"){
-    return { type: "rect", x: start.x, y: start.y, w: 0, h: 0,
+    return { type: "rect", anim: "arcane", x: start.x, y: start.y, w: 0, h: 0,
       stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
   }
   return null;
