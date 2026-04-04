@@ -817,18 +817,6 @@ tbody tr:hover {
 /* Tour actif */
 tr.active {
   background: var(--bg-active) !important;
-  position: relative;
-}
-
-tr.active::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: linear-gradient(to bottom, var(--accent-light), var(--accent));
-  border-radius: 0 4px 4px 0;
 }
 
 tr.active td {
@@ -837,7 +825,7 @@ tr.active td {
 }
 
 tr.active td:first-child {
-  padding-left: 10px;
+  box-shadow: inset 4px 0 0 var(--accent);
 }
 
 .turn-indicator {
