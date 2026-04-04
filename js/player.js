@@ -491,6 +491,11 @@ function loop(){
   }
   // Keep animating while animated spell shapes or a spell preview is visible
   if(state?.shapes?.some(s => s.anim) || playerPreviewShape?.anim) dirty = true;
+  // Prune locally expired one-shot shapes (MJ will also prune and re-sync)
+  if(state?.shapes?.some(s => s.anim && s.animStart && (Date.now() - s.animStart) >= (s.anim === "arcane" ? 2500 : s.type === "circle" ? 2000 : s.type === "cone" ? 1800 : 1500))){
+    state.shapes = state.shapes.filter(s => !(s.anim && s.animStart && (Date.now() - s.animStart) >= (s.anim === "arcane" ? 2500 : s.type === "circle" ? 2000 : s.type === "cone" ? 1800 : 1500)));
+    dirty = true;
+  }
   if(dirty || pingOverlay || measureDragging || spellDragging) renderNow();
   requestAnimationFrame(loop);
 }
@@ -849,6 +854,7 @@ function endToolPointer(e){
     playerPreviewShape = null;
     if(finalShape && spellShapeHasSize(finalShape)){
       finalShape.creatorId = playerId;
+      finalShape.animStart = Date.now();
       if(!state.shapes) state.shapes = [];
       state.shapes.push({ id: -(Date.now()), ...finalShape });
       try{ rt?.sendShapeAdd?.({ ...finalShape }); }catch{}

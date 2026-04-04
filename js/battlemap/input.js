@@ -350,6 +350,8 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
     if(dragMode?.startsWith("draw") && state.ui.previewShape){
       const s = state.ui.previewShape;
       if(s.type !== "path" || (s.points?.length || 0) >= 2){
+        // Stamp the start time for one-shot spell animations
+        if(s.anim) s.animStart = Date.now();
         addShape(state, s);
       }
       state.ui.previewShape = null;

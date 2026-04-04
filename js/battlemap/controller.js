@@ -1,5 +1,5 @@
 import { createInitialState, migrateState, addToken, undoShape, clearShapes, addShape, addFogArea, undoFogArea, clearFog } from "./model.js";
-import { draw, screenToWorld, cellToWorld } from "./render.js";
+import { draw, screenToWorld, cellToWorld, isAnimShapeExpired } from "./render.js";
 import { createInputController } from "./input.js";
 import { clamp } from "./utils.js";
 
@@ -175,6 +175,13 @@ export function createBattlemapController(dom){
       if(dirty || forceDraw){
         draw(canvas, ctx, state, overlay);
         dirty = false;
+      }
+
+      // Remove expired one-shot spell shapes and sync to players
+      if(state.shapes?.some(isAnimShapeExpired)){
+        state.shapes = state.shapes.filter(s => !isAnimShapeExpired(s));
+        dirty = true;
+        markDirty(false);
       }
     }
 
