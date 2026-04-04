@@ -594,6 +594,7 @@ function monsterSizeToCells(sizeRaw){
     }
 
     function render() {
+      sortCombatants();
       roundDisplay.textContent = roundNumber.toString();
       countDisplay.textContent = combatants.length.toString();
       nextBtn.disabled = combatants.length === 0;
@@ -1681,6 +1682,7 @@ function monsterSizeToCells(sizeRaw){
         battlemap.invalidate();
         window.__mapDirtyTs = Date.now();
         realtime?.markDirty?.();
+        sortCombatants();
         saveState();
         render();
       },
