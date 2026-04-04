@@ -516,8 +516,14 @@ let playerPreviewShape = null;
 
 const spellToolBtns = document.querySelectorAll("[data-spell-tool]");
 const spellColorInput = document.getElementById("spellColor");
+const spellLineWidthInput = document.getElementById("spellLineWidth");
+const spellLineWidthValue = document.getElementById("spellLineWidthValue");
 const undoSpellBtn = document.getElementById("undoSpellBtn");
 const clearSpellBtn = document.getElementById("clearSpellBtn");
+
+spellLineWidthInput?.addEventListener("input", () => {
+  if(spellLineWidthValue) spellLineWidthValue.textContent = (parseFloat(spellLineWidthInput.value) || 1.5) + "c";
+});
 
 function spellSnap(world){
   const cellPx = state?.grid?.cellPx || 60;
@@ -538,8 +544,9 @@ function buildSpellPreviewShape(tool, start){
     return { type: "circle", anim: "fire", cx: start.x, cy: start.y, r: 0,
       stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
   } else if(tool === "spell-line"){
+    const lw = (parseFloat(spellLineWidthInput?.value) || 1.5) * cellPx;
     return { type: "line-template", anim: "fire", x1: start.x, y1: start.y, x2: start.x, y2: start.y,
-      width: 1.5 * cellPx, stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
+      width: lw, stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
   } else if(tool === "spell-cube"){
     return { type: "rect", anim: "arcane", x: start.x, y: start.y, w: 0, h: 0,
       stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };

@@ -30,6 +30,7 @@ export function createBattlemapController(dom){
     fogPreview: null,
     spellSize: 9, // default spell size in meters
     spellColor: "#f59e0b",
+    spellLineWidth: 1.5, // in cells
     onTokenSelected: null,
     onTokenMoved: null,
   };
@@ -379,6 +380,11 @@ dom.bgFile?.addEventListener("change", async () => {
   }
   dom.drawColor?.addEventListener("input", () => { state.ui.drawColor = dom.drawColor.value || "#22c55e"; });
   dom.spellColor?.addEventListener("input", () => { state.ui.spellColor = dom.spellColor.value || "#f59e0b"; });
+  dom.spellLineWidth?.addEventListener("input", () => {
+    const v = parseFloat(dom.spellLineWidth.value) || 1.5;
+    state.ui.spellLineWidth = v;
+    if(dom.spellLineWidthValue) dom.spellLineWidthValue.textContent = v + "c";
+  });
   dom.drawWidth?.addEventListener("input", () => {
     const v = Number(dom.drawWidth.value || 3);
     state.ui.drawWidth = Math.max(1, Math.min(16, v));

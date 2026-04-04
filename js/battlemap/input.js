@@ -139,7 +139,7 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
         state.ui.previewShape = {
           type: "line-template", anim: "fire",
           x1: drawStart.x, y1: drawStart.y, x2: drawStart.x, y2: drawStart.y,
-          width: (state.ui.spellSize || 1.5) * state.grid.cellPx,
+          width: (state.ui.spellLineWidth || 1.5) * state.grid.cellPx,
           stroke: sc1, strokeWidth: 2,
           fill: sc1, fillAlpha: 0.22,
         };

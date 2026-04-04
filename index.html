@@ -327,9 +327,13 @@
                 </div>
               </div>
 
-              <!-- Spell color picker -->
+              <!-- Spell color picker + line width -->
               <div class="map-ribbon__group">
                 <label class="map-ribbon__color" title="Couleur sorts"><input id="spellColor" type="color" value="#f59e0b" /></label>
+                <label class="map-ribbon__slider" title="Largeur ligne (cases)">
+                  <input id="spellLineWidth" type="range" min="0.5" max="6" step="0.5" value="1.5" />
+                  <span id="spellLineWidthValue" class="map-ribbon__val">1.5c</span>
+                </label>
               </div>
 
               <span class="map-ribbon__sep"></span>
