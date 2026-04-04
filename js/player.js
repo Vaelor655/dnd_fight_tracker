@@ -544,7 +544,7 @@ function buildSpellPreviewShape(tool, start){
     return { type: "circle", anim: "fire", cx: start.x, cy: start.y, r: 0,
       stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
   } else if(tool === "spell-line"){
-    const lw = (parseFloat(spellLineWidthInput?.value) || 1.5) * cellPx;
+    const lw = (parseFloat(spellLineWidthInput?.value) || 1) * cellPx;
     return { type: "line-template", anim: "fire", x1: start.x, y1: start.y, x2: start.x, y2: start.y,
       width: lw, stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
   } else if(tool === "spell-cube"){
@@ -567,6 +567,8 @@ function updateSpellPreviewShape(s, start, current){
   } else if(s.type === "line-template"){
     s.x2 = current.x;
     s.y2 = current.y;
+    const cellPx = state?.grid?.cellPx || 60;
+    s.width = (parseFloat(spellLineWidthInput?.value) || 1) * cellPx;
   } else if(s.type === "rect"){
     const dx = current.x - start.x;
     const dy = current.y - start.y;

@@ -317,6 +317,7 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       }else if(s.type === "line-template"){
         s.x2 = worldSnap.x;
         s.y2 = worldSnap.y;
+        s.width = (state.ui.spellLineWidth || 1) * state.grid.cellPx;
         onChange();
       }else if(s.type === "rect"){
         // Cube: constrain to square
