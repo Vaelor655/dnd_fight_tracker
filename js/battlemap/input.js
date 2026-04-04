@@ -124,40 +124,44 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
         onStatus("Cercle…");
       }else if(state.ui.tool === "spell-cone"){
         dragMode = "draw-spell";
+        const sc0 = state.ui.spellColor || "#f59e0b";
         state.ui.previewShape = {
           type: "cone", anim: "fire",
           cx: drawStart.x, cy: drawStart.y, length: 0, angle: 0,
-          stroke: "#f59e0b", strokeWidth: 2,
-          fill: "#f59e0b", fillAlpha: 0.22,
+          stroke: sc0, strokeWidth: 2,
+          fill: sc0, fillAlpha: 0.22,
           spellSize: state.ui.spellSize || 9,
         };
         onStatus("Cône…");
       }else if(state.ui.tool === "spell-line"){
         dragMode = "draw-spell";
+        const sc1 = state.ui.spellColor || "#f59e0b";
         state.ui.previewShape = {
           type: "line-template", anim: "fire",
           x1: drawStart.x, y1: drawStart.y, x2: drawStart.x, y2: drawStart.y,
           width: (state.ui.spellSize || 1.5) * state.grid.cellPx,
-          stroke: "#3b82f6", strokeWidth: 2,
-          fill: "#3b82f6", fillAlpha: 0.22,
+          stroke: sc1, strokeWidth: 2,
+          fill: sc1, fillAlpha: 0.22,
         };
         onStatus("Ligne…");
       }else if(state.ui.tool === "spell-cube"){
         dragMode = "draw-spell";
+        const sc2 = state.ui.spellColor || "#f59e0b";
         state.ui.previewShape = {
           type: "rect", anim: "arcane",
           x: drawStart.x, y: drawStart.y, w: 0, h: 0,
-          stroke: "#ef4444", strokeWidth: 2,
-          fill: "#ef4444", fillAlpha: 0.22,
+          stroke: sc2, strokeWidth: 2,
+          fill: sc2, fillAlpha: 0.22,
         };
         onStatus("Cube…");
       }else if(state.ui.tool === "spell-sphere"){
         dragMode = "draw-spell";
+        const sc3 = state.ui.spellColor || "#f59e0b";
         state.ui.previewShape = {
           type: "circle", anim: "fire",
           cx: drawStart.x, cy: drawStart.y, r: 0,
-          stroke: "#a855f7", strokeWidth: 2,
-          fill: "#a855f7", fillAlpha: 0.22,
+          stroke: sc3, strokeWidth: 2,
+          fill: sc3, fillAlpha: 0.22,
         };
         onStatus("Sphère…");
       }else{

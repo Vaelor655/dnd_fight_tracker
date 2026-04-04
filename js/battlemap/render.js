@@ -774,6 +774,20 @@ function drawTokenLabel(ctx, camera, grid, cx, yTop, text, diameter){
 // Visual noise clock (page-relative, smooth)
 function _n(){ return performance.now() / 1000; }
 
+function hexToRgb(hex){
+  const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+  return m ? { r: parseInt(m[1],16), g: parseInt(m[2],16), b: parseInt(m[3],16) }
+           : { r: 255, g: 100, b: 0 };
+}
+// Blend rgb toward white for bright core
+function _rc(rgb, a){ return `rgba(${rgb.r},${rgb.g},${rgb.b},${a})`; }
+function _rw(rgb, t, a){ // t=0 → color, t=1 → white
+  const r = Math.round(rgb.r + (255-rgb.r)*t);
+  const g = Math.round(rgb.g + (255-rgb.g)*t);
+  const b = Math.round(rgb.b + (255-rgb.b)*t);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
 /**
  * Compute animation state for a one-shot spell shape.
  * - preview (no animStart): loops visually so the user can see the effect during drag
@@ -805,6 +819,7 @@ function drawSpellFireCircle(ctx, camera, s, preview){
   const { p, fade, n, done } = animProg(s, DURATION);
   if(done) return;
 
+  const rgb = hexToRgb(s.stroke || "#f59e0b");
   const cx = s.cx, cy = s.cy, r = Math.max(1, s.r);
   // Expansion burst at start (scale 1.4→1 in first 20%)
   const burst = p < 0.2 ? (1.4 - p / 0.2 * 0.4) : 1.0;
@@ -816,9 +831,9 @@ function drawSpellFireCircle(ctx, camera, s, preview){
     ctx.save();
     ctx.globalAlpha = flashA;
     const fg = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * burst * 1.1);
-    fg.addColorStop(0, "rgba(255,255,255,1)");
-    fg.addColorStop(0.4, "rgba(255,200,80,0.8)");
-    fg.addColorStop(1, "rgba(255,80,0,0)");
+    fg.addColorStop(0,   "rgba(255,255,255,1)");
+    fg.addColorStop(0.4, _rw(rgb, 0.6, 0.8));
+    fg.addColorStop(1,   _rc(rgb, 0));
     ctx.fillStyle = fg;
     ctx.beginPath(); ctx.arc(cx, cy, r * burst * 1.1, 0, Math.PI*2); ctx.fill();
     ctx.restore();
@@ -830,18 +845,18 @@ function drawSpellFireCircle(ctx, camera, s, preview){
   const swA = (1 - swP) * 0.6 * ef;
   ctx.save();
   ctx.globalAlpha = swA;
-  ctx.strokeStyle = "#ffcc44";
+  ctx.strokeStyle = _rw(rgb, 0.5, 1);
   ctx.lineWidth = (4 - swP * 3) / camera.zoom;
   ctx.beginPath(); ctx.arc(cx, cy, swR, 0, Math.PI*2); ctx.stroke();
   ctx.restore();
 
-  // Radial fire fill
+  // Radial fill
   const noiseP = 0.88 + Math.sin(n * 5.3) * 0.08 + Math.sin(n * 7.7) * 0.04;
   const gr = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * burst * noiseP);
-  gr.addColorStop(0,    `rgba(255,255,160,${0.95*ef})`);
-  gr.addColorStop(0.25, `rgba(255,140,0,${0.75*ef})`);
-  gr.addColorStop(0.6,  `rgba(220,40,0,${0.5*ef})`);
-  gr.addColorStop(1,    `rgba(180,0,0,0)`);
+  gr.addColorStop(0,    `rgba(255,255,200,${0.95*ef})`);
+  gr.addColorStop(0.25, _rw(rgb, 0.4, 0.75*ef));
+  gr.addColorStop(0.6,  _rc(rgb, 0.5*ef));
+  gr.addColorStop(1,    _rc(rgb, 0));
   ctx.save();
   ctx.beginPath(); ctx.arc(cx, cy, r * burst, 0, Math.PI*2);
   ctx.fillStyle = gr; ctx.fill();
@@ -858,7 +873,7 @@ function drawSpellFireCircle(ctx, camera, s, preview){
       const py = cy + Math.sin(angle)*dist;
       const sz = (r*0.18 + Math.sin(n*4+i)*r*0.07) / camera.zoom;
       ctx.globalAlpha = (0.7 + Math.sin(n*5+i)*0.25) * ef;
-      ctx.fillStyle = `hsl(${20+Math.sin(n*4+i)*18},100%,${52+Math.sin(n*3+i)*15}%)`;
+      ctx.fillStyle = _rw(rgb, 0.3 + Math.sin(n*3+i)*0.2, 1);
       ctx.beginPath(); ctx.arc(px, py, sz, 0, Math.PI*2); ctx.fill();
     }
     ctx.restore();
@@ -868,9 +883,9 @@ function drawSpellFireCircle(ctx, camera, s, preview){
   ctx.save();
   ctx.globalAlpha = ef;
   ctx.lineWidth = (2.5 + Math.sin(n*4)*0.6) / camera.zoom;
-  ctx.strokeStyle = "#ff6600";
+  ctx.strokeStyle = _rc(rgb, 1);
   ctx.shadowBlur  = 14 / camera.zoom;
-  ctx.shadowColor = "#ffaa00";
+  ctx.shadowColor = _rw(rgb, 0.3, 1);
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke();
   ctx.restore();
 }
@@ -880,6 +895,7 @@ function drawSpellFireCone(ctx, camera, s, preview){
   const { p, fade, n, done } = animProg(s, DURATION);
   if(done) return;
 
+  const rgb = hexToRgb(s.stroke || "#f59e0b");
   const spread = Math.PI / 3, half = spread / 2;
   // Cone "grows" from 0 to full in first 10%
   const grow = p < 0.1 ? p / 0.1 : 1.0;
@@ -897,10 +913,10 @@ function drawSpellFireCone(ctx, camera, s, preview){
 
   const gr = ctx.createRadialGradient(s.cx, s.cy, 0, s.cx, s.cy, len);
   const np = 0.82 + Math.sin(n * 5) * 0.1;
-  gr.addColorStop(0,       `rgba(255,255,120,${0.9*ef})`);
-  gr.addColorStop(0.35*np, `rgba(255,110,0,${0.75*ef})`);
-  gr.addColorStop(0.7,     `rgba(210,30,0,${0.4*ef})`);
-  gr.addColorStop(1,       `rgba(160,0,0,0)`);
+  gr.addColorStop(0,       `rgba(255,255,200,${0.9*ef})`);
+  gr.addColorStop(0.35*np, _rw(rgb, 0.35, 0.75*ef));
+  gr.addColorStop(0.7,     _rc(rgb, 0.4*ef));
+  gr.addColorStop(1,       _rc(rgb, 0));
   ctx.fillStyle = gr;
   ctx.fillRect(s.cx - len, s.cy - len, len * 2, len * 2);
 
@@ -915,8 +931,8 @@ function drawSpellFireCone(ctx, camera, s, preview){
     const lw = (4 + Math.sin(n*5+i)*2) / camera.zoom;
     const al = (0.25 + Math.sin(n*3.7+i*0.9)*0.18) * ef;
     const tg = ctx.createLinearGradient(s.cx, s.cy, tx, ty);
-    tg.addColorStop(0, `rgba(255,220,60,${al*1.4})`);
-    tg.addColorStop(1, `rgba(220,40,0,0)`);
+    tg.addColorStop(0, _rw(rgb, 0.7, al*1.4));
+    tg.addColorStop(1, _rc(rgb, 0));
     ctx.globalAlpha = 1; ctx.strokeStyle = tg;
     ctx.lineWidth = lw; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(s.cx, s.cy); ctx.lineTo(tx, ty); ctx.stroke();
@@ -926,9 +942,9 @@ function drawSpellFireCone(ctx, camera, s, preview){
   ctx.save();
   ctx.globalAlpha = ef;
   ctx.lineWidth = 2 / camera.zoom;
-  ctx.strokeStyle = "#ff5500";
+  ctx.strokeStyle = _rc(rgb, 1);
   ctx.shadowBlur  = 12 / camera.zoom;
-  ctx.shadowColor = "#ffaa00";
+  ctx.shadowColor = _rw(rgb, 0.3, 1);
   ctx.beginPath();
   ctx.moveTo(s.cx, s.cy);
   ctx.lineTo(s.cx + Math.cos(ang - half)*len, s.cy + Math.sin(ang - half)*len);
@@ -942,6 +958,7 @@ function drawSpellFireLine(ctx, camera, s, preview){
   const { p, fade, n, done } = animProg(s, DURATION);
   if(done) return;
 
+  const rgb = hexToRgb(s.stroke || "#f59e0b");
   const dx = (s.x2||0)-(s.x1||0), dy = (s.y2||0)-(s.y1||0);
   const len = Math.sqrt(dx*dx+dy*dy);
   if(len < 1) return;
@@ -967,11 +984,11 @@ function drawSpellFireLine(ctx, camera, s, preview){
   const midX = (s.x1+ex)/2, midY = (s.y1+ey)/2;
   const pg = ctx.createLinearGradient(midX+nx*hw, midY+ny*hw, midX-nx*hw, midY-ny*hw);
   const cp = 0.82 + Math.sin(n*6.2)*0.14;
-  pg.addColorStop(0,    `rgba(180,10,0,${0.05*ef})`);
-  pg.addColorStop(0.28, `rgba(255,70,0,${0.55*ef})`);
-  pg.addColorStop(0.5,  `rgba(255,230,80,${cp*ef})`);
-  pg.addColorStop(0.72, `rgba(255,70,0,${0.55*ef})`);
-  pg.addColorStop(1,    `rgba(180,10,0,${0.05*ef})`);
+  pg.addColorStop(0,    _rc(rgb, 0.05*ef));
+  pg.addColorStop(0.28, _rc(rgb, 0.55*ef));
+  pg.addColorStop(0.5,  _rw(rgb, 0.7, cp*ef));
+  pg.addColorStop(0.72, _rc(rgb, 0.55*ef));
+  pg.addColorStop(1,    _rc(rgb, 0.05*ef));
   ctx.fillStyle = pg;
   const tLen = Math.sqrt((ex-s.x1)**2+(ey-s.y1)**2);
   ctx.fillRect(Math.min(s.x1,ex)-hw, Math.min(s.y1,ey)-hw, tLen+hw*2, tLen+hw*2);
@@ -982,8 +999,9 @@ function drawSpellFireLine(ctx, camera, s, preview){
     const pr = ((n*1.1+i/ns) % 1) * travel;
     const bx = s.x1+dx*pr + nx*Math.sin(n*5+i*1.4)*hw*0.55;
     const by = s.y1+dy*pr + ny*Math.sin(n*5+i*1.4)*hw*0.55;
-    ctx.globalAlpha = Math.sin(pr/travel*Math.PI)*0.7*ef;
-    ctx.fillStyle = "#ffcc00";
+    const bAlpha = travel > 0 ? Math.sin(pr/travel*Math.PI)*0.7*ef : 0;
+    ctx.globalAlpha = bAlpha;
+    ctx.fillStyle = _rw(rgb, 0.5, 1);
     ctx.beginPath(); ctx.arc(bx, by, hw*0.32/camera.zoom, 0, Math.PI*2); ctx.fill();
   }
   ctx.restore();
@@ -991,9 +1009,9 @@ function drawSpellFireLine(ctx, camera, s, preview){
   ctx.save();
   ctx.globalAlpha = ef;
   ctx.lineWidth = (1.5+Math.sin(n*5)*0.5) / camera.zoom;
-  ctx.strokeStyle = "#ff3300";
+  ctx.strokeStyle = _rc(rgb, 1);
   ctx.shadowBlur  = 10 / camera.zoom;
-  ctx.shadowColor = "#ff7700";
+  ctx.shadowColor = _rw(rgb, 0.3, 1);
   ctx.beginPath();
   ctx.moveTo(c1.x,c1.y); ctx.lineTo(c2.x,c2.y);
   ctx.lineTo(c3.x,c3.y); ctx.lineTo(c4.x,c4.y);

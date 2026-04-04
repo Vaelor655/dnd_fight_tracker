@@ -1444,6 +1444,7 @@ function monsterSizeToCells(sizeRaw){
       toolSelect: document.getElementById("toolSelect"),
       toolButtons: document.getElementById("toolButtons"),
       drawColor: document.getElementById("drawColor"),
+      spellColor: document.getElementById("spellColor"),
       drawWidth: document.getElementById("drawWidth"),
       drawWidthValue: document.getElementById("drawWidthValue"),
       fillMode: document.getElementById("fillMode"),
