@@ -278,6 +278,7 @@ function renderNow(){
   const overlay = {
     measure: computeMeasureOverlay(),
     ping: computePingOverlay(),
+    previewShape: playerPreviewShape,
   };
   draw(canvas, ctx, state, overlay);
   syncOwnedTokenPanel();
@@ -494,12 +495,90 @@ function loop(){
 requestAnimationFrame(loop);
 
 
-// ===== Tools (client-side only): measure + ping =====
-let toolMode = "none"; // none | measure | ping
+// ===== Tools (client-side only): measure + ping + spell shapes =====
+let toolMode = "none"; // none | measure | ping | spell-cone | spell-sphere | spell-line | spell-cube
 let gHeld = false; // hold-to-ping (press and hold 'g' + left click)
 let measureDragging = false;
 let measureStartCell = null;
 let measureEndCell = null;
+
+// Spell drawing state
+let spellDragging = false;
+let spellStart = null;
+let playerPreviewShape = null;
+
+const spellToolBtns = document.querySelectorAll("[data-spell-tool]");
+const spellColorInput = document.getElementById("spellColor");
+const undoSpellBtn = document.getElementById("undoSpellBtn");
+const clearSpellBtn = document.getElementById("clearSpellBtn");
+
+function spellSnap(world){
+  const cellPx = state?.grid?.cellPx || 60;
+  const snap = cellPx / 2;
+  return {
+    x: Math.round(world.x / snap) * snap,
+    y: Math.round(world.y / snap) * snap,
+  };
+}
+
+function buildSpellPreviewShape(tool, start){
+  const color = spellColorInput?.value || "#f59e0b";
+  const cellPx = state?.grid?.cellPx || 60;
+  if(tool === "spell-cone"){
+    return { type: "cone", cx: start.x, cy: start.y, length: 0, angle: 0,
+      stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
+  } else if(tool === "spell-sphere"){
+    return { type: "circle", cx: start.x, cy: start.y, r: 0,
+      stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
+  } else if(tool === "spell-line"){
+    return { type: "line-template", x1: start.x, y1: start.y, x2: start.x, y2: start.y,
+      width: 1.5 * cellPx, stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
+  } else if(tool === "spell-cube"){
+    return { type: "rect", x: start.x, y: start.y, w: 0, h: 0,
+      stroke: color, strokeWidth: 2, fill: color, fillAlpha: 0.22 };
+  }
+  return null;
+}
+
+function updateSpellPreviewShape(s, start, current){
+  if(s.type === "cone"){
+    const dx = current.x - start.x;
+    const dy = current.y - start.y;
+    s.length = Math.sqrt(dx*dx + dy*dy);
+    s.angle = Math.atan2(dy, dx);
+  } else if(s.type === "circle"){
+    const dx = current.x - start.x;
+    const dy = current.y - start.y;
+    s.r = Math.sqrt(dx*dx + dy*dy);
+  } else if(s.type === "line-template"){
+    s.x2 = current.x;
+    s.y2 = current.y;
+  } else if(s.type === "rect"){
+    const dx = current.x - start.x;
+    const dy = current.y - start.y;
+    const side = Math.max(Math.abs(dx), Math.abs(dy));
+    s.w = Math.sign(dx || 1) * side;
+    s.h = Math.sign(dy || 1) * side;
+  }
+}
+
+function spellShapeHasSize(s){
+  if(s.type === "cone") return (s.length || 0) > 4;
+  if(s.type === "circle") return (s.r || 0) > 4;
+  if(s.type === "line-template"){
+    const dx = (s.x2 - s.x1), dy = (s.y2 - s.y1);
+    return Math.sqrt(dx*dx + dy*dy) > 4;
+  }
+  if(s.type === "rect") return Math.abs(s.w || 0) > 4 && Math.abs(s.h || 0) > 4;
+  return false;
+}
+
+spellToolBtns.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const tool = btn.getAttribute("data-spell-tool") || "";
+    setTool(toolMode === tool ? "none" : tool);
+  });
+});
 
 // last received ping (cell coords), ephemeral
 let lastPing = null; // { cell:{x,y}, ts, from }
@@ -510,6 +589,11 @@ function setTool(mode){
     measureDragging = false;
     measureStartCell = null;
     measureEndCell = null;
+  }
+  if(!mode.startsWith("spell-")){
+    spellDragging = false;
+    spellStart = null;
+    playerPreviewShape = null;
   }
   updateToolButtons();
   dirty = true;
@@ -524,6 +608,11 @@ function updateToolButtons(){
     pingBtn.classList.toggle("is-active", toolMode === "ping");
     pingBtn.setAttribute("aria-pressed", toolMode === "ping" ? "true" : "false");
   }
+  spellToolBtns.forEach(btn => {
+    const t = btn.getAttribute("data-spell-tool") || "";
+    btn.classList.toggle("is-active", toolMode === t);
+    btn.setAttribute("aria-pressed", toolMode === t ? "true" : "false");
+  });
   if(measureBtn) measureBtn.classList.toggle("primary", toolMode === "measure");
   if(pingBtn) pingBtn.classList.toggle("primary", toolMode === "ping");
 }
@@ -706,32 +795,68 @@ canvas.addEventListener("pointerdown", async (e) => {
     }catch{}
     return;
   }
+
+  if(toolMode.startsWith("spell-")){
+    const worldSnap = spellSnap(world);
+    spellDragging = true;
+    spellStart = worldSnap;
+    playerPreviewShape = buildSpellPreviewShape(toolMode, worldSnap);
+    dirty = true;
+    return;
+  }
 });
 
 canvas.addEventListener("pointermove", (e) => {
-  if(toolMode !== "measure" || !measureDragging) return;
   if(activeToolPointerId !== null && e.pointerId !== activeToolPointerId) return;
 
-  e.preventDefault();
-  const { sx, sy } = canvasEventToScreen(e);
-  const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
-  const cell = worldToCell(state, world);
-  measureEndCell = state.grid?.layout === "hex"
-    ? { x: Math.round(cell.x), y: Math.round(cell.y) }
-    : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
-  dirty = true;
+  if(toolMode === "measure" && measureDragging){
+    e.preventDefault();
+    const { sx, sy } = canvasEventToScreen(e);
+    const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
+    const cell = worldToCell(state, world);
+    measureEndCell = state.grid?.layout === "hex"
+      ? { x: Math.round(cell.x), y: Math.round(cell.y) }
+      : { x: Math.round(cell.x * 2) / 2, y: Math.round(cell.y * 2) / 2 };
+    dirty = true;
+    return;
+  }
+
+  if(toolMode.startsWith("spell-") && spellDragging && playerPreviewShape){
+    e.preventDefault();
+    const { sx, sy } = canvasEventToScreen(e);
+    const world = screenToWorld(canvas, state.camera, { x: sx, y: sy });
+    updateSpellPreviewShape(playerPreviewShape, spellStart, spellSnap(world));
+    dirty = true;
+  }
 });
 
-function endMeasurePointer(e){
+function endToolPointer(e){
   if(activeToolPointerId !== null && e.pointerId !== activeToolPointerId) return;
-  if(toolMode !== "measure") return;
-  measureDragging = false;
-  activeToolPointerId = null;
-  dirty = true;
+
+  if(toolMode === "measure"){
+    measureDragging = false;
+    activeToolPointerId = null;
+    dirty = true;
+    return;
+  }
+
+  if(toolMode.startsWith("spell-") && spellDragging){
+    spellDragging = false;
+    activeToolPointerId = null;
+    const finalShape = playerPreviewShape ? { ...playerPreviewShape } : null;
+    playerPreviewShape = null;
+    if(finalShape && spellShapeHasSize(finalShape)){
+      finalShape.creatorId = playerId;
+      if(!state.shapes) state.shapes = [];
+      state.shapes.push({ id: -(Date.now()), ...finalShape });
+      try{ rt?.sendShapeAdd?.({ ...finalShape }); }catch{}
+    }
+    dirty = true;
+  }
 }
 
-canvas.addEventListener("pointerup", endMeasurePointer);
-canvas.addEventListener("pointercancel", endMeasurePointer);
+canvas.addEventListener("pointerup", endToolPointer);
+canvas.addEventListener("pointercancel", endToolPointer);
 
 canvas.addEventListener("contextmenu", (e) => e.preventDefault());
 
@@ -875,6 +1000,28 @@ playerId = rt.getPlayerId?.() || "";
 // Update presence when pseudo / couleur change
 pingNameInput?.addEventListener("change", () => rt.trackIdentity?.());
 pingColorInput?.addEventListener("input", () => rt.trackIdentity?.());
+
+// Spell undo / clear
+undoSpellBtn?.addEventListener("click", async () => {
+  if(state?.shapes){
+    for(let i = state.shapes.length - 1; i >= 0; i--){
+      if(state.shapes[i].creatorId === playerId){
+        state.shapes.splice(i, 1);
+        dirty = true;
+        break;
+      }
+    }
+  }
+  try{ await rt.sendShapeUndo?.(playerId); }catch{}
+});
+
+clearSpellBtn?.addEventListener("click", async () => {
+  if(state?.shapes){
+    state.shapes = state.shapes.filter(s => s.creatorId !== playerId);
+    dirty = true;
+  }
+  try{ await rt.sendShapeClearCreator?.(playerId); }catch{}
+});
 
 function sendOwnedTokenStats(patch){
   const tok = getOwnedTokenById(selectedOwnedTokenId);

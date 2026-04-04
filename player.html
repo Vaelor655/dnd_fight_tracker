@@ -108,6 +108,42 @@
 
             <span class="map-ribbon__sep"></span>
 
+            <div class="map-ribbon__grouped">
+              <span class="map-ribbon__category">Sorts / Effets</span>
+              <div class="map-ribbon__group" id="spellToolButtons">
+                <button type="button" class="map-ribbon__btn" data-spell-tool="spell-cone" title="Cône">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M12 4l-8 16h16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                  <span class="map-ribbon__label">Cône</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-spell-tool="spell-sphere" title="Sphère">
+                  <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>
+                  <span class="map-ribbon__label">Sphère</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-spell-tool="spell-line" title="Ligne">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M4 20L20 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                  <span class="map-ribbon__label">Ligne</span>
+                </button>
+                <button type="button" class="map-ribbon__btn" data-spell-tool="spell-cube" title="Cube">
+                  <svg class="ico" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 3"/></svg>
+                  <span class="map-ribbon__label">Cube</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="map-ribbon__group">
+              <label class="map-ribbon__color" title="Couleur du sort">
+                <input id="spellColor" type="color" value="#f59e0b" />
+              </label>
+              <button id="undoSpellBtn" class="map-ribbon__btn" type="button" title="Annuler dernier sort">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <button id="clearSpellBtn" class="map-ribbon__btn map-ribbon__btn--danger" type="button" title="Effacer mes sorts">
+                <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+            </div>
+
+            <span class="map-ribbon__sep"></span>
+
             <div class="map-ribbon__group">
               <label class="map-ribbon__slider" title="Zoom">
                 <svg class="ico" viewBox="0 0 24 24" style="width:16px;height:16px;flex-shrink:0"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.35-4.35" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M11 8v6M8 11h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>

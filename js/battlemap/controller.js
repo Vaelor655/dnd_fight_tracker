@@ -1,4 +1,4 @@
-import { createInitialState, migrateState, addToken, undoShape, clearShapes, addFogArea, undoFogArea, clearFog } from "./model.js";
+import { createInitialState, migrateState, addToken, undoShape, clearShapes, addShape, addFogArea, undoFogArea, clearFog } from "./model.js";
 import { draw, screenToWorld, cellToWorld } from "./render.js";
 import { createInputController } from "./input.js";
 import { clamp } from "./utils.js";
@@ -629,6 +629,32 @@ dom.bgFile?.addEventListener("change", async () => {
     dirty = true;
   }
 
+  function addExternalShape(shape){
+    addShape(state, { ...shape });
+    dirty = true;
+    markDirty(false);
+  }
+
+  function removeLastShapeByCreator(creatorId){
+    for(let i = state.shapes.length - 1; i >= 0; i--){
+      if(state.shapes[i].creatorId === creatorId){
+        state.shapes.splice(i, 1);
+        dirty = true;
+        markDirty(false);
+        return;
+      }
+    }
+  }
+
+  function clearShapesByCreator(creatorId){
+    const before = state.shapes.length;
+    state.shapes = state.shapes.filter(s => s.creatorId !== creatorId);
+    if(state.shapes.length !== before){
+      dirty = true;
+      markDirty(false);
+    }
+  }
+
   // ── Movement tracking per turn ──
   function startTurnForToken(tokenId){
     const t = state.tokens.find(x => x.id === tokenId);
@@ -665,6 +691,9 @@ dom.bgFile?.addEventListener("change", async () => {
     // overlays / redraw control (used for pings, measurement preview, etc.)
     setOverlayProvider,
     invalidate,
+    addExternalShape,
+    removeLastShapeByCreator,
+    clearShapesByCreator,
     setZoom,
     setBackgroundFromUrl: loadBackgroundFromUrl,
     startTurnForToken,

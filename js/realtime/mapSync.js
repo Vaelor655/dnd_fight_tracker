@@ -87,6 +87,9 @@ export function initMapRealtimeMJ({
   onPing,
   onPresencePlayers,
   onTokenUpdate,
+  onShapeAdd,
+  onShapeUndo,
+  onShapeClearCreator,
 }){
   const supabase = getSupabase();
 
@@ -117,6 +120,9 @@ async function startPresence(){
     .channel(`battlemap:${roomId}`, { config: { presence: { key: presenceKey } } })
     .on("broadcast", { event: "ping" }, (msg) => { try{ onPing && onPing(msg?.payload); }catch{} })
     .on("broadcast", { event: "token_update" }, (msg) => { try{ onTokenUpdate && onTokenUpdate(msg?.payload); }catch{} })
+    .on("broadcast", { event: "shape_add" }, (msg) => { try{ onShapeAdd && onShapeAdd(msg?.payload); }catch{} })
+    .on("broadcast", { event: "shape_undo" }, (msg) => { try{ onShapeUndo && onShapeUndo(msg?.payload); }catch{} })
+    .on("broadcast", { event: "shape_clear_creator" }, (msg) => { try{ onShapeClearCreator && onShapeClearCreator(msg?.payload); }catch{} })
     .on("presence", { event: "sync" }, () => updateOnlineList())
     .on("presence", { event: "join" }, () => updateOnlineList())
     .on("presence", { event: "leave" }, () => updateOnlineList())
@@ -562,6 +568,33 @@ async function trackIdentity(){
       if(!channel) return { error: "not_connected" };
       try{
         await channel.send({ type: "broadcast", event: "token_update", payload });
+        return { ok: true };
+      }catch(e){
+        return { error: String(e?.message || e) };
+      }
+    },
+    sendShapeAdd: async (shape) => {
+      if(!channel) return { error: "not_connected" };
+      try{
+        await channel.send({ type: "broadcast", event: "shape_add", payload: shape });
+        return { ok: true };
+      }catch(e){
+        return { error: String(e?.message || e) };
+      }
+    },
+    sendShapeUndo: async (creatorId) => {
+      if(!channel) return { error: "not_connected" };
+      try{
+        await channel.send({ type: "broadcast", event: "shape_undo", payload: { creatorId } });
+        return { ok: true };
+      }catch(e){
+        return { error: String(e?.message || e) };
+      }
+    },
+    sendShapeClearCreator: async (creatorId) => {
+      if(!channel) return { error: "not_connected" };
+      try{
+        await channel.send({ type: "broadcast", event: "shape_clear_creator", payload: { creatorId } });
         return { ok: true };
       }catch(e){
         return { error: String(e?.message || e) };

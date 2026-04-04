@@ -1522,6 +1522,23 @@ button.is-active {
   gap: 1px;
 }
 
+/* Labeled group wrapper (label above buttons) */
+.map-ribbon__grouped {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+.map-ribbon__category {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+  font-family: 'Cinzel', 'Georgia', serif;
+  white-space: nowrap;
+  line-height: 1;
+}
+
 /* Tool button (ribbon style with optional label) */
 .map-ribbon__btn {
   display: inline-flex;

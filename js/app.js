@@ -1687,6 +1687,23 @@ function monsterSizeToCells(sizeRaw){
         render();
       },
       onlineEl: document.getElementById("onlinePlayers"),
+      onShapeAdd: (payload) => {
+        if(!payload || !payload.type) return;
+        battlemap.addExternalShape(payload);
+        realtime?.markDirty?.();
+      },
+      onShapeUndo: (payload) => {
+        const creatorId = String(payload?.creatorId || "");
+        if(!creatorId) return;
+        battlemap.removeLastShapeByCreator(creatorId);
+        realtime?.markDirty?.();
+      },
+      onShapeClearCreator: (payload) => {
+        const creatorId = String(payload?.creatorId || "");
+        if(!creatorId) return;
+        battlemap.clearShapesByCreator(creatorId);
+        realtime?.markDirty?.();
+      },
     });
 
     // quand la map bouge, on sauvegarde après un petit délai
