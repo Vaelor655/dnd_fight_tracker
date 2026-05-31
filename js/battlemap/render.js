@@ -1,5 +1,9 @@
 const imageCache = new Map();
 
+// Offscreen canvas réutilisé pour le rendu du fog (évite la règle evenodd qui re-foge les chevauchements)
+let _fogCanvas = null;
+let _fogCtx = null;
+
 // ===== Name censor "roulette" (player view) =====
 const CENSOR_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 function rollingCensorLabel(seed, tokenId, nowMs){
@@ -385,37 +389,49 @@ export function draw(canvas, ctx, state, overlay){
   // ── Fog of War (player view only — MJ sees a semi-transparent overlay) ──
   if(state.fog?.enabled){
     const fogAlpha = isPlayerView ? 1.0 : 0.35;
-    ctx.save();
-    ctx.globalAlpha = fogAlpha;
 
-    // Draw full black fog covering the visible area (extended)
+    // Réutilise ou crée un canvas hors-écran aux mêmes dimensions
+    if(!_fogCanvas || _fogCanvas.width !== canvas.width || _fogCanvas.height !== canvas.height){
+      _fogCanvas = document.createElement("canvas");
+      _fogCanvas.width = canvas.width;
+      _fogCanvas.height = canvas.height;
+      _fogCtx = _fogCanvas.getContext("2d");
+    }
+    const fc = _fogCtx;
+    fc.clearRect(0, 0, _fogCanvas.width, _fogCanvas.height);
+
+    // Applique la même transformation caméra que le canvas principal
+    const t = ctx.getTransform();
+    fc.setTransform(t.a, t.b, t.c, t.d, t.e, t.f);
+
+    // Remplit tout en noir (fog)
     const fogPad = 2000;
-    ctx.fillStyle = "#111111";
-    ctx.beginPath();
-    ctx.rect(left - fogPad, top - fogPad, (right - left) + fogPad * 2, (bottom - top) + fogPad * 2);
+    fc.fillStyle = "#111111";
+    fc.fillRect(left - fogPad, top - fogPad, (right - left) + fogPad * 2, (bottom - top) + fogPad * 2);
 
-    // Cut out revealed areas (counter-clockwise = hole in the path)
+    // Perce les zones révélées avec destination-out :
+    // les chevauchements s'additionnent correctement (union, pas XOR)
+    fc.globalCompositeOperation = "destination-out";
+    fc.fillStyle = "#000000";
     const revealed = state.fog.revealedAreas || [];
     for(const area of revealed){
+      fc.beginPath();
       if(area.type === "rect"){
         const ax = Math.min(area.x, area.x + area.w);
         const ay = Math.min(area.y, area.y + area.h);
-        const aw = Math.abs(area.w);
-        const ah = Math.abs(area.h);
-        // counter-clockwise rect to punch hole
-        ctx.moveTo(ax, ay);
-        ctx.lineTo(ax, ay + ah);
-        ctx.lineTo(ax + aw, ay + ah);
-        ctx.lineTo(ax + aw, ay);
-        ctx.closePath();
-      }else if(area.type === "circle"){
-        // counter-clockwise circle
-        ctx.moveTo(area.cx + area.r, area.cy);
-        ctx.arc(area.cx, area.cy, area.r, 0, Math.PI * 2, true);
-        ctx.closePath();
+        fc.rect(ax, ay, Math.abs(area.w), Math.abs(area.h));
+      } else if(area.type === "circle"){
+        fc.arc(area.cx, area.cy, area.r, 0, Math.PI * 2);
       }
+      fc.fill();
     }
-    ctx.fill("evenodd");
+    fc.globalCompositeOperation = "source-over";
+
+    // Dessine la couche fog sur le canvas principal (en espace pixel, sans transform)
+    ctx.save();
+    ctx.globalAlpha = fogAlpha;
+    ctx.resetTransform();
+    ctx.drawImage(_fogCanvas, 0, 0);
     ctx.restore();
   }
 
