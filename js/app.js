@@ -1467,6 +1467,7 @@ function monsterSizeToCells(sizeRaw){
       toggleGridBtn: document.getElementById("toggleGridBtn"),
       mapToolbar: document.getElementById("mapToolbar"),
       drawOptionsBar: document.getElementById("drawOptionsBar"),
+      spellOptionsBar: document.getElementById("spellOptionsBar"),
       fogToggle: document.getElementById("fogToggle"),
       undoFogBtn: document.getElementById("undoFogBtn"),
       clearFogBtn: document.getElementById("clearFogBtn"),

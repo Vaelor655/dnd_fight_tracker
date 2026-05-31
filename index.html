@@ -272,19 +272,24 @@
           <div id="mapToolbar" class="map-ribbon" role="toolbar" aria-label="Outils battlemap">
             <div class="map-ribbon__main" id="toolButtons">
 
-              <div class="map-ribbon__group">
-                <button type="button" class="map-ribbon__btn is-active" data-tool="tokens" title="Sélection / Déplacer tokens">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-                  <span class="map-ribbon__label">Sélection</span>
-                </button>
-                <button type="button" class="map-ribbon__btn" data-tool="background" title="Déplacer le fond de carte">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2v20M2 12h20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  <span class="map-ribbon__label">Fond</span>
-                </button>
+              <!-- Navigation -->
+              <div class="map-ribbon__grouped">
+                <span class="map-ribbon__category">Navigation</span>
+                <div class="map-ribbon__group">
+                  <button type="button" class="map-ribbon__btn is-active" data-tool="tokens" title="Sélection / Déplacer tokens">
+                    <svg class="ico" viewBox="0 0 24 24"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                    <span class="map-ribbon__label">Sélection</span>
+                  </button>
+                  <button type="button" class="map-ribbon__btn" data-tool="background" title="Déplacer le fond de carte">
+                    <svg class="ico" viewBox="0 0 24 24"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2v20M2 12h20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span class="map-ribbon__label">Fond</span>
+                  </button>
+                </div>
               </div>
 
               <span class="map-ribbon__sep"></span>
 
+              <!-- Dessin -->
               <div class="map-ribbon__grouped">
                 <span class="map-ribbon__category">Dessin</span>
                 <div class="map-ribbon__group">
@@ -303,8 +308,31 @@
                 </div>
               </div>
 
+              <!-- Draw options (contextuel – visible seulement quand outil dessin actif) -->
+              <div class="map-ribbon__options" id="drawOptionsBar">
+                <span class="map-ribbon__sep map-ribbon__sep--inner"></span>
+                <label class="map-ribbon__color" title="Couleur"><input id="drawColor" type="color" value="#22c55e" /></label>
+                <label class="map-ribbon__slider" title="Épaisseur">
+                  <input id="drawWidth" type="range" min="1" max="16" value="3" />
+                  <span id="drawWidthValue" class="map-ribbon__val">3</span>
+                </label>
+                <button type="button" class="map-ribbon__btn map-ribbon__btn--toggle" id="fillModeBtn" title="Remplir">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M5 5h14v14H5z" fill="currentColor" opacity="0.35"/><path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                </button>
+                <button type="button" class="map-ribbon__btn map-ribbon__btn--toggle is-active" id="snapModeBtn" title="Snap grille">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 3v18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="15" r="1.5" fill="currentColor"/></svg>
+                </button>
+                <button id="undoDrawBtn" class="map-ribbon__btn" type="button" title="Annuler dernier dessin">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button id="clearDrawBtn" class="map-ribbon__btn map-ribbon__btn--danger" type="button" title="Tout effacer">
+                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+
               <span class="map-ribbon__sep"></span>
 
+              <!-- Sorts / Effets -->
               <div class="map-ribbon__grouped">
                 <span class="map-ribbon__category">Sorts / Effets</span>
                 <div class="map-ribbon__group">
@@ -327,10 +355,11 @@
                 </div>
               </div>
 
-              <!-- Spell color picker + line width -->
-              <div class="map-ribbon__group">
+              <!-- Spell options (contextuel – visible seulement quand outil sort actif) -->
+              <div class="map-ribbon__options" id="spellOptionsBar">
+                <span class="map-ribbon__sep map-ribbon__sep--inner"></span>
                 <label class="map-ribbon__color" title="Couleur sorts"><input id="spellColor" type="color" value="#f59e0b" /></label>
-                <label class="map-ribbon__slider" title="Largeur ligne (cases)">
+                <label class="map-ribbon__slider" title="Largeur (cases)">
                   <input id="spellLineWidth" type="range" min="0.5" max="6" step="0.5" value="1" />
                   <span id="spellLineWidthValue" class="map-ribbon__val">1c</span>
                 </label>
@@ -338,63 +367,50 @@
 
               <span class="map-ribbon__sep"></span>
 
-              <!-- Draw options (inline, contextual) -->
-              <div class="map-ribbon__options" id="drawOptionsBar">
-                <label class="map-ribbon__color" title="Couleur"><input id="drawColor" type="color" value="#22c55e" /></label>
-                <label class="map-ribbon__slider" title="Épaisseur">
-                  <input id="drawWidth" type="range" min="1" max="16" value="3" />
-                  <span id="drawWidthValue" class="map-ribbon__val">3</span>
-                </label>
-                <button type="button" class="map-ribbon__btn map-ribbon__btn--toggle" id="fillModeBtn" title="Remplir">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M5 5h14v14H5z" fill="currentColor" opacity="0.35"/><path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                </button>
-                <button type="button" class="map-ribbon__btn map-ribbon__btn--toggle is-active" id="snapModeBtn" title="Snap grille">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 3v18h18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="15" r="1.5" fill="currentColor"/></svg>
-                </button>
-                <button id="undoDrawBtn" class="map-ribbon__btn" type="button" title="Annuler dernier dessin">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button id="clearDrawBtn" class="map-ribbon__btn map-ribbon__btn--danger" type="button" title="Tout effacer">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
+              <!-- Brouillard de guerre -->
+              <div class="map-ribbon__grouped">
+                <span class="map-ribbon__category">Brouillard</span>
+                <div class="map-ribbon__group">
+                  <button id="fogToggle" class="map-ribbon__btn map-ribbon__btn--toggle" type="button" title="Brouillard de guerre ON/OFF" aria-pressed="false">
+                    <svg class="ico" viewBox="0 0 24 24"><path d="M3 15c2-3 5-5 9-5s7 2 9 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 9c2 2 5 3 9 3s7-1 9-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span class="map-ribbon__label">Fog</span>
+                  </button>
+                  <button type="button" class="map-ribbon__btn" data-tool="fog-rect" title="Révéler zone (rectangle)">
+                    <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span class="map-ribbon__label">Rect</span>
+                  </button>
+                  <button type="button" class="map-ribbon__btn" data-tool="fog-circle" title="Révéler zone (cercle)">
+                    <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span class="map-ribbon__label">Cercle</span>
+                  </button>
+                  <button id="undoFogBtn" class="map-ribbon__btn" type="button" title="Annuler dernière zone">
+                    <svg class="ico" viewBox="0 0 24 24"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <button id="clearFogBtn" class="map-ribbon__btn map-ribbon__btn--danger" type="button" title="Effacer zones révélées">
+                    <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
               </div>
 
               <span class="map-ribbon__sep"></span>
 
-              <div class="map-ribbon__group">
-                <button id="fogToggle" class="map-ribbon__btn map-ribbon__btn--toggle" type="button" title="Brouillard de guerre ON/OFF" aria-pressed="false">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 15c2-3 5-5 9-5s7 2 9 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 9c2 2 5 3 9 3s7-1 9-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  <span class="map-ribbon__label">Fog</span>
-                </button>
-                <button type="button" class="map-ribbon__btn" data-tool="fog-rect" title="Révéler zone (rectangle)">
-                  <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                </button>
-                <button type="button" class="map-ribbon__btn" data-tool="fog-circle" title="Révéler zone (cercle)">
-                  <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 9v6M9 12h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                </button>
-                <button id="undoFogBtn" class="map-ribbon__btn" type="button" title="Annuler dernière zone">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M7 7H3V3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7a9 9 0 1 1 2.64 6.36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button id="clearFogBtn" class="map-ribbon__btn map-ribbon__btn--danger" type="button" title="Effacer zones révélées">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-              </div>
-
-              <span class="map-ribbon__sep"></span>
-
-              <div class="map-ribbon__group">
-                <button id="measureBtn" class="map-ribbon__btn" type="button" title="Mesurer (clic-drag)">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M2 12h20M6 8v8M12 8v8M18 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  <span class="map-ribbon__label">Mesure</span>
-                </button>
-                <button id="toggleGridBtn" class="map-ribbon__btn map-ribbon__btn--toggle is-active" type="button" title="Grille" aria-pressed="true">
-                  <svg class="ico" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                  <span class="map-ribbon__label">Grille</span>
-                </button>
-                <button id="mjPingBtn" class="map-ribbon__btn" type="button" title="Ping (G + clic)">
-                  <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                  <span class="map-ribbon__label">Ping</span>
-                </button>
+              <!-- Utilitaires -->
+              <div class="map-ribbon__grouped">
+                <span class="map-ribbon__category">Utilitaires</span>
+                <div class="map-ribbon__group">
+                  <button id="measureBtn" class="map-ribbon__btn" type="button" title="Mesurer (clic-drag)">
+                    <svg class="ico" viewBox="0 0 24 24"><path d="M2 12h20M6 8v8M12 8v8M18 8v8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    <span class="map-ribbon__label">Mesure</span>
+                  </button>
+                  <button id="toggleGridBtn" class="map-ribbon__btn map-ribbon__btn--toggle is-active" type="button" title="Grille" aria-pressed="true">
+                    <svg class="ico" viewBox="0 0 24 24"><path d="M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <span class="map-ribbon__label">Grille</span>
+                  </button>
+                  <button id="mjPingBtn" class="map-ribbon__btn" type="button" title="Ping (G + clic)">
+                    <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    <span class="map-ribbon__label">Ping</span>
+                  </button>
+                </div>
               </div>
 
             </div>
