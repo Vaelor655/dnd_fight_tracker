@@ -246,10 +246,14 @@ function markDirty(full=true){
     dom.fogToggle.setAttribute("aria-pressed", fogOn ? "true" : "false");
   }
 
-  // Show/hide draw options sub-bar
+  // Show/hide contextual options bars
   if(dom.drawOptionsBar){
-    const drawTools = ["rect", "circle", "pen", "spell-cone", "spell-line", "spell-cube", "spell-sphere"];
+    const drawTools = ["rect", "circle", "pen"];
     dom.drawOptionsBar.classList.toggle("is-visible", drawTools.includes(state.ui.tool));
+  }
+  if(dom.spellOptionsBar){
+    const spellTools = ["spell-cone", "spell-line", "spell-cube", "spell-sphere"];
+    dom.spellOptionsBar.classList.toggle("is-visible", spellTools.includes(state.ui.tool));
   }
 }
 

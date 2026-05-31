@@ -1514,6 +1514,10 @@ button.is-active {
   opacity: 0.5;
   flex-shrink: 0;
 }
+.map-ribbon__sep--inner {
+  height: 20px;
+  margin: 0 4px;
+}
 
 /* Tool groups */
 .map-ribbon__group {
