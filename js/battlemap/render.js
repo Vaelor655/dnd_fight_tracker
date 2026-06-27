@@ -382,45 +382,48 @@ export function draw(canvas, ctx, state, overlay){
     }
   }
 
-  // ── Fog of War (player view only — MJ sees a semi-transparent overlay) ──
+  // ── Fog of War ──
   if(state.fog?.enabled){
     const fogAlpha = isPlayerView ? 1.0 : 0.35;
-    ctx.save();
-    ctx.globalAlpha = fogAlpha;
-
-    // Draw full black fog covering the visible area (extended)
     const fogPad = 2000;
-    ctx.fillStyle = "#111111";
-    ctx.beginPath();
-    ctx.rect(left - fogPad, top - fogPad, (right - left) + fogPad * 2, (bottom - top) + fogPad * 2);
-
-    // Cut out revealed areas (counter-clockwise = hole in the path)
     const revealed = state.fog.revealedAreas || [];
+
+    // Use an offscreen canvas so overlapping revealed areas don't cancel each other
+    // (evenodd would re-fog the intersection — destination-out avoids that)
+    const fog = (typeof OffscreenCanvas !== "undefined")
+      ? new OffscreenCanvas(canvas.width, canvas.height)
+      : Object.assign(document.createElement("canvas"), { width: canvas.width, height: canvas.height });
+    const fCtx = fog.getContext("2d");
+    fCtx.setTransform(camera.zoom, 0, 0, camera.zoom, cx - camera.x * camera.zoom, cy - camera.y * camera.zoom);
+
+    // Fill solid fog
+    fCtx.fillStyle = "#111111";
+    fCtx.fillRect(left - fogPad, top - fogPad, (right - left) + fogPad * 2, (bottom - top) + fogPad * 2);
+
+    // Punch holes with destination-out (additive — overlaps stay revealed)
+    fCtx.globalCompositeOperation = "destination-out";
     for(const area of revealed){
+      fCtx.beginPath();
       if(area.type === "rect"){
         const ax = Math.min(area.x, area.x + area.w);
         const ay = Math.min(area.y, area.y + area.h);
-        const aw = Math.abs(area.w);
-        const ah = Math.abs(area.h);
-        // counter-clockwise rect to punch hole
-        ctx.moveTo(ax, ay);
-        ctx.lineTo(ax, ay + ah);
-        ctx.lineTo(ax + aw, ay + ah);
-        ctx.lineTo(ax + aw, ay);
-        ctx.closePath();
+        fCtx.rect(ax, ay, Math.abs(area.w), Math.abs(area.h));
       }else if(area.type === "circle"){
-        // counter-clockwise circle
-        ctx.moveTo(area.cx + area.r, area.cy);
-        ctx.arc(area.cx, area.cy, area.r, 0, Math.PI * 2, true);
-        ctx.closePath();
+        fCtx.arc(area.cx, area.cy, area.r, 0, Math.PI * 2);
       }else if(area.type === "polygon" && area.points?.length >= 2){
         const pts = area.points;
-        ctx.moveTo(pts[0].x, pts[0].y);
-        for(let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
-        ctx.closePath();
+        fCtx.moveTo(pts[0].x, pts[0].y);
+        for(let i = 1; i < pts.length; i++) fCtx.lineTo(pts[i].x, pts[i].y);
+        fCtx.closePath();
       }
+      fCtx.fill();
     }
-    ctx.fill("evenodd");
+
+    // Composite onto main canvas
+    ctx.save();
+    ctx.globalAlpha = fogAlpha;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.drawImage(fog, 0, 0);
     ctx.restore();
   }
 
