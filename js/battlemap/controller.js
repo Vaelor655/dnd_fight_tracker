@@ -2,6 +2,28 @@ import { createInitialState, migrateState, addToken, undoShape, clearShapes, add
 import { draw, screenToWorld, cellToWorld, isAnimShapeExpired } from "./render.js";
 import { createInputController } from "./input.js";
 import { clamp } from "./utils.js";
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "../realtime/config.js";
+
+async function uploadImageToSupabase(file) {
+  const ext = file.name.split(".").pop() || "png";
+  const filename = `bg_${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+  const res = await fetch(
+    `${SUPABASE_URL}/storage/v1/object/battlemap-images/${filename}`,
+    {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+        "Content-Type": file.type || "image/png",
+      },
+      body: file,
+    }
+  );
+  if (!res.ok) {
+    const msg = await res.text();
+    throw new Error(`Upload Supabase échoué: ${msg}`);
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/battlemap-images/${filename}`;
+}
 
 function colorFromId(id){
   // deterministic hue
@@ -285,16 +307,26 @@ function markDirty(full=true){
   }
 
   async function loadBackgroundFromFile(file){
-    const dataUrl = await fileToDataUrl(file);
+    setStatus("Upload en cours…");
+    let publicUrl;
+    try {
+      publicUrl = await uploadImageToSupabase(file);
+    } catch(e) {
+      setStatus("Upload échoué ❌");
+      setTimeout(() => setStatus("Prêt"), 1500);
+      return;
+    }
+
     const img = new Image();
     await new Promise((resolve, reject) => {
       img.onerror = reject;
       img.onload = resolve;
-      img.src = dataUrl;
+      img.src = publicUrl;
     });
 
     state.background = {
-      dataUrl,
+      url: publicUrl,
+      dataUrl: null,
       opacity: (Number(dom.bgOpacity?.value) || 85) / 100,
       x: 0, y: 0, w: img.naturalWidth, h: img.naturalHeight,
       _naturalW: img.naturalWidth,
