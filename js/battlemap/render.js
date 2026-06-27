@@ -413,6 +413,12 @@ export function draw(canvas, ctx, state, overlay){
         ctx.moveTo(area.cx + area.r, area.cy);
         ctx.arc(area.cx, area.cy, area.r, 0, Math.PI * 2, true);
         ctx.closePath();
+      }else if(area.type === "polygon" && area.points?.length >= 3){
+        // counter-clockwise polygon (reverse winding to punch hole)
+        const pts = area.points;
+        ctx.moveTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+        for(let i = pts.length - 2; i >= 0; i--) ctx.lineTo(pts[i].x, pts[i].y);
+        ctx.closePath();
       }
     }
     ctx.fill("evenodd");
@@ -435,6 +441,13 @@ export function draw(canvas, ctx, state, overlay){
     }else if(fp.type === "circle"){
       ctx.beginPath();
       ctx.arc(fp.cx, fp.cy, Math.max(0, fp.r), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }else if(fp.type === "polygon" && fp.points?.length >= 2){
+      ctx.beginPath();
+      ctx.moveTo(fp.points[0].x, fp.points[0].y);
+      for(let i = 1; i < fp.points.length; i++) ctx.lineTo(fp.points[i].x, fp.points[i].y);
+      ctx.closePath();
       ctx.fill();
       ctx.stroke();
     }
