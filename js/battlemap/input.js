@@ -194,7 +194,10 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       }else{
         dragMode = "fog-lasso";
         state.ui.fogPreview = { type: "polygon", points: [{ x: world.x, y: world.y }] };
-        onStatus("Révéler zone libre…");
+        // Auto-enable fog so the reveal is immediately visible
+        if(!state.fog) state.fog = { enabled: false, revealedAreas: [] };
+        if(!state.fog.enabled){ state.fog.enabled = true; }
+        onStatus("Révéler zone libre… (relâcher pour valider)");
       }
       setCursor();
       onChange();
@@ -315,7 +318,7 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       const last = pts[pts.length - 1];
       const dx = world.x - last.x;
       const dy = world.y - last.y;
-      if((dx*dx + dy*dy) > 16){
+      if((dx*dx + dy*dy) > 4){
         pts.push({ x: world.x, y: world.y });
         onChange();
       }
@@ -385,7 +388,7 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
         addFogArea(state, { ...fp });
       }else if(fp.type === "circle" && fp.r > 5){
         addFogArea(state, { ...fp });
-      }else if(fp.type === "polygon" && fp.points?.length >= 3){
+      }else if(fp.type === "polygon" && fp.points?.length >= 2){
         addFogArea(state, { type: "polygon", points: fp.points.slice() });
       }
       state.ui.fogPreview = null;
