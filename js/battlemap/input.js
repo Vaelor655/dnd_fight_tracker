@@ -181,16 +181,20 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
     }
 
     // Fog reveal tools
-    if(state.ui.tool === "fog-rect" || state.ui.tool === "fog-circle"){
+    if(state.ui.tool === "fog-rect" || state.ui.tool === "fog-circle" || state.ui.tool === "fog-lasso"){
       drawStart = world;
       if(state.ui.tool === "fog-rect"){
         dragMode = "fog-rect";
         state.ui.fogPreview = { type: "rect", x: drawStart.x, y: drawStart.y, w: 0, h: 0 };
         onStatus("Révéler zone (rect)…");
-      }else{
+      }else if(state.ui.tool === "fog-circle"){
         dragMode = "fog-circle";
         state.ui.fogPreview = { type: "circle", cx: drawStart.x, cy: drawStart.y, r: 0 };
         onStatus("Révéler zone (cercle)…");
+      }else{
+        dragMode = "fog-lasso";
+        state.ui.fogPreview = { type: "polygon", points: [{ x: world.x, y: world.y }] };
+        onStatus("Révéler zone libre…");
       }
       setCursor();
       onChange();
@@ -306,6 +310,18 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
       return;
     }
 
+    if(dragMode === "fog-lasso" && state.ui.fogPreview){
+      const pts = state.ui.fogPreview.points;
+      const last = pts[pts.length - 1];
+      const dx = world.x - last.x;
+      const dy = world.y - last.y;
+      if((dx*dx + dy*dy) > 16){
+        pts.push({ x: world.x, y: world.y });
+        onChange();
+      }
+      return;
+    }
+
     if(dragMode === "draw-spell" && state.ui.previewShape){
       const s = state.ui.previewShape;
       if(s.type === "cone"){
@@ -369,6 +385,8 @@ export function createInputController({ canvas, state, onChange, onStatus, onDro
         addFogArea(state, { ...fp });
       }else if(fp.type === "circle" && fp.r > 5){
         addFogArea(state, { ...fp });
+      }else if(fp.type === "polygon" && fp.points?.length >= 3){
+        addFogArea(state, { type: "polygon", points: fp.points.slice() });
       }
       state.ui.fogPreview = null;
       onChange();
