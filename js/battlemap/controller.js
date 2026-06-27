@@ -338,6 +338,7 @@ function markDirty(full=true){
     setTimeout(() => setStatus("Prêt"), 900);
 
     dirty = true;
+    dom.onDirty?.();
     markDirty(false);
   }
 
